@@ -3,10 +3,12 @@
 # Além das funções e classes já definidas, podem acrescentar outras que considerem pertinentes.
 
 # Grupo 00:
-# 00000 Nome1
-# 00000 Nome2
+# 00000 Laura Quintas
+# 92780 Raquel Romão
 
-import sys
+#import sys (como estava antes)
+from sys import stdin
+import numpy as np
 from search import (
     Problem,
     Node,
@@ -33,24 +35,45 @@ class TakuzuState:
 
 
 class Board:
-    """Representação interna de um tabuleiro de Takuzu."""
+    """Representação interna de um tabuleiro de Takuzu.""" #estou a pensar numa lista de listas (array de arrays)
+
+    def __init__(self, board_size):
+        self.board = np.empty((board_size, board_size), dtype=object)  #None nas várias posições
+        self.board_size = board_size
+
+    def set_number(self, value, row: int, col: int): #adicionei para já esta função
+        self.board[row,col] = value
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
-        # TODO
-        pass
+        return self.board[row, col] #como está agora pode ser devolvido None, o que pode dar problemas à frente 
 
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
-        # TODO
-        pass
+        #estar na coluna 0 ou na coluna n/[-1] é que vão ser aqui o issue
+        if row == 0:
+            return (None, self.board.get_number(row + 1, col))
+        
+        elif row == self.board_size - 1:
+            return (self.board.get_number(row - 1, col), None)
+
+        else:
+            return (self.board.get_number(row - 1, col), self.board.get_number(row + 1, col))
+
 
     def adjacent_horizontal_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
-        # TODO
-        pass
+        #estar na primeira ou última coluna é que vão ser o issue
+        if col == 0:
+            return (None, self.board.get_number(row, col + 1))
+        
+        elif col == self.board_size - 1:
+            return (self.board.get_number(row, col - 1), None)
+
+        else:
+            return (self.board.get_number(row, col - 1), self.board.get_number(row, col + 1))
 
     @staticmethod
     def parse_instance_from_stdin():
@@ -63,8 +86,30 @@ class Board:
             > from sys import stdin
             > stdin.readline()
         """
-        # TODO
-        pass
+        #formato input:
+        #4\n
+        #2\t1\t2\t0\n
+        #2\t2\t0\t2\n
+        #2\t0\t2\t2\n
+        #1\t1\t2\t0\n
+
+        #open and close file? ainda não testei se isto funciona, especialmente o line in stdin
+
+        board_size = stdin.readline(0)
+        board = Board(board_size)
+       
+        row=0
+        for line in stdin:
+            values = line.strip().split('\t') #retorna lista de strings com os numeros
+            values = np.array(list(map(int, values)))
+            values = np.where(values==2, None, values)
+
+            for col in values:
+                board.set_number(row, col) #precisa de otimização! pensei em adicionar a linha na totalidade também
+                #adiciona os None por cima dos antigos, não adoro
+            row+=1
+
+        return board
 
     # TODO: outros metodos da classe
 

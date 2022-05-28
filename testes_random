@@ -1,0 +1,11 @@
+import numpy as np
+
+print(np.empty((2, 2), dtype=object))
+
+input_line= '2\t1\t2\t0\n'
+print(input_line.strip().split('\t'))
+print(np.array(list(map(int, input_line.strip().split('\t')))))
+
+values = np.array(list(map(int, input_line.strip().split('\t'))))
+
+print(np.where(values==2, None, values))
