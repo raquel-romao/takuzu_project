@@ -19,6 +19,7 @@ from search import (
     recursive_best_first_search,
 )
 
+#olá
 
 class TakuzuState:
     state_id = 0
