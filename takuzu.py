@@ -19,7 +19,7 @@ from search import (
     recursive_best_first_search,
 )
 
-#olá
+#olá 
 
 class TakuzuState:
     state_id = 0
@@ -103,7 +103,7 @@ class Board:
         for line in stdin:
             values = line.strip().split('\t') #retorna lista de strings com os numeros
             values = np.array(list(map(int, values)))
-            values = np.where(values==2, None, values)
+            #values = np.where(values==2, None, values)
 
             for col in values:
                 board.set_number(row, col) #precisa de otimização! pensei em adicionar a linha na totalidade também
