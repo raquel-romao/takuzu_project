@@ -124,11 +124,11 @@ class Board:
                     if row == 0:
                         board.info[i][2] = np.array((i,j))
                     else:
-                        np.append(row,[(i,j)]) #bruh
+                        board.info[i][2] = np.append(row,[(i,j)]) #bruh
                     if col == 0:
                         board.info[board_size + j -1][2] = np.array((i,j))
                     else:
-                        np.append(col,[(i,j)]) #bruh
+                        board.info[board_size + j -1][2]=np.append(col,[(i,j)]) #bruh
                     
 
 
