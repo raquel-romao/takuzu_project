@@ -19,7 +19,6 @@ from search import (
     recursive_best_first_search,
 )
 
-#olá
 
 class TakuzuState:
     state_id = 0
@@ -38,9 +37,22 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" #estou a pensar numa lista de listas (array de arrays)
 
+<<<<<<< HEAD
     def __init__(self, board, board_size): #mudei isto para nao termos de criar duas vezes np.array, criamos só na funçao e recebemos
         self.board = board  
+=======
+    def __init__(self, board_size): 
+        self.board = np.ones((board_size,board_size), dtype=object)*2 
+>>>>>>> 272d55daeba4cd1f6c044b402e837f4439dd3e1b
         self.board_size = board_size
+        self.info = np.zeros((board_size * 2,2), dtype=object) 
+        
+    
+    def __str__(self):
+        for i in self.board:
+            for j in i:
+                print(str(j), end=" ")
+            print()
 
     def __str__(self):
         for i in self.board:
@@ -50,6 +62,13 @@ class Board:
 
     def set_number(self, value, row: int, col: int): #adicionei para já esta função
         self.board[row,col] = value
+        if value == 1:
+            self.info[row][1] +=1
+            self.info[self.board_size + col][1] += 1
+        elif value == 0:
+            self.info[row][0] +=1
+            self.info[self.board_size + col][0] += 1
+        #else? tipo vamos usar o set_number para voltar a pôr como vazio = 2 ou aquilo simplesmente tem guardado uma board e volta atrás assim?
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
@@ -100,6 +119,7 @@ class Board:
         #2\t0\t2\t2\n
         #1\t1\t2\t0\n
 
+<<<<<<< HEAD
         #também não consegui testar com o stdin mas teoricamente acho que devia resultar, ja nao tinha cerebro p perceber como é que abro o ficheiro
 
         board_size = int(stdin.readline().rstrip('\n'))
@@ -112,6 +132,24 @@ class Board:
             board[i] = values
         
         return Board(board,board_size)
+=======
+        board_size = int(stdin.readline().strip('\n'))
+        board = Board(board_size)
+        
+        for i in range(board_size):
+            values = stdin.readline().strip('\n').split('\t') 
+            for j in range(board_size):
+                value= int(values[j])
+                board.set_number(value,i,j)
+                if value == 1:
+                    board.info[i][1] +=1
+                    board.info[board_size + j - 1][1] += 1                    
+                elif value == 0:
+                    board.info[i][0]+=1
+                    board.info[board_size + j - 1][0] += 1 
+               
+        return board
+>>>>>>> 272d55daeba4cd1f6c044b402e837f4439dd3e1b
 
     # TODO: outros metodos da classe
 
@@ -119,8 +157,10 @@ class Board:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        # TODO
+        #self.empty = np.array(list(zip(*np.where(board==2))))
+        #self.board = board
         pass
+        
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
@@ -159,3 +199,8 @@ if __name__ == "__main__":
     # Imprimir para o standard output no formato indicado.
     pass
 
+<<<<<<< HEAD
+=======
+
+board = Board.parse_instance_from_stdin()
+>>>>>>> 272d55daeba4cd1f6c044b402e837f4439dd3e1b
