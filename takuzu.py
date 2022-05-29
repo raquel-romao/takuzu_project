@@ -44,10 +44,14 @@ class Board:
         
     
     def __str__(self):
+        prettyprint=''
         for i in self.board:
-            for j in i:
-                print(str(j), end=" ")
-            print()
+            for j in range(len(i)):
+                if j == len(i)-1:
+                    prettyprint += f'{i[j]}\n'
+                else:
+                    prettyprint += f'{i[j]}    '
+        return prettyprint
 
     def set_number(self, value, row: int, col: int): #adicionei para já esta função
         self.board[row,col] = value
