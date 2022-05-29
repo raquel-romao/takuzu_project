@@ -207,3 +207,7 @@ print(initial_state.board.get_number(0, 0))
 result_state = problem.result(initial_state, (0, 0, 0))
 
 print(result_state.board.get_number(0, 0))
+
+print(problem.actions(initial_state))
+
+print(problem.actions(result_state))
