@@ -19,7 +19,6 @@ from search import (
     recursive_best_first_search,
 )
 
-#olá
 
 class TakuzuState:
     state_id = 0
@@ -105,10 +104,9 @@ class Board:
         board_size = int(stdin.readline().rstrip('\n'))
         board = np.empty(board_size, dtype=object)
         
-               
-        for i in range(board_size): #aqui começa no zero certo?
+        for i in range(board_size): #aqui começa no zero certo? -> yes!
             values = stdin.readline().rstrip('\n').split('\t') #retorna lista de strings com os numeros
-            values = np.array(list(map(int, values)))
+            values = np.array(list(map(int, values)))  #usar np.fromstring function (?) mas sem os strip/split e usando sep=
             board[i] = values
         
         return Board(board,board_size)
