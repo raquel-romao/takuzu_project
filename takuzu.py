@@ -72,13 +72,13 @@ class Board:
         respectivamente."""
         #estar na coluna 0 ou na coluna n/[-1] é que vão ser aqui o issue
         if row == 0:
-            return (None, self.board.get_number(row + 1, col))
+            return (None, self.get_number(row + 1, col))
         
         elif row == self.board_size - 1:
-            return (self.board.get_number(row - 1, col), None)
+            return (self.get_number(row - 1, col), None)
 
         else:
-            return (self.board.get_number(row - 1, col), self.board.get_number(row + 1, col))
+            return (self.get_number(row - 1, col), self.get_number(row + 1, col))
 
 
     def adjacent_horizontal_numbers(self, row: int, col: int):
