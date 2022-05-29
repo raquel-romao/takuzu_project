@@ -145,8 +145,9 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         result = np.where(state.board==2)
+        print(result)
         empty = list(zip(result[0],result[1]))
-        print(empty)
+        
         empty_arr = []
         for i in empty:
             empty_arr += [(i[0],i[1],0),(i[0],i[1],1)]
