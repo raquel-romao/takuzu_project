@@ -37,23 +37,12 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" #estou a pensar numa lista de listas (array de arrays)
 
-<<<<<<< HEAD
-    def __init__(self, board, board_size): #mudei isto para nao termos de criar duas vezes np.array, criamos só na funçao e recebemos
-        self.board = board  
-=======
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=object)*2 
->>>>>>> 272d55daeba4cd1f6c044b402e837f4439dd3e1b
         self.board_size = board_size
         self.info = np.zeros((board_size * 2,2), dtype=object) 
         
     
-    def __str__(self):
-        for i in self.board:
-            for j in i:
-                print(str(j), end=" ")
-            print()
-
     def __str__(self):
         for i in self.board:
             for j in i:
@@ -119,20 +108,6 @@ class Board:
         #2\t0\t2\t2\n
         #1\t1\t2\t0\n
 
-<<<<<<< HEAD
-        #também não consegui testar com o stdin mas teoricamente acho que devia resultar, ja nao tinha cerebro p perceber como é que abro o ficheiro
-
-        board_size = int(stdin.readline().rstrip('\n'))
-        board = np.empty(board_size, dtype=object)
-        
-               
-        for i in range(board_size): #aqui começa no zero certo?
-            values = stdin.readline().rstrip('\n').split('\t') #retorna lista de strings com os numeros
-            values = np.array(list(map(int, values)))
-            board[i] = values
-        
-        return Board(board,board_size)
-=======
         board_size = int(stdin.readline().strip('\n'))
         board = Board(board_size)
         
@@ -149,7 +124,6 @@ class Board:
                     board.info[board_size + j - 1][0] += 1 
                
         return board
->>>>>>> 272d55daeba4cd1f6c044b402e837f4439dd3e1b
 
     # TODO: outros metodos da classe
 
@@ -199,8 +173,5 @@ if __name__ == "__main__":
     # Imprimir para o standard output no formato indicado.
     pass
 
-<<<<<<< HEAD
-=======
 
 board = Board.parse_instance_from_stdin()
->>>>>>> 272d55daeba4cd1f6c044b402e837f4439dd3e1b
