@@ -213,8 +213,7 @@ result_state = problem.result(initial_state, (0, 0, 0))
 
 print(result_state.board.get_number(0, 0))
 print(initial_state.board)
-print(type(initial_state.board))
-print(type(initial_state.board[1]))
+
 
 
 print(problem.actions(initial_state))
