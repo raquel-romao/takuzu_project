@@ -138,8 +138,7 @@ class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
         #self.empty = np.array(list(zip(*np.where(board==2))))
-        self.board = board
-        self.state = TakuzuState(board)
+        #self.states = np.array(TakuzuState(board))
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
@@ -187,3 +186,13 @@ print(board)
 
 print(board.adjacent_vertical_numbers(3, 3))
 print(board.adjacent_horizontal_numbers(3, 3))
+
+problem= Takuzu(board)
+
+initial_state = TakuzuState(board)
+
+print(initial_state.board.get_number(0, 0))
+
+result_state = problem.result(initial_state, (0, 0, 0))
+
+print(result_state.board.get_number(0, 0))
