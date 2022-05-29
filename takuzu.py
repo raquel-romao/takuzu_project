@@ -108,16 +108,13 @@ class Board:
         #2\t0\t2\t2\n
         #1\t1\t2\t0\n
 
-        #também não consegui testar com o stdin mas teoricamente acho que devia resultar, ja nao tinha cerebro p perceber como é que abro o ficheiro
-
-        board_size = int(stdin.readline().rstrip('\n'))
+        board_size = int(stdin.readline().strip('\n'))
         board = Board(board_size)
         
-        
         for i in range(board_size):
-            values = stdin.readline().rstrip('\n').split('\t') 
-            for j in range(len(values)):
-                value= values[j]
+            values = stdin.readline().strip('\n').split('\t') 
+            for j in range(board_size):
+                value= int(values[j])
                 board.set_number(value,i,j)
                 if value == 1:
                     board.info[i][1] +=1
@@ -134,8 +131,10 @@ class Board:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        # 
+        #self.empty = np.array(list(zip(*np.where(board==2))))
+        #self.board = board
         pass
+        
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
@@ -173,3 +172,6 @@ if __name__ == "__main__":
     # Retirar a solução a partir do nó resultante,
     # Imprimir para o standard output no formato indicado.
     pass
+
+
+board = Board.parse_instance_from_stdin()
