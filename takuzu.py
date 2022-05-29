@@ -38,10 +38,11 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" #estou a pensar numa lista de listas (array de arrays)
 
-    def __init__(self, board, board_size): #mudei isto para nao termos de criar duas vezes np.array, criamos só na funçao e recebemos
-        self.board = board  
+    def __init__(self, board_size): 
+        self.board = np.ones((board_size,board_size), dtype=object)*2 
         self.board_size = board_size
-
+        self.info = np.zeros((board_size * 2,3), dtype=object) #a minha ideia aqui e fazer um array de arrays com 3 instancias (numero de 0s, numero de 1s, lista de coordenadas vazias) e seria com tamanho o dobro do board_size para guardar info linhas + colunas
+# fiz esta cena do info porque pelo que estive a pesquisar a complexidade é O8n9 para contar o numero de instancias de algo um array, e como vamos er de ir busca bue vezes essa info achei por melhor 'gastar'mais tempo na construçºao da board para depois compensar on the long run
     def __str__(self):
         for i in self.board:
             for j in i:
@@ -49,6 +50,7 @@ class Board:
             print()
 
     def set_number(self, value, row: int, col: int): #adicionei para já esta função
+
         self.board[row,col] = value
 
     def get_number(self, row: int, col: int) -> int:
@@ -103,15 +105,39 @@ class Board:
         #também não consegui testar com o stdin mas teoricamente acho que devia resultar, ja nao tinha cerebro p perceber como é que abro o ficheiro
 
         board_size = int(stdin.readline().rstrip('\n'))
-        board = np.empty(board_size, dtype=object)
+        board = Board(board_size)
         
                
         for i in range(board_size): #aqui começa no zero certo?
             values = stdin.readline().rstrip('\n').split('\t') #retorna lista de strings com os numeros
-            values = np.array(list(map(int, values)))
-            board[i] = values
-        
-        return Board(board,board_size)
+            for j in range(len(values)):
+                value= values[j]
+                board.set_number(value,i,j)
+                if value == 1:
+                    board.info[i][1] +=1
+                    board.info[board_size + j - 1][1] +=1                    
+                elif value == 0:
+                    board.info[i][0]+=1
+                    board.info[board_size + j - 1][0] +=1  
+                else:
+                    row=board.info[i][2]
+                    col=board.info[board_size + j -1][2]
+                    #queria que a 3ª nstancia para cada  linha do array board_info fosse um array de ttuples cm as coordenadas dos que estavam vazios tno nas colunas como nas linhas mas nºao estou a consegguir que mantenha o formato tuple
+                    if row == 0:
+                        board.info[i][2] = np.array((i,j))
+                    else:
+                        np.append(row,[(i,j)]) #bruh
+                    if col == 0:
+                        board.info[board_size + j -1][2] = np.array((i,j))
+                    else:
+                        np.append(col,[(i,j)]) #bruh
+                    
+
+
+
+            
+            
+        return board
 
     # TODO: outros metodos da classe
 
