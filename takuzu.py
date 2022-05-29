@@ -19,7 +19,6 @@ from search import (
     recursive_best_first_search,
 )
 
-#olá
 
 class TakuzuState:
     state_id = 0
@@ -107,8 +106,7 @@ class Board:
         board_size = int(stdin.readline().rstrip('\n'))
         board = Board(board_size)
         
-               
-        for i in range(board_size): #aqui começa no zero certo?
+        for i in range(board_size): #aqui começa no zero certo? -> yes!
             values = stdin.readline().rstrip('\n').split('\t') #retorna lista de strings com os numeros
             for j in range(len(values)):
                 value= values[j]
