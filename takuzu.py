@@ -63,7 +63,7 @@ class Board:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] #como está agora pode ser devolvido None, o que pode dar problemas à frente 
 
-    def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
+    def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
         #estar na coluna 0 ou na coluna n/[-1] é que vão ser aqui o issue
@@ -77,7 +77,7 @@ class Board:
             return (self.board.get_number(row - 1, col), self.board.get_number(row + 1, col))
 
 
-    def adjacent_horizontal_numbers(self, row: int, col: int) -> (int, int):
+    def adjacent_horizontal_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
         #estar na primeira ou última coluna é que vão ser o issue
@@ -108,7 +108,7 @@ class Board:
         #2\t0\t2\t2\n
         #1\t1\t2\t0\n
 
-        board_size = int(stdin.readline().strip('\n'))
+        board_size = int(stdin.readline().rstrip('\n'))
         board = Board(board_size)
         
         for i in range(board_size):
@@ -173,3 +173,8 @@ if __name__ == "__main__":
     # Imprimir para o standard output no formato indicado.
     pass
 
+board = Board.parse_instance_from_stdin()
+print(board)
+
+print(board.adjacent_vertical_numbers(3, 3))
+print(board.adjacent_horizontal_numbers(3, 3))
