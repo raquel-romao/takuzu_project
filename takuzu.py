@@ -50,8 +50,14 @@ class Board:
             print()
 
     def set_number(self, value, row: int, col: int): #adicionei para já esta função
-
         self.board[row,col] = value
+        if value == 1:
+            self.info[row][1] +=1
+            self.info[self.board_size + col][1] += 1
+        elif value == 0:
+            self.info[row][0] +=1
+            self.info[self.board_size + col][0] += 1
+        #else? tipo vamos usar o set_number para voltar a pôr como vazio = 2 ou aquilo simplesmente tem guardado uma board e volta atrás assim?
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
@@ -108,8 +114,8 @@ class Board:
         board = Board(board_size)
         
         
-        for i in range(board_size): #aqui começa no zero certo? -> yes!
-            values = stdin.readline().rstrip('\n').split('\t') #retorna lista de strings com os numeros
+        for i in range(board_size):
+            values = stdin.readline().rstrip('\n').split('\t') 
             for j in range(len(values)):
                 value= values[j]
                 board.set_number(value,i,j)
