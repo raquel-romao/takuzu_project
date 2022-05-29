@@ -118,7 +118,7 @@ class Board:
         board = Board(board_size)
 
         for i in range(board_size):
-            values = np.array(i.strip('\n').split('\t') )
+            values = np.array(stdin.readline().strip('\n').split('\t') )
             board[i] = values
         '''
         for i in range(board_size):
