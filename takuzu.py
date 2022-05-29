@@ -198,7 +198,7 @@ if __name__ == "__main__":
 
 board = Board.parse_instance_from_stdin()
 print(board)
-print(type(board))
+print(type(board.board))
 
 print(board.adjacent_vertical_numbers(3, 3))
 print(board.adjacent_horizontal_numbers(3, 3))
