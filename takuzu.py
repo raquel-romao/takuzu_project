@@ -40,7 +40,7 @@ class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
     def __init__(self, board_size): 
-        self.board = np.ones((board_size,board_size), dtype=object)*2 
+        self.board = np.ones((board_size), dtype=object) 
         self.board_size = board_size
         self.info = np.zeros((board_size * 2,2), dtype=object) 
         
@@ -116,7 +116,11 @@ class Board:
 
         board_size = int(stdin.readline().rstrip('\n'))
         board = Board(board_size)
-        
+
+        for i in range(board_size):
+            values = np.array(i.strip('\n').split('\t') )
+            board[i] = values
+        '''
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
@@ -128,7 +132,7 @@ class Board:
                 elif value == 0:
                     board.info[i][0]+=1
                     board.info[board_size + j - 1][0] += 1 
-               
+        '''       
         return board
 
     # TODO: outros metodos da classe
