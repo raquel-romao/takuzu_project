@@ -40,7 +40,7 @@ class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
     def __init__(self, board_size): 
-        self.board = np.ones((board_size,board_size), dtype=object)*2 
+        self.board = np.ones((board_size,board_size), dtype=object) 
         self.board_size = board_size
         self.info = np.zeros((board_size * 2,2), dtype=object) 
         
@@ -60,14 +60,14 @@ class Board:
         if value == 1:
             self.info[row][1] +=1
             self.info[self.board_size + col][1] += 1
-        elif value == 0:
+        else:
             self.info[row][0] +=1
             self.info[self.board_size + col][0] += 1
-        #else? tipo vamos usar o set_number para voltar a pôr como vazio = 2 ou aquilo simplesmente tem guardado uma board e volta atrás assim?
+        
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
-        return self.board[row, col] #como está agora pode ser devolvido None, o que pode dar problemas à frente 
+        return self.board[row, col] 
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -116,7 +116,7 @@ class Board:
 
         board_size = int(stdin.readline().rstrip('\n'))
         board = Board(board_size)
-        
+
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
@@ -139,22 +139,29 @@ class Takuzu(Problem):
         """O construtor especifica o estado inicial."""
         #self.empty = np.array(list(zip(*np.where(board==2))))
         #self.states = np.array(TakuzuState(board))
+        #self.initial_state = TakuzuState(board)
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        #aqui vamos usar o problem? para decidir as actions?
-        pass
+
+        result = np.where(state.board.board == 2)
+        empty = list(zip(result[0],result[1]))
+        
+        empty_arr = []
+        for i in empty:
+            empty_arr += [(i[0],i[1],0),(i[0],i[1],1)]
+        return empty_arr
 
     def result(self, state: TakuzuState, action):
         """Retorna o estado resultante de executar a 'action' sobre
         'state' passado como argumento. A ação a executar deve ser uma
         das presentes na lista obtida pela execução de
         self.actions(state)."""
-        new_board = state.board
+        new_board = copy.deepcopy(state.board)
         new_board.set_number(action[0],action[1],action[2])
 
-        new_state = TakuzuState(new_board)  #nao sei se nao vamos ter de pôr (action[0], action[1], action[2]) probably
+        new_state = TakuzuState(new_board)  
 
         return new_state
 
@@ -228,3 +235,10 @@ print(initial_state.board.get_number(0, 0))
 result_state = problem.result(initial_state, (0, 0, 0))
 
 print(result_state.board.get_number(0, 0))
+
+print(initial_state.board)
+print(initial_state.board.get_number(0, 0))
+
+print(problem.actions(initial_state))
+
+print(problem.actions(result_state))
