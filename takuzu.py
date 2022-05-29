@@ -139,12 +139,16 @@ class Takuzu(Problem):
         """O construtor especifica o estado inicial."""
         #self.empty = np.array(list(zip(*np.where(board==2))))
         #self.states = np.array(TakuzuState(board))
+        self.initial_state = TakuzuState(board)
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        #aqui vamos usar o problem? para decidir as actions?
-        pass
+        empty = list(zip(*np.where(state.board==2)))
+        empty_arr = []
+        for i in empty:
+            empty_arr += [(i[0],i[1],0),(i[0],i[1],1)]
+        return empty_arr
 
     def result(self, state: TakuzuState, action):
         """Retorna o estado resultante de executar a 'action' sobre
