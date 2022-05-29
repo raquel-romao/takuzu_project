@@ -154,7 +154,7 @@ class Takuzu(Problem):
         new_board = state.board
         new_board.set_number(action[0],action[1],action[2])
 
-        new_state = Takuzu(new_board)  #nao sei se nao vamos ter de pôr (action[0], action[1], action[2]) probably
+        new_state = TakuzuState(new_board)  #nao sei se nao vamos ter de pôr (action[0], action[1], action[2]) probably
 
         return new_state
 
