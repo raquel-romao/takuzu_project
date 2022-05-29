@@ -118,10 +118,6 @@ class Board:
         board = Board(board_size)
 
         for i in range(board_size):
-            values = np.array(stdin.readline().strip('\n').split('\t') )
-            board[i] = values
-        '''
-        for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value= int(values[j])
@@ -132,7 +128,7 @@ class Board:
                 elif value == 0:
                     board.info[i][0]+=1
                     board.info[board_size + j - 1][0] += 1 
-        '''       
+               
         return board
 
     # TODO: outros metodos da classe
@@ -202,6 +198,7 @@ if __name__ == "__main__":
 
 board = Board.parse_instance_from_stdin()
 print(board)
+print(type(board))
 
 print(board.adjacent_vertical_numbers(3, 3))
 print(board.adjacent_horizontal_numbers(3, 3))
