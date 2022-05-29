@@ -1,18 +1,16 @@
 import numpy as np
 import sys
 
-print(np.empty((2, 2), dtype=object))
-print(np.empty(2,dtype=object))
-board = np.empty(2,dtype=object)
 
 
+'''
 input_line= '2\t1\t2\t0\n'
 print(input_line.rstrip('\n').split('\t'))
 print(np.array(list(map(int, input_line.rstrip('\n').split('\t')))))
 board[0]=np.array(list(map(int, input_line.rstrip('\n').split('\t'))))
 print(board)
 
-
+'''
 '''
 print(input_line.strip().split('\t'))
 print(np.array(list(map(int, input_line.strip().split('\t')))))
@@ -24,3 +22,11 @@ print(np.where(values==2, None, values))
 #$ python takuzu.py < Exemplo1.txt
 
 '''
+
+aula = 2
+ist=  aula
+
+ist= 4
+
+print(aula)
+print(ist)

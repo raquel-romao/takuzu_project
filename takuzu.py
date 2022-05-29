@@ -7,6 +7,7 @@
 # 92780 Raquel Romão
 
 #import sys (como estava antes)
+from hashlib import new
 from sys import stdin
 import numpy as np
 from search import (
@@ -18,6 +19,7 @@ from search import (
     greedy_search,
     recursive_best_first_search,
 )
+import copy
 
 
 class TakuzuState:
@@ -53,7 +55,7 @@ class Board:
                     prettyprint += f'{i[j]}    '
         return prettyprint
 
-    def set_number(self, value, row: int, col: int): #adicionei para já esta função
+    def set_number(self, row: int, col: int, value): #adicionei para já esta função
         self.board[row,col] = value
         if value == 1:
             self.info[row][1] +=1
@@ -119,7 +121,7 @@ class Board:
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value= int(values[j])
-                board.set_number(value,i,j)
+                board.set_number(i,j,value)
                 if value == 1:
                     board.info[i][1] +=1
                     board.info[board_size + j - 1][1] += 1                    
@@ -136,14 +138,13 @@ class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
         #self.empty = np.array(list(zip(*np.where(board==2))))
-        #self.board = board
-        pass
-        
+        self.board = board
+        self.state = TakuzuState(board)
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        # TODO
+        #aqui vamos usar o problem? para decidir as actions?
         pass
 
     def result(self, state: TakuzuState, action):
@@ -151,8 +152,12 @@ class Takuzu(Problem):
         'state' passado como argumento. A ação a executar deve ser uma
         das presentes na lista obtida pela execução de
         self.actions(state)."""
-        # TODO
-        pass
+        new_board = state.board
+        new_board.set_number(action[0],action[1],action[2])
+
+        new_state = Takuzu(new_board)  #nao sei se nao vamos ter de pôr (action[0], action[1], action[2]) probably
+
+        return new_state
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
