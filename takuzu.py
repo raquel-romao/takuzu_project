@@ -86,13 +86,13 @@ class Board:
         respectivamente."""
         #estar na primeira ou última coluna é que vão ser o issue
         if col == 0:
-            return (None, self.board.get_number(row, col + 1))
+            return (None, self.get_number(row, col + 1))
         
         elif col == self.board_size - 1:
-            return (self.board.get_number(row, col - 1), None)
+            return (self.get_number(row, col - 1), None)
 
         else:
-            return (self.board.get_number(row, col - 1), self.board.get_number(row, col + 1))
+            return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
     @staticmethod
     def parse_instance_from_stdin():
