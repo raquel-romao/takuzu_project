@@ -40,7 +40,7 @@ class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
     def __init__(self, board_size): 
-        self.board = np.ones((board_size), dtype=object) 
+        self.board = np.ones((board_size,board_size), dtype=object) 
         self.board_size = board_size
         self.info = np.zeros((board_size * 2,2), dtype=object) 
         
