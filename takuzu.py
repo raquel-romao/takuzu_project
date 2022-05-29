@@ -37,7 +37,7 @@ class TakuzuState:
 
 
 class Board:
-    """Representação interna de um tabuleiro de Takuzu.""" #estou a pensar numa lista de listas (array de arrays)
+    """Representação interna de um tabuleiro de Takuzu.""" 
 
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=object)*2 
@@ -55,7 +55,7 @@ class Board:
                     prettyprint += f'{i[j]}    '
         return prettyprint
 
-    def set_number(self, row: int, col: int, value): #adicionei para já esta função
+    def set_number(self, row: int, col: int, value): 
         self.board[row,col] = value
         if value == 1:
             self.info[row][1] +=1
@@ -72,7 +72,7 @@ class Board:
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
-        #estar na coluna 0 ou na coluna n/[-1] é que vão ser aqui o issue
+        
         if row == 0:
             return (None, self.get_number(row + 1, col))
         
@@ -86,7 +86,7 @@ class Board:
     def adjacent_horizontal_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
-        #estar na primeira ou última coluna é que vão ser o issue
+      
         if col == 0:
             return (None, self.get_number(row, col + 1))
         
@@ -164,6 +164,13 @@ class Takuzu(Problem):
         estão preenchidas com uma sequência de números adjacentes."""
         # TODO
         pass
+
+    #se where == 2 não for lista vazia (? ver), então não temos solução
+    #fazer função auxiliar para ver se as linhas estão ok e usar transposta dessa para as colunas
+
+    #sum = n/2 (se não for impar) para respeitar numero igual de 1s e 0s; para impar fazer outro if
+
+    #
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
