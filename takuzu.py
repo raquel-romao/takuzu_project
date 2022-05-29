@@ -158,19 +158,44 @@ class Takuzu(Problem):
 
         return new_state
 
+    def dif_rows_cols(self, state: TakuzuState):
+        _, row_counts = np.unique(state.board, axis=0, return_counts=True)
+        unique_rows = len(row_counts) == state.board.board_size
+
+        _, col_counts = np.unique(state.board, axis=1, return_counts=True)
+        unique_cols = len(col_counts) == state.board.board_size
+
+        return unique_rows and unique_cols
+
+    #not sure se pode ir buscar assim o board_size
+
+    def equal_number(self, state: TakuzuState): #isto ainda n está para as linhas/colunas, falta mudar o state.board
+        board_size = state.board.board_size
+        equal = False
+        if board_size % 2 == 0:
+            if np.sum(state.board) == board_size//2:
+                equal = True
+        else:
+            if np.sum(state.board) in [board_size//2 - 1, board_size//2 + 1] : #pode ser +1 ou -1 
+                equal = True 
+        return equal
+
+
+
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
-        # TODO
-        pass
 
-    #se where == 2 não for lista vazia (? ver), então não temos solução
-    #fazer função auxiliar para ver se as linhas estão ok e usar transposta dessa para as colunas
+        if 2 in state.board:
+            goal = False
+        else:
+            goal = self.dif_rows_cols(self, state: TakuzuState)
+            #(...)
+
+        return goal
 
     #sum = n/2 (se não for impar) para respeitar numero igual de 1s e 0s; para impar fazer outro if
-
-    #
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
