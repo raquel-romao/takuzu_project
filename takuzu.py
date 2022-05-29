@@ -173,5 +173,3 @@ if __name__ == "__main__":
     # Imprimir para o standard output no formato indicado.
     pass
 
-
-board = Board.parse_instance_from_stdin()
