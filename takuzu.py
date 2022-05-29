@@ -146,7 +146,6 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
 
         result = np.where(state.board.board == 2)
-        print(result)
         empty = list(zip(result[0],result[1]))
         
         empty_arr = []
@@ -198,7 +197,6 @@ if __name__ == "__main__":
 
 board = Board.parse_instance_from_stdin()
 print(board)
-print(type(board.board[0]))
 
 print(board.adjacent_vertical_numbers(3, 3))
 print(board.adjacent_horizontal_numbers(3, 3))
@@ -213,8 +211,7 @@ result_state = problem.result(initial_state, (0, 0, 0))
 
 print(result_state.board.get_number(0, 0))
 print(initial_state.board)
-
-
+print(initial_state.board.get_number(0, 0))
 
 print(problem.actions(initial_state))
 
