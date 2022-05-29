@@ -60,14 +60,14 @@ class Board:
         if value == 1:
             self.info[row][1] +=1
             self.info[self.board_size + col][1] += 1
-        elif value == 0:
+        else:
             self.info[row][0] +=1
             self.info[self.board_size + col][0] += 1
-        #else? tipo vamos usar o set_number para voltar a pôr como vazio = 2 ou aquilo simplesmente tem guardado uma board e volta atrás assim?
+        
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
-        return self.board[row, col] #como está agora pode ser devolvido None, o que pode dar problemas à frente 
+        return self.board[row, col] 
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -161,7 +161,7 @@ class Takuzu(Problem):
         new_board = copy.deepcopy(state.board)
         new_board.set_number(action[0],action[1],action[2])
 
-        new_state = TakuzuState(new_board)  #nao sei se nao vamos ter de pôr (action[0], action[1], action[2]) probably
+        new_state = TakuzuState(new_board)  
 
         return new_state
 
