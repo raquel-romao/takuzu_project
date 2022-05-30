@@ -211,10 +211,13 @@ class Takuzu(Problem):
 
     def half_half(self, state: TakuzuState):
         board_size= state.board.board_size
+        half = board_size //2
+        sum_col=np.sum(state.board.board, axis=0)
+        sum_lines = np.sum(state.board.board, axis=1)
         if board_size % 2 == 0:
-            return np.all(np.sum(state.board.board, axis=0), where= board_size//2) and np.all(np.sum(state.board.board, axis=1), where=board_size//2) #colunas =0 e linhas=1
+            return np.all(sum_col==half) and np.all(sum_lines==half) #colunas =0 e linhas=1
         else:
-            return np.all(np.sum(state.board.board, axis=0), where=[board_size//2, board_size//2 -1]) and np.all(np.sum(state.board.board, axis=1), where=[board_size//2, board_size//2 -1])
+            return (np.all(sum_col==half) or np.all(sum_col==half-1)) and (np.all(sum-lines==half) or np.all(sum-lines==half-1))
 
     def adjacent(self, state: TakuzuState):
         board=state.board
