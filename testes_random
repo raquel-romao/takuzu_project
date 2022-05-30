@@ -32,7 +32,9 @@ ist= 4
 #print(ist)
 
 
-array = np.array([[1,1,3], [1,1,6], [1,1,9]])
+array = np.array([[1,2,3], [1,1,6], [1,1,9]])
 
+_, row_counts = np.unique(array, axis=1, return_counts=True)
+print(row_counts)
 
-print(len(np.unique(array, axis=1)))
+print(np.empty(4))

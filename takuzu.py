@@ -176,17 +176,34 @@ class Takuzu(Problem):
 
     #not sure se pode ir buscar assim o board_size
 
-    def equal_number(self, state: TakuzuState): #isto ainda n está para as linhas/colunas, falta mudar o state.board
+    def equal_number(self, state: TakuzuState, cord, ax): #ax=1 para linhas e ax=0 para colunas
+        "Função auxiliar que verifica, retornando True ou False, se há um número igual de 0s e 1s, para uma determinada linha (ax=1) ou coluna (ax=0)."
         board_size = state.board.board_size
         equal = False
         if board_size % 2 == 0:
-            if np.sum(state.board) == board_size//2:
+            if np.sum(state.board, axis = ax)[cord] == board_size//2:
                 equal = True
         else:
-            if np.sum(state.board) in [board_size//2 - 1, board_size//2 + 1] : #pode ser +1 ou -1 
+            if np.sum(state.board, axis = ax)[cord] in [board_size//2 - 1, board_size//2 + 1] : #pode ser +1 ou -1 
                 equal = True 
         return equal
+    
+    def equal_number_row(self, state: TakuzuState):
+        "Função auxiliar que determina se há um número igual de 0s e 1s nas totalidade das linhas."
+        board_size = state.board.board_size
+        equal_test =[]
+        for cord in (board_size - 1):
+            equal_test += self.equal_number(state, cord, 1)
 
+        return np.all(np.array(equal_test))
+
+    def equal_number_col(self, state: TakuzuState):
+        "Função auxiliar que determina se há um número igual de 0s e 1s nas totalidade das colunas."
+        board_size = state.board.board_size
+        equal_test =[]
+        for cord in (board_size - 1):
+            equal_test += self.equal_number(state, cord, 0)
+        return np.all(np.array(equal_test))
 
 
     def goal_test(self, state: TakuzuState):
@@ -197,12 +214,11 @@ class Takuzu(Problem):
         if 2 in state.board:
             goal = False
         else:
-            goal = self.dif_rows_cols(self, state: TakuzuState)
-            #(...)
+            if self.dif_rows_cols(state) and self.equal_number_row(state) and self.equal_number_col(state): #Verificação de números adjacentes missing!!
+                goal = True
 
         return goal
 
-    #sum = n/2 (se não for impar) para respeitar numero igual de 1s e 0s; para impar fazer outro if
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
