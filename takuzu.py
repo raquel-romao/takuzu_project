@@ -276,4 +276,6 @@ result_state = problem.result(initial_state, (3, 1, 0))
 result_state = problem.result(initial_state, (3, 2, 1))
 result_state = problem.result(initial_state, (3, 3, 0))
 
+print(result_state.board)
+
 print(problem.goal_test(result_state))
