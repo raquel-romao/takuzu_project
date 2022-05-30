@@ -153,6 +153,7 @@ class Takuzu(Problem):
             empty_arr += [(i[0],i[1],0),(i[0],i[1],1)]
         return empty_arr
 
+
     def result(self, state: TakuzuState, action):
         """Retorna o estado resultante de executar a 'action' sobre
         'state' passado como argumento. A ação a executar deve ser uma
@@ -165,6 +166,7 @@ class Takuzu(Problem):
 
         return new_state
 
+
     def dif_rows_cols(self, state: TakuzuState):
         _, row_counts = np.unique(state.board.board, axis=0, return_counts=True)
         unique_rows = len(row_counts) == state.board.board_size
@@ -175,7 +177,7 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
     #not sure se pode ir buscar assim o board_size
-
+'''
     def equal_number(self, state: TakuzuState, cord, ax): #ax=1 para linhas e ax=0 para colunas
         "Função auxiliar que verifica, retornando True ou False, se há um número igual de 0s e 1s, para uma determinada linha (ax=1) ou coluna (ax=0)."
         board_size = state.board.board_size
@@ -205,7 +207,22 @@ class Takuzu(Problem):
             equal_test += self.equal_number(state, cord, 0)
         return np.all(np.array(equal_test))
 
-    
+    '''
+
+    def half_half(self, state: TakuzuState):
+        board_size= state.board.board_size
+        if board_size % 2 = 0:
+            return np.all(np.sum(state.board.board, axis=0), where= board_size//2) and np.all(np.sum(state.board.board, axis=1), where=board_size//2) #colunas =0 e linhas=1
+        else:
+            return np.all(np.sum(state.board.board, axis=0), where=[board_size//2, board_size//2 -1]) and np.all(np.sum(state.board.board, axis=1), where=[board_size//2, board_size//2 -1])
+
+    def adjacent(self, state: TakuzuState):
+        board=state.board
+        for i in board.board_size:
+            for j in board.board_size:
+                if board.adjacent_vertical_numbers(i,j).count(board.get_number(i,j))==2 or board.adjacent_horizontal_numbers(i,j).count(board.get_number(i,j))==2:
+                    return False
+        return True
 
 
     def goal_test(self, state: TakuzuState):
@@ -214,12 +231,11 @@ class Takuzu(Problem):
         estão preenchidas com uma sequência de números adjacentes."""
 
         if 2 in state.board:
-            goal = False #return False
+            return False
         else:
-            if self.dif_rows_cols(state) and self.equal_number_row(state) and self.equal_number_col(state): #Verificação de números adjacentes missing!!
-                goal = True
+            return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state) #já ta
+                
 
-        return goal
 
 
     def h(self, node: Node):
@@ -257,6 +273,3 @@ print(result_state.board.get_number(0, 0))
 print(initial_state.board)
 print(initial_state.board.get_number(0, 0))
 
-print(problem.actions(initial_state))
-
-print(problem.actions(result_state))
