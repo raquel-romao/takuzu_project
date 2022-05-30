@@ -267,9 +267,13 @@ initial_state = TakuzuState(board)
 print(initial_state.board.get_number(0, 0))
 
 result_state = problem.result(initial_state, (0, 0, 0))
+print(problem.goal_test(result_state))
 
-print(result_state.board.get_number(0, 0))
+result_state = problem.result(initial_state, (0, 1, 1))
+result_state = problem.result(initial_state, (1, 2, 0))
+result_state = problem.result(initial_state, (2, 1, 1))
+result_state = problem.result(initial_state, (3, 1, 0))
+result_state = problem.result(initial_state, (3, 2, 1))
+result_state = problem.result(initial_state, (3, 3, 0))
 
-print(initial_state.board)
-print(initial_state.board.get_number(0, 0))
-
+print(problem.goal_test(result_state))
