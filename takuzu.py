@@ -166,10 +166,10 @@ class Takuzu(Problem):
         return new_state
 
     def dif_rows_cols(self, state: TakuzuState):
-        _, row_counts = np.unique(state.board, axis=0, return_counts=True)
+        _, row_counts = np.unique(state.board.board, axis=0, return_counts=True)
         unique_rows = len(row_counts) == state.board.board_size
 
-        _, col_counts = np.unique(state.board, axis=1, return_counts=True)
+        _, col_counts = np.unique(state.board.board, axis=1, return_counts=True)
         unique_cols = len(col_counts) == state.board.board_size
 
         return unique_rows and unique_cols
@@ -181,10 +181,10 @@ class Takuzu(Problem):
         board_size = state.board.board_size
         equal = False
         if board_size % 2 == 0:
-            if np.sum(state.board, axis = ax)[cord] == board_size//2:
+            if np.sum(state.board.board, axis = ax)[cord] == board_size//2:
                 equal = True
         else:
-            if np.sum(state.board, axis = ax)[cord] in [board_size//2 - 1, board_size//2 + 1] : #pode ser +1 ou -1 
+            if np.sum(state.board.board, axis = ax)[cord] in [board_size//2 - 1, board_size//2 + 1] : #pode ser +1 ou -1 
                 equal = True 
         return equal
     
@@ -205,6 +205,8 @@ class Takuzu(Problem):
             equal_test += self.equal_number(state, cord, 0)
         return np.all(np.array(equal_test))
 
+    
+
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
@@ -212,7 +214,7 @@ class Takuzu(Problem):
         estão preenchidas com uma sequência de números adjacentes."""
 
         if 2 in state.board:
-            goal = False
+            goal = False #return False
         else:
             if self.dif_rows_cols(state) and self.equal_number_row(state) and self.equal_number_col(state): #Verificação de números adjacentes missing!!
                 goal = True
