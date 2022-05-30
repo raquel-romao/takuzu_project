@@ -140,6 +140,7 @@ class Takuzu(Problem):
         #self.empty = np.array(list(zip(*np.where(board==2))))
         #self.states = np.array(TakuzuState(board))
         #self.initial_state = TakuzuState(board)
+        self.initial = TakuzuState(board)
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
