@@ -177,7 +177,7 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
     #not sure se pode ir buscar assim o board_size
-'''
+    '''
     def equal_number(self, state: TakuzuState, cord, ax): #ax=1 para linhas e ax=0 para colunas
         "Função auxiliar que verifica, retornando True ou False, se há um número igual de 0s e 1s, para uma determinada linha (ax=1) ou coluna (ax=0)."
         board_size = state.board.board_size
