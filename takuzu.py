@@ -40,7 +40,7 @@ class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
     def __init__(self, board_size): 
-        self.board = np.ones((board_size,board_size)) 
+        self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
         self.info = np.zeros((board_size * 2,2), dtype=object) 
         
@@ -221,8 +221,8 @@ class Takuzu(Problem):
 
     def adjacent(self, state: TakuzuState):
         board=state.board
-        for i in board.board_size:
-            for j in board.board_size:
+        for i in range(board.board_size):
+            for j in range(board.board_size):
                 if board.adjacent_vertical_numbers(i,j).count(board.get_number(i,j))==2 or board.adjacent_horizontal_numbers(i,j).count(board.get_number(i,j))==2:
                     return False
         return True
