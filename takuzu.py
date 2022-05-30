@@ -215,9 +215,9 @@ class Takuzu(Problem):
         sum_col=np.sum(state.board.board, axis=0)
         sum_lines = np.sum(state.board.board, axis=1)
         if board_size % 2 == 0:
-            return np.all(sum_col==half) and np.all(sum_lines==half) #colunas =0 e linhas=1
+            return np.all(sum_col==half) and np.all(sum_lines==half) 
         else:
-            return (np.all(sum_col==half) or np.all(sum_col==half-1)) and (np.all(sum-lines==half) or np.all(sum-lines==half-1))
+            return (np.all(sum_col==half) or np.all(sum_col==half-1)) and (np.all(sum_lines==half) or np.all(sum_lines==half-1))
 
     def adjacent(self, state: TakuzuState):
         board=state.board
@@ -260,25 +260,12 @@ if __name__ == "__main__":
 board = Board.parse_instance_from_stdin()
 print(board)
 
-print(board.adjacent_vertical_numbers(3, 3))
-print(board.adjacent_horizontal_numbers(3, 3))
+
 
 problem= Takuzu(board)
 
-initial_state = TakuzuState(board)
 
-print(initial_state.board.get_number(0, 0))
+goal_node = depth_first_tree_search(problem)
 
-result_state = problem.result(initial_state, (0, 0, 0))
-print(problem.goal_test(result_state))
-
-result_state = problem.result(result_state, (0, 1, 1))
-result_state = problem.result(result_state, (1, 2, 0))
-result_state = problem.result(result_state, (2, 1, 1))
-result_state = problem.result(result_state, (3, 1, 0))
-result_state = problem.result(result_state, (3, 2, 1))
-result_state = problem.result(result_state, (3, 3, 0))
-
-print(result_state.board)
-
-print(problem.goal_test(result_state))
+print("Is goal?", problem.goal_test(goal_node.state))
+print("Solution:\n", goal_node.state.board)
