@@ -40,7 +40,7 @@ class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
     def __init__(self, board_size): 
-        self.board = np.ones((board_size,board_size), dtype=object) 
+        self.board = np.ones((board_size,board_size)) 
         self.board_size = board_size
         self.info = np.zeros((board_size * 2,2), dtype=object) 
         
@@ -176,7 +176,7 @@ class Takuzu(Problem):
 
         return unique_rows and unique_cols
 
-    #not sure se pode ir buscar assim o board_size
+    
     '''
     def equal_number(self, state: TakuzuState, cord, ax): #ax=1 para linhas e ax=0 para colunas
         "Função auxiliar que verifica, retornando True ou False, se há um número igual de 0s e 1s, para uma determinada linha (ax=1) ou coluna (ax=0)."
