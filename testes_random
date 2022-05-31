@@ -29,6 +29,3 @@ array = np.array([[1,2,3], [1,2,3], [1,1,9]])
 
 _, row_counts = np.unique(array, axis=0, return_counts=True)
 print(row_counts)
-
-
-

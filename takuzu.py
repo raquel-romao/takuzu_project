@@ -266,17 +266,7 @@ print(board)
 
 problem= Takuzu(board)
 
-def compare_searchers(problems, header,
-                      searchers=[breadth_first_tree_search,
-                                 depth_first_tree_search]):
-    def do(searcher, problem):
-        p = InstrumentedProblem(problem)
-        searcher(p)
-        return p
-
-    table = [[name(s)] + [do(s, p) for p in problems] for s in searchers]
-    print_table(table, header)
-
+goal_node=depth_first_tree_search(problem)
 
 
 compare_searchers([problem],'bfs vs dfs')
