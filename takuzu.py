@@ -270,4 +270,4 @@ problem= Takuzu(board)
 
 a = InstrumentedProblem(problem)
 
-
+a.compare_searchers(problem,'bfs vs dfs')
