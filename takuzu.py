@@ -100,8 +100,10 @@ class Board:
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
         e retorna uma instância da classe Board.
+
         Por exemplo:
             $ python3 takuzu.py < input_T01
+
             > from sys import stdin
             > stdin.readline()
         """
@@ -195,7 +197,9 @@ class Takuzu(Problem):
         equal_test =[]
         for cord in (board_size - 1):
             equal_test += self.equal_number(state, cord, 1)
+
         return np.all(np.array(equal_test))
+
     def equal_number_col(self, state: TakuzuState):
         "Função auxiliar que determina se há um número igual de 0s e 1s nas totalidade das colunas."
         board_size = state.board.board_size
@@ -203,6 +207,7 @@ class Takuzu(Problem):
         for cord in (board_size - 1):
             equal_test += self.equal_number(state, cord, 0)
         return np.all(np.array(equal_test))
+
     '''
 
     def half_half(self, state: TakuzuState):
@@ -260,9 +265,7 @@ print(board)
 
 problem= Takuzu(board)
 
-
-goal_node=breadth_first_tree_search(problem)
-
+goal_node=depth_first_tree_search(problem)
 
 print("Is goal?", problem.goal_test(goal_node.state))
 print("Solution:\n", goal_node.state.board)
