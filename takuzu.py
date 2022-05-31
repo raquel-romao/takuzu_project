@@ -279,4 +279,4 @@ def compare_searchers(problems, header,
 
 
 
-compare_searchers(problem,'bfs vs dfs')
+compare_searchers([problem],'bfs vs dfs')
