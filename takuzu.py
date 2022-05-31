@@ -18,6 +18,7 @@ from search import (
     depth_first_tree_search,
     greedy_search,
     recursive_best_first_search,
+    InstrumentedProblem,
 )
 import copy
 
@@ -266,9 +267,7 @@ print(board)
 problem= Takuzu(board)
 
 
-goal_node=depth_first_tree_search(problem)
 
+a = InstrumentedProblem(problem)
 
-print("Is goal?", problem.goal_test(goal_node.state))
-print("Solution:\n", goal_node.state.board)
 
