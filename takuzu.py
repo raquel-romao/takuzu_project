@@ -273,6 +273,6 @@ goal_node=depth_first_tree_search(problem)
 
 
 
-print("Is goal?", goal_node.state)
+print("Is goal?", problem.goal_test(goal_node.state))
 
 print("Solution:\n", goal_node.state.board)
