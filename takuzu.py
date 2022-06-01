@@ -219,9 +219,10 @@ class Takuzu(Problem):
         if board_size % 2 == 0:
             return np.all(sum_col==half) and np.all(sum_lines==half) 
         else:
-            col = (half < sum_col < half+2)
-            lin = (half-1< sum_lines < half+2)
-            return any(half<=sum_col<=half+1) and any(half<=sum_lines<=half+1)
+            col = np.where(sum_col == half+1, half)
+            lin = np.where(sum_lines == half+1, half)
+            return np.all(col==half) and np.all(lin==half)
+
 
     def adjacent(self, state: TakuzuState):
         board=state.board
