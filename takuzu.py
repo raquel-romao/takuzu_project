@@ -219,8 +219,8 @@ class Takuzu(Problem):
         if board_size % 2 == 0:
             return np.all(sum_col==half) and np.all(sum_lines==half) 
         else:
-            col = half<=sum_col<=half+1
-            lin = half<=sum_lines<=half+1
+            col = (half-1 < sum_col <half+2)
+            lin = (half-1< sum_lines < half+2)
             print(col)
             print(type(col))
             print(type(lin))
