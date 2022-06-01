@@ -21,11 +21,14 @@ print(np.where(values==2, None, values))
 
 #$ python takuzu.py < Exemplo1.txt
 
-'''
-
 
 
 array = np.array([[1,2,3], [1,2,3], [1,1,9]])
 
 _, row_counts = np.unique(array, axis=0, return_counts=True)
 print(row_counts)
+
+'''
+
+a= 1==2 or 2==2
+print(a)
