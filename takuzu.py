@@ -268,6 +268,5 @@ problem= Takuzu(board)
 
 goal_node=depth_first_tree_search(problem)
 
-print(problem.goal_test(goal_node))
-
-print(goal_node.board)
+print("Is goal?", problem.goal_test(goal_node.state))
+print("Solution:\n", goal_node.state.board)
