@@ -18,6 +18,7 @@ from search import (
     depth_first_tree_search,
     greedy_search,
     recursive_best_first_search,
+    InstrumentedProblem,
 )
 import copy
 
@@ -218,7 +219,12 @@ class Takuzu(Problem):
         if board_size % 2 == 0:
             return np.all(sum_col==half) and np.all(sum_lines==half) 
         else:
-            return (np.all(sum_col==half) or np.all(sum_col==half-1)) and (np.all(sum_lines==half) or np.all(sum_lines==half-1))
+            col = (half-1 < sum_col <half+2)
+            lin = (half-1< sum_lines < half+2)
+            print(col)
+            print(type(col))
+            print(type(lin))
+            return any(half<=sum_col<=half+1) and any(half<=sum_lines<=half+1)
 
     def adjacent(self, state: TakuzuState):
         board=state.board
@@ -265,7 +271,13 @@ print(board)
 
 problem= Takuzu(board)
 
-goal_node=depth_first_tree_search(problem)
+#goal_node=depth_first_tree_search(problem)
 
-print("Is goal?", problem.goal_test(goal_node.state))
-print("Solution:\n", goal_node.state.board)
+new = problem.result(problem.initial,(1,0,0))
+print(new.board)
+new = problem.result(new,(2,2,1))
+print(new.board)
+
+print("Is goal?", problem.goal_test(new))
+
+print("Solution:\n", new.board)
