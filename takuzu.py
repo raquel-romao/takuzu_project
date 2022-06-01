@@ -221,6 +221,7 @@ class Takuzu(Problem):
         else:
             print(sum_col)
             print(sum_lines)
+            print(half)
             print(np.all(sum_col==half) or np.all(sum_col==(half-1)))
             print(np.all(sum_col==half))
             print(np.all(sum_col==(half-1)))
