@@ -269,4 +269,3 @@ problem= Takuzu(board)
 goal_node=depth_first_tree_search(problem)
 
 
-compare_searchers([problem],'bfs vs dfs')
