@@ -268,7 +268,7 @@ problem= Takuzu(board)
 
 #goal_node=depth_first_tree_search(problem)
 
-new = problem.result(problem.state,(1,0,0))
+new = problem.result(problem.initial,(1,0,0))
 print(new.board)
 new = problem.result(new,(2,2,1))
 print(new.board)
