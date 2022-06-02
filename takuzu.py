@@ -93,7 +93,6 @@ class Board:
     def count10_lines(line):
 
 
-
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
@@ -120,9 +119,13 @@ class Board:
             for j in range(board_size):
                 value= int(values[j])
                 board.set_number(i,j,value)
-
+                
                
         return board
+
+    # TODO: outros metodos da classe
+
+
 
     # TODO: outros metodos da classe
 
