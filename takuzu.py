@@ -43,6 +43,7 @@ class Board:
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
+        self.info = np.zeros((board_size * 2,2), dtype=object) 
         
     
     def __str__(self):
@@ -57,6 +58,12 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row,col] = value
+        if value == 1:
+            self.info[row][1] +=1
+            self.info[self.board_size + col][1] += 1
+        else:
+            self.info[row][0] +=1
+            self.info[self.board_size + col][0] += 1
         
 
     def get_number(self, row: int, col: int) -> int:
@@ -90,9 +97,6 @@ class Board:
         else:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
-    def count10_lines(line):
-
-
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
@@ -119,13 +123,14 @@ class Board:
             for j in range(board_size):
                 value= int(values[j])
                 board.set_number(i,j,value)
-                
+                if value == 1:
+                    board.info[i][1] +=1
+                    board.info[board_size + j - 1][1] += 1                    
+                elif value == 0:
+                    board.info[i][0]+=1
+                    board.info[board_size + j - 1][0] += 1 
                
         return board
-
-    # TODO: outros metodos da classe
-
-
 
     # TODO: outros metodos da classe
 
@@ -133,21 +138,22 @@ class Board:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
+        #self.empty = np.array(list(zip(*np.where(board==2))))
+        #self.states = np.array(TakuzuState(board))
+        #self.initial_state = TakuzuState(board)
         self.initial = TakuzuState(board)
-
-
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        result = np.where(state.board.board == 2)
-        empty= np.array(list(zip(result[0],result[1])))
-        actions=np.array([])
-        
-        for i in empty:
-            np.append(actions, [(i[0],i[1],0),(i[0],i[1],1)])
 
-        return actions
+        result = np.where(state.board.board == 2)
+        empty = list(zip(result[0],result[1]))
+        
+        empty_arr = []
+        for i in empty:
+            empty_arr += [(i[0],i[1],0),(i[0],i[1],1)]
+        return empty_arr
 
 
     def result(self, state: TakuzuState, action):
@@ -217,7 +223,6 @@ class Takuzu(Problem):
             lin = np.where(sum_lines == half+1, half, sum_lines)
             return np.all(col==half) and np.all(lin==half)
 
-
     def adjacent(self, state: TakuzuState):
         board=state.board
         for i in range(board.board_size):
@@ -244,11 +249,6 @@ class Takuzu(Problem):
         """Função heuristica utilizada para a procura A*."""
         # TODO
         pass
-    
-    #ideias para a heurística:
-    #nr de zeros por coluna/linha completados -> secalhar é um 1
-    #onde temos temos 2, temos dois zeros adjacentes secalhar é um 1
-    #escolher variável 
 
     # TODO: outros metodos da classe
 
@@ -268,10 +268,13 @@ print(board)
 
 problem= Takuzu(board)
 
-goal_node=depth_first_tree_search(problem)
+#goal_node=depth_first_tree_search(problem)
 
+new = problem.result(problem.initial,(1,0,0))
+print(new.board)
+new = problem.result(new,(2,2,1))
+print(new.board)
 
+print("Is goal?", problem.goal_test(new))
 
-print("Is goal?", problem.goal_test(goal_node.state))
-
-print("Solution:\n", goal_node.state.board)
+print("Solution:\n", new.board)
