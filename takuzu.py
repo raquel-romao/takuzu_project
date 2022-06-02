@@ -241,6 +241,11 @@ class Takuzu(Problem):
         """Função heuristica utilizada para a procura A*."""
         # TODO
         pass
+    
+    #ideias para a heurística:
+    #nr de zeros por coluna/linha completados -> secalhar é um 1
+    #onde temos temos 2, temos dois zeros adjacentes secalhar é um 1
+    #escolher variável 
 
     # TODO: outros metodos da classe
 
