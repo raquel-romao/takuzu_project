@@ -43,7 +43,7 @@ class Board:
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
-        self.info = np.zeros((board_size * 2,2), dtype=object) 
+        
         
     
     def __str__(self):
@@ -58,12 +58,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row,col] = value
-        if value == 1:
-            self.info[row][1] +=1
-            self.info[self.board_size + col][1] += 1
-        else:
-            self.info[row][0] +=1
-            self.info[self.board_size + col][0] += 1
+        
         
 
     def get_number(self, row: int, col: int) -> int:
@@ -123,12 +118,7 @@ class Board:
             for j in range(board_size):
                 value= int(values[j])
                 board.set_number(i,j,value)
-                if value == 1:
-                    board.info[i][1] +=1
-                    board.info[board_size + j - 1][1] += 1                    
-                elif value == 0:
-                    board.info[i][0]+=1
-                    board.info[board_size + j - 1][0] += 1 
+                
                
         return board
 
