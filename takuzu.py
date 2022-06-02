@@ -43,7 +43,6 @@ class Board:
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
-        self.info = np.zeros((board_size * 2,2), dtype=object) 
         
     
     def __str__(self):
@@ -58,12 +57,6 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row,col] = value
-        if value == 1:
-            self.info[row][1] +=1
-            self.info[self.board_size + col][1] += 1
-        else:
-            self.info[row][0] +=1
-            self.info[self.board_size + col][0] += 1
         
 
     def get_number(self, row: int, col: int) -> int:
@@ -97,6 +90,10 @@ class Board:
         else:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
+    def count10_lines(line):
+
+
+
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
@@ -123,12 +120,7 @@ class Board:
             for j in range(board_size):
                 value= int(values[j])
                 board.set_number(i,j,value)
-                if value == 1:
-                    board.info[i][1] +=1
-                    board.info[board_size + j - 1][1] += 1                    
-                elif value == 0:
-                    board.info[i][0]+=1
-                    board.info[board_size + j - 1][0] += 1 
+
                
         return board
 
@@ -138,22 +130,21 @@ class Board:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        #self.empty = np.array(list(zip(*np.where(board==2))))
-        #self.states = np.array(TakuzuState(board))
-        #self.initial_state = TakuzuState(board)
         self.initial = TakuzuState(board)
+
+
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-
         result = np.where(state.board.board == 2)
-        empty = list(zip(result[0],result[1]))
+        empty= np.array(list(zip(result[0],result[1])))
+        actions=np.array([])
         
-        empty_arr = []
         for i in empty:
-            empty_arr += [(i[0],i[1],0),(i[0],i[1],1)]
-        return empty_arr
+            np.append(actions, [(i[0],i[1],0),(i[0],i[1],1)])
+
+        return actions
 
 
     def result(self, state: TakuzuState, action):
@@ -255,19 +246,24 @@ class Takuzu(Problem):
 
 
 if __name__ == "__main__":
-
+    # TODO:
     # Ler o ficheiro do standard input,
-    board = Board.parse_instance_from_stdin()
-    print(board)
-
-    problem = Takuzu(board)
-
     # Usar uma técnica de procura para resolver a instância,
-    goal_node = breadth_first_tree_search(problem)
-
-
-    print("Is goal?", problem.goal_test(goal_node.state))
-    
     # Retirar a solução a partir do nó resultante,
     # Imprimir para o standard output no formato indicado.
-    print("Solution:\n", goal_node.state.board)
+    pass
+
+board = Board.parse_instance_from_stdin()
+print(board)
+
+
+
+problem= Takuzu(board)
+
+goal_node=depth_first_tree_search(problem)
+
+
+
+print("Is goal?", problem.goal_test(goal_node.state))
+
+print("Solution:\n", goal_node.state.board)

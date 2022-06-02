@@ -28,8 +28,29 @@ array = np.array([[1,2,3], [1,2,3], [1,1,9]])
 _, row_counts = np.unique(array, axis=0, return_counts=True)
 print(row_counts)
 
+
+
+oi = np.array([(0,2),(3,4)])
+
+
+b = np.array(list(zip((oi==0).sum(axis=0), (oi==0).sum(axis=1))))
+print(b)
+
+linha_01 = np.array([(self.board[row, :] == 0).sum(axis=1),(self.board[row, :] == 1).sum(axis=1)])
+        coluna_01 = np.array([(self.board[:,col] == 0).sum(axis=0),(self.board[:,col] == 1).sum(axis=0)])
+
+        if self.board_size % 2:
+            menor_linhas = linha_01 < self.board_size//2
+            menor_colunas = coluna_01 < self.board_size//2
+            if np.all(menor_linhas) and np.all(menor_colunas):
+                self.actions=np.array([])
+            elif not menor_linhas[0]:
+                np.delete(self.actions, where= self.actions[row,:,0])
 '''
 
-print(3//2)
-print(3/2)
-print()
+a = np.array([(1,2,1),(1,4,0)])
+print(a)
+result = np.where(a[0] == 1)
+
+
+print(result)
