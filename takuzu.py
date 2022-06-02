@@ -254,27 +254,14 @@ class Takuzu(Problem):
 
 
 if __name__ == "__main__":
-    # TODO:
-    # Ler o ficheiro do standard input,
-    # Usar uma técnica de procura para resolver a instância,
-    # Retirar a solução a partir do nó resultante,
-    # Imprimir para o standard output no formato indicado.
-    pass
+    # $ python3 takuzu < i1.txt
+    board = Board.parse_instance_from_stdin()
+    # Criar uma instância de Takuzu:
+    problem = Takuzu(board)
+    # Obter o nó solução usando a procura em profundidade:
+    goal_node = depth_first_tree_search(problem)
+    # Verificar se foi atingida a solução
+    print("Is goal?", problem.goal_test(goal_node.state))
+    print("Solution:\n", goal_node.state.board)
 
-board = Board.parse_instance_from_stdin()
-print(board)
 
-
-
-problem= Takuzu(board)
-
-#goal_node=depth_first_tree_search(problem)
-
-new = problem.result(problem.initial,(1,0,0))
-print(new.board)
-new = problem.result(new,(2,2,1))
-print(new.board)
-
-print("Is goal?", problem.goal_test(new))
-
-print("Solution:\n", new.board)
