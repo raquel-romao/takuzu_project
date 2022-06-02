@@ -21,11 +21,15 @@ print(np.where(values==2, None, values))
 
 #$ python takuzu.py < Exemplo1.txt
 
-'''
-
 
 
 array = np.array([[1,2,3], [1,2,3], [1,1,9]])
 
 _, row_counts = np.unique(array, axis=0, return_counts=True)
 print(row_counts)
+
+'''
+
+print(3//2)
+print(3/2)
+print()
