@@ -128,9 +128,6 @@ class Board:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        #self.empty = np.array(list(zip(*np.where(board==2))))
-        #self.states = np.array(TakuzuState(board))
-        #self.initial_state = TakuzuState(board)
         self.initial = TakuzuState(board)
 
     def actions(self, state: TakuzuState):
@@ -253,5 +250,5 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
-
+    print(hash(goal_node.state))
 
