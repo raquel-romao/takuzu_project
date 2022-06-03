@@ -76,8 +76,8 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board_size): 
-        self.board = np.ones((board_size,board_size), dtype=int) 
+    def __init__(self, board, board_size): 
+        self.board = board 
         self.board_size = board_size
         self.string = str(self.board.ravel())
         
@@ -132,6 +132,10 @@ class Board:
     def __hash__(self):
         return hash(self.string)
 
+    def copy(self):
+        board = self.board.copy()
+        return Board(board, self.board_size)
+
 
     @staticmethod
     def parse_instance_from_stdin():
@@ -146,15 +150,15 @@ class Board:
         """
 
         board_size = int(stdin.readline().rstrip('\n'))
-        board = Board(board_size)
+        board = []
 
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
-            for j in range(board_size):
-                value = int(values[j])
-                board.set_number(i, j, value)
+            board.append(values)
 
-        return board
+        board = np.array(board)
+
+        return Board(board)
 
     # TODO: outros metodos da classe
 
@@ -179,8 +183,8 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        new_board = state.board.board.copy()
-        
+        new_board = state.board.copy()
+
         new_board.set_number(action[0], action[1], action[2])
 
         hash_state = hash(new_board)
