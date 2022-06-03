@@ -159,8 +159,8 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        #new_board = copy.deepcopy(state.board)
-        new_state = TakuzuState(state.board)
+        new_board = copy.deepcopy(state.board)
+        new_state = TakuzuState(new_board)
         new_state.board.set_number(action[0],action[1],action[2])
 
 
@@ -249,7 +249,7 @@ class Takuzu(Problem):
         pass
 
     # TODO: outros metodos da classe
-'''
+
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
     board = Board.parse_instance_from_stdin()
@@ -260,20 +260,7 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
-'''
 
-board = Board.parse_instance_from_stdin()
 
-problem = Takuzu(board)
 
-s0 = TakuzuState(board)
-print(s0.board)
-
-s1 = problem.result(s0,(0,0,1))
-print(s0.board)
-print(s1.board)
-s2 = problem.result(s1,(0,1,0))
-print(s0.board)
-print(s1.board)
-print(s2.board)
 
