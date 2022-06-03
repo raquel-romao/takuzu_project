@@ -46,6 +46,7 @@ class Board:
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
+        self.string = str(self.board.ravel())
         
         
     
@@ -95,8 +96,10 @@ class Board:
         else:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
+
     def __hash__(self):
-        return str(self.board.ravel())
+        return hash(self.string)
+
 
     @staticmethod
     def parse_instance_from_stdin():

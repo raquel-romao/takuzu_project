@@ -48,9 +48,12 @@ linha_01 = np.array([(self.board[row, :] == 0).sum(axis=1),(self.board[row, :] =
                 np.delete(self.actions, where= self.actions[row,:,0])
 '''
 
-a = np.array([(1,2,1),(1,4,0)])
+a = np.array([[1,2,1],[1,4,0]])
 print(a)
-result = np.where(a[0] == 1)
+result = str(a.ravel())
+print(hash(result))
+
+#result = np.where(a[0] == 1)
 
 
 print(result)
