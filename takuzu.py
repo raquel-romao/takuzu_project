@@ -62,9 +62,9 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row,col] = value
+        self.string = str(self.board.ravel)
         
         
-
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
