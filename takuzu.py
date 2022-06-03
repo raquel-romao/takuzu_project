@@ -55,9 +55,9 @@ class TakuzuState:
 
             for i in empty:
                 if line[i[0]][0] < half and col[i[1]][0]< half:
-                    actions.append(i[0],i[1],0)
+                    actions.append((i[0],i[1],0))
                 elif line[i[0]][1] < half and col[i[1]][1] < half:
-                    actions.append(i[0],i[1],1)
+                    actions.append((i[0],i[1],1))
                 else:
                     return []
 
