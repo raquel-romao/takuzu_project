@@ -43,6 +43,7 @@ class Board:
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
+        self.hash = str(self.board.ravel())
         
         
     
@@ -58,12 +59,13 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row,col] = value
-        
+        self.hash = str(self.board.ravel())
         
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
+
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -91,6 +93,11 @@ class Board:
 
         else:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
+
+
+    def __hash__(self):
+        return self.hash
+
 
     @staticmethod
     def parse_instance_from_stdin():
@@ -148,12 +155,10 @@ class Takuzu(Problem):
         'state' passado como argumento. A ação a executar deve ser uma
         das presentes na lista obtida pela execução de
         self.actions(state)."""
-        new_board = copy.deepcopy(state.board)
-        new_board.set_number(action[0],action[1],action[2])
+        
+        state.board.set_number(action[0],action[1],action[2]) 
 
-        new_state = TakuzuState(new_board)  
-
-        return new_state
+        return state
 
 
     def dif_rows_cols(self, state: TakuzuState):
@@ -198,6 +203,7 @@ class Takuzu(Problem):
 
     '''
 
+
     def half_half(self, state: TakuzuState):
         board_size= state.board.board_size
         half = board_size //2
@@ -209,6 +215,7 @@ class Takuzu(Problem):
             col = np.where(sum_col == half+1, half, sum_col)
             lin = np.where(sum_lines == half+1, half, sum_lines)
             return np.all(col==half) and np.all(lin==half)
+
 
     def adjacent(self, state: TakuzuState):
         board=state.board
@@ -239,7 +246,7 @@ class Takuzu(Problem):
 
     # TODO: outros metodos da classe
 
-
+'''
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
     board = Board.parse_instance_from_stdin()
@@ -251,4 +258,15 @@ if __name__ == "__main__":
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
     print(hash(goal_node.state))
+'''
+
+board = Board.parse_instance_from_stdin()
+problem = Takuzu(board)
+s0=TakuzuState(board)
+print(s0)
+
+s1 = problem.result(s0,(0,0,1))
+
+print(s0)
+print(s1)
 
