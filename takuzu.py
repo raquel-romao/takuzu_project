@@ -287,5 +287,17 @@ if __name__ == "__main__":
 board = Board.parse_instance_from_stdin()
 print(board)
 
+problem = Takuzu(board)
 
+s1 =TakuzuState(board)
+s2= problem.result(s1,(0,0,0))
+s2 = problem.result(s2,(0,1,1))
+s2 = problem.result(s2,(1,2,0))
+s2 = problem.result(s2,(2,1,1))
+s2 = problem.result(s2,(3,1,0))
+s2 = problem.result(s2,(3,2,1))
+s2 = problem.result(s2,(3,3,0))
+print(s1.board)
+print(s2.board)
 
+print(problem.goal_test(s2))
