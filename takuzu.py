@@ -6,7 +6,7 @@
 # 92780 Raquel Romão
 
 #import sys (como estava antes)
-import copy
+
 from hashlib import new
 from sys import stdin
 from unittest import result
@@ -151,7 +151,9 @@ class Board:
         board = []
 
         for i in range(board_size):
-            values = stdin.readline().strip('\n').split('\t') 
+            values = stdin.readline().strip('\n').split('\t')
+            print(values)
+            print(type(values))
             board.append(values)
 
         board = np.array(board)
@@ -181,7 +183,7 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        new_board = copy.deepcopy(state.board)
+        new_board = state.board.copy()
 
         new_board.set_number(action[0], action[1], action[2])
 
@@ -285,10 +287,12 @@ if __name__ == "__main__":
 board = Board.parse_instance_from_stdin()
 print(board)
 
+print(type(board[0]))
+'''
 problem = Takuzu(board)
 
-s1 = TakuzuState(board)
-s2 = problem.result(s1,(0,0,0))
+s1 =TakuzuState(board)
+s2= problem.result(s1,(0,0,0))
 s2 = problem.result(s2,(0,1,1))
 s2 = problem.result(s2,(1,2,0))
 s2 = problem.result(s2,(2,1,1))
@@ -298,6 +302,7 @@ s2 = problem.result(s2,(3,3,0))
 print(s1.board)
 print(s2.board)
 print(type(s2))
-print(type(s2.board))
+print(ty)
 
 print(problem.goal_test(s2))
+'''
