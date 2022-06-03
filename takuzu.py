@@ -101,6 +101,10 @@ class Board:
     def __hash__(self):
         return hash(self.string)
 
+    def copy(self):
+        new_board= self.board.copy()
+        return Board(new_board, self.board_size)
+
 
     @staticmethod
     def parse_instance_from_stdin():
@@ -122,7 +126,7 @@ class Board:
                 board[i, j]= value
 
         new_board=Board(board,board_size)
-        
+
         return new_board
 
 
@@ -152,7 +156,7 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        new_board = copy.deepcopy(state.board)
+        new_board = state.board.copy()
         new_state = TakuzuState(new_board)
         new_state.board.set_number(action[0], action[1], action[2])
         
