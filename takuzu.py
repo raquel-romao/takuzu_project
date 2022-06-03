@@ -19,7 +19,6 @@ from search import (
     recursive_best_first_search,
     InstrumentedProblem,
 )
-import copy
 
 
 class TakuzuState:
@@ -48,7 +47,6 @@ class Board:
         self.board_size = board_size
         self.string = str(self.board.ravel())
         
-        
     
     def __str__(self):
         prettyprint=''
@@ -61,7 +59,7 @@ class Board:
         return prettyprint
 
     def set_number(self, row: int, col: int, value): 
-        self.board[row,col] = value
+        self.board[row, col] = value
         self.string = str(self.board.ravel)
         
         
@@ -112,12 +110,6 @@ class Board:
             > from sys import stdin
             > stdin.readline()
         """
-        #formato input:
-        #4\n
-        #2\t1\t2\t0\n
-        #2\t2\t0\t2\n
-        #2\t0\t2\t2\n
-        #1\t1\t2\t0\n
 
         board_size = int(stdin.readline().rstrip('\n'))
         board = Board(board_size)
@@ -125,10 +117,9 @@ class Board:
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
-                value= int(values[j])
-                board.set_number(i,j,value)
+                value = int(values[j])
+                board.set_number(i, j, value)
 
-               
         return board
 
     # TODO: outros metodos da classe
@@ -145,11 +136,11 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
 
         result = np.where(state.board.board == 2)
-        empty = list(zip(result[0],result[1]))
+        empty = list(zip(result[0], result[1]))
         
         empty_arr = []
         for i in empty:
-            empty_arr += [(i[0],i[1],0),(i[0],i[1],1)]
+            empty_arr += [(i[0],i[1],0), (i[0],i[1],1)]
         return empty_arr
 
 
@@ -159,10 +150,9 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        new_board = copy.deepcopy(state.board)
+        new_board = state.board.copy()
         new_state = TakuzuState(new_board)
-        new_state.board.set_number(action[0],action[1],action[2])
-
+        new_state.board.set_number(action[0], action[1], action[2])
 
         return new_state
 
@@ -210,9 +200,9 @@ class Takuzu(Problem):
     '''
 
     def half_half(self, state: TakuzuState):
-        board_size= state.board.board_size
+        board_size = state.board.board_size
         half = board_size //2
-        sum_col=np.sum(state.board.board, axis=0)
+        sum_col = np.sum(state.board.board, axis=0)
         sum_lines = np.sum(state.board.board, axis=1)
         if board_size % 2 == 0:
             return np.all(sum_col==half) and np.all(sum_lines==half) 
@@ -222,7 +212,7 @@ class Takuzu(Problem):
             return np.all(col==half) and np.all(lin==half)
 
     def adjacent(self, state: TakuzuState):
-        board=state.board
+        board = state.board
         for i in range(board.board_size):
             for j in range(board.board_size):
                 if board.adjacent_vertical_numbers(i,j).count(board.get_number(i,j))==2 or board.adjacent_horizontal_numbers(i,j).count(board.get_number(i,j))==2:
@@ -238,7 +228,7 @@ class Takuzu(Problem):
         if 2 in state.board.board:
             return False
         else:
-            return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state) #já ta
+            return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state)
                 
 
 

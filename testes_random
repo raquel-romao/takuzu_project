@@ -66,9 +66,19 @@ print(s2.board)
 a = np.array([[1,2,1],[1,4,0]])
 print(a)
 result = str(a.ravel())
-print(hash(result))
+#print(hash(result))
 
 #result = np.where(a[0] == 1)
 
 
-print(result)
+#print(result)
+
+b = a.copy()
+
+print(b is a)
+
+b[0,0]=99
+
+print(b, '=b')
+print(a, '=a')
+
