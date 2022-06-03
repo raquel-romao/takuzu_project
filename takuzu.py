@@ -237,12 +237,11 @@ class Takuzu(Problem):
             return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state) #já ta
                 
 
-
-
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
         # TODO
         pass
+
 
     # TODO: outros metodos da classe
 
