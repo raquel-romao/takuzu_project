@@ -6,6 +6,10 @@
 # 92780 Raquel Romão
 
 #import sys (como estava antes)
+import imp
+
+
+import copy
 from hashlib import new
 from sys import stdin
 import numpy as np
@@ -154,7 +158,7 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        new_board = state.board.copy()
+        new_board = copy.deepcopy(state.board)
         new_state = TakuzuState(new_board)
         new_state.board.set_number(action[0], action[1], action[2])
         
