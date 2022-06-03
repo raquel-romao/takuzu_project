@@ -46,6 +46,21 @@ linha_01 = np.array([(self.board[row, :] == 0).sum(axis=1),(self.board[row, :] =
                 self.actions=np.array([])
             elif not menor_linhas[0]:
                 np.delete(self.actions, where= self.actions[row,:,0])
+
+board = Board.parse_instance_from_stdin()
+
+problem = Takuzu(board)
+
+s0 = TakuzuState(board)
+print(s0.board)
+
+s1 = problem.result(s0,(0,0,1))
+print(s0.board)
+print(s1.board)
+s2 = problem.result(s1,(0,1,0))
+print(s0.board)
+print(s1.board)
+print(s2.board)
 '''
 
 a = np.array([[1,2,1],[1,4,0]])
