@@ -30,15 +30,41 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
+        self.possible_actions = None
 
     def __lt__(self, other):
         return self.id < other.id
 
-    def __eq__(self,other):
-        return self.board.board == other.board.board
 
     def __hash__(self): #também é para pôr aqui? -> acho que no need
         return hash(self.board)
+
+    def actions(self):
+        if self.possible_actions == None:
+            line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
+            col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+            actions = []
+            empty = self.empty_positions()
+            if self.board.board_size % 2 == 0:
+                half = self.board.board_size //2
+            else:
+                half = self.board.board_size //2 +1
+
+            for i in empty:
+                if line[i[0]][0] < half and col[i[1]][0]< half:
+                    actions.append((i[0],i[1],0))
+                elif line[i[0]][1] < half and col[i[1]][1] < half:
+                    actions.append((i[0],i[1],1))
+                else:
+                    return []
+            self.possible_actions = actions
+        
+        return self.possible_actions
+
+    def empty_positions(self):
+        result = np.where(self.board.board == 2)
+        empty = list(zip(result[0],result[1]))
+        return empty
 
     #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não
 
@@ -141,13 +167,7 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
 
-        result = np.where(state.board.board == 2)
-        empty = list(zip(result[0], result[1]))
-        
-        empty_arr = []
-        for i in empty:
-            empty_arr += [(i[0],i[1],0), (i[0],i[1],1)]
-        return empty_arr
+        return state.actions()
 
 
     def result(self, state: TakuzuState, action):
