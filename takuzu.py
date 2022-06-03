@@ -6,8 +6,6 @@
 # 92780 Raquel Romão
 
 #import sys (como estava antes)
-import imp
-
 
 import copy
 from hashlib import new
