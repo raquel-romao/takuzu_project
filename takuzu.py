@@ -43,8 +43,8 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board_size): 
-        self.board = np.ones((board_size,board_size), dtype=int) 
+    def __init__(self, board, board_size): 
+        self.board = board 
         self.board_size = board_size
         self.string = str(self.board.ravel())
         
@@ -99,29 +99,33 @@ class Board:
     def __hash__(self):
         return hash(self.string)
 
+    def copy(self):
+        board = self.board.copy()
+        return Board(board, self.board_size)
+
 
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
         e retorna uma instância da classe Board.
+
         Por exemplo:
             $ python3 takuzu.py < input_T01
+
             > from sys import stdin
             > stdin.readline()
         """
 
         board_size = int(stdin.readline().rstrip('\n'))
-        board = Board(board_size)
+        board = []
 
         for i in range(board_size):
-            values = stdin.readline().strip('\n').split('\t') 
-            for j in range(board_size):
-                value = int(values[j])
-                board.set_number(i, j, value)
+            values = stdin.readline().strip('\n').split('\t')
+            board.append(values)
 
-        return board
+        board = np.array(board)
 
-    # TODO: outros metodos da classe
+        return Board(board,board_size)
 
 
 class Takuzu(Problem):
