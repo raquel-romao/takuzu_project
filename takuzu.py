@@ -44,8 +44,8 @@ class TakuzuState:
 
     def actions(self):
         if self.possible_actions == None:
-            line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-            col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+            line = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+            col = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
             actions = []
             empty = self.empty_positions()
             if self.board.board_size % 2 == 0:
