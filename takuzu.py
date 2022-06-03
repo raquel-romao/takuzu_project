@@ -266,9 +266,9 @@ board = Board.parse_instance_from_stdin()
 problem = Takuzu(board)
 
 s0 = TakuzuState(board)
-print(s0)
+print(s0.board)
 
 s1 = problem.result(s0,(0,0,1))
-print(s0)
-print(s1)
+print(s0.board)
+print(s1.board)
 
