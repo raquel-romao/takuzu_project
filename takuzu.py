@@ -271,7 +271,7 @@ class Takuzu(Problem):
         #MAS por ex se faltarem muitas peças para adicionar numa linha por exemplo e tivermos bue longe do n//2, jogar um 1 seria mais relavante, devolver 0 no caso de jogar 1 (o ideal) ou devolver 1 no caso de jogar 0 (pode ajudar mas não muito)
     
     # TODO: outros metodos da classe
-
+'''
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
     board = Board.parse_instance_from_stdin()
@@ -282,7 +282,10 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
+'''
 
+board = Board.parse_instance_from_stdin()
+print(board)
 
 
 
