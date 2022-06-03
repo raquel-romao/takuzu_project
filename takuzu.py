@@ -33,6 +33,9 @@ class TakuzuState:
     def __lt__(self, other):
         return self.id < other.id
 
+    def __eq__(self,other):
+        return self.board.board == other.board.board
+
     def __hash__(self): #também é para pôr aqui?
         return hash(self.board)
 
@@ -133,6 +136,7 @@ class Takuzu(Problem):
         """O construtor especifica o estado inicial."""
         self.initial = TakuzuState(board)
 
+
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
@@ -151,10 +155,10 @@ class Takuzu(Problem):
         'state' passado como argumento. A ação a executar deve ser uma
         das presentes na lista obtida pela execução de
         self.actions(state)."""
-        new_board = copy.deepcopy(state.board)
-        new_board.set_number(action[0],action[1],action[2])
-
-        new_state = TakuzuState(new_board)  
+        
+        new_state = TakuzuState(state.board)
+        new_state.board.set_number(action[0],action[1],action[2])
+        new_state.__hash__()
 
         return new_state
 
@@ -241,7 +245,7 @@ class Takuzu(Problem):
         pass
 
     # TODO: outros metodos da classe
-
+'''
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
     board = Board.parse_instance_from_stdin()
@@ -252,8 +256,16 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
+'''
 
+board = Board.parse_instance_from_stdin()
 
+problem = Takuzu(board)
 
+s0 = TakuzuState(board)
+print(s0)
 
+s1 = problem.result(s0,(0,0,1))
+print(s0)
+print(s1)
 
