@@ -271,4 +271,8 @@ print(s0.board)
 s1 = problem.result(s0,(0,0,1))
 print(s0.board)
 print(s1.board)
+s2 = problem.result(s1,(0,1,0))
+print(s0.board)
+print(s1.board)
+print(s2.board)
 
