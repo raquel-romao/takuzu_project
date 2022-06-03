@@ -177,8 +177,17 @@ class Takuzu(Problem):
         self.actions(state)."""
         
         new_board = state.board.copy()
+
+        new_board.set_number(action[0], action[1], action[2])
+
+        hash_state = hash(new_board)
+
+        #avoid creating same state, helps with space
+        if hash_state in self.visited_states:
+            return self.visited_states[hash_state]
+
         new_state = TakuzuState(new_board)
-        new_state.board.set_number(action[0], action[1], action[2])
+        self.visited_states.update({hash_state: new_state})
         
         return new_state
 
