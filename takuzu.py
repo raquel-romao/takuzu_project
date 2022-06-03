@@ -35,8 +35,6 @@ class TakuzuState:
     def __lt__(self, other):
         return self.id < other.id
 
-    def __eq__(self,other):
-        return self.board.board == other.board.board
 
     def __hash__(self): #também é para pôr aqui? -> acho que no need
         return hash(self.board)
