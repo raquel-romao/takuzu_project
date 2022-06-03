@@ -190,7 +190,7 @@ class Takuzu(Problem):
         hash_state = hash(new_board)
 
         #avoid creating same state, helps with space
-        if state in self.visited_states:
+        if hash_state in self.visited_states:
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
