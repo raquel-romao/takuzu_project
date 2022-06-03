@@ -1,4 +1,3 @@
-# takuzu.py: Template para implementação do projeto de Inteligência Artificial 2021/2022.
 # Devem alterar as classes e funções neste ficheiro de acordo com as instruções do enunciado.
 # Além das funções e classes já definidas, podem acrescentar outras que considerem pertinentes.
 
@@ -43,7 +42,6 @@ class Board:
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
- 
         
         
     
@@ -59,13 +57,12 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row,col] = value
-
+        
         
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
-
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -94,10 +91,8 @@ class Board:
         else:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
-    '''
-    def __hash__(self): # é isto?
+    def __hash__(self):
         return str(self.board.ravel())
-    '''
 
     @staticmethod
     def parse_instance_from_stdin():
@@ -125,7 +120,7 @@ class Board:
             for j in range(board_size):
                 value= int(values[j])
                 board.set_number(i,j,value)
-                
+
                
         return board
 
@@ -155,10 +150,12 @@ class Takuzu(Problem):
         'state' passado como argumento. A ação a executar deve ser uma
         das presentes na lista obtida pela execução de
         self.actions(state)."""
-        
-        state.board.set_number(action[0],action[1],action[2]) 
+        new_board = copy.deepcopy(state.board)
+        new_board.set_number(action[0],action[1],action[2])
 
-        return state
+        new_state = TakuzuState(new_board)  
+
+        return new_state
 
 
     def dif_rows_cols(self, state: TakuzuState):
@@ -203,7 +200,6 @@ class Takuzu(Problem):
 
     '''
 
-
     def half_half(self, state: TakuzuState):
         board_size= state.board.board_size
         half = board_size //2
@@ -215,7 +211,6 @@ class Takuzu(Problem):
             col = np.where(sum_col == half+1, half, sum_col)
             lin = np.where(sum_lines == half+1, half, sum_lines)
             return np.all(col==half) and np.all(lin==half)
-
 
     def adjacent(self, state: TakuzuState):
         board=state.board
@@ -237,14 +232,14 @@ class Takuzu(Problem):
             return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state) #já ta
                 
 
+
+
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
         # TODO
         pass
 
-
     # TODO: outros metodos da classe
-
 
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
