@@ -130,7 +130,7 @@ class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
         self.initial = TakuzuState(board)
-        #self.states ={}
+        self.visited_states = {}
 
 
     def actions(self, state: TakuzuState):
@@ -162,6 +162,11 @@ class Takuzu(Problem):
         #h = self.hash(new_state)
 		#if h in self.states:
 			#return self.states[h]
+            
+        if new_state.board.board[0:1] in self.visited_states:
+            self.visited_states[new_state.board.board[0:1]] = np.array([hash(new_state)])
+        else:
+            self.visited_states[new_state.board.board[0:1]].append(hash(new_state))
 
         return new_state
 
