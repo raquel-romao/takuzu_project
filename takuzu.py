@@ -6,7 +6,7 @@
 # 92780 Raquel Romão
 
 #import sys (como estava antes)
-from curses.ascii import FF
+
 from hashlib import new
 from sys import stdin
 from unittest import result
