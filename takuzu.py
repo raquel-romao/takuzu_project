@@ -45,8 +45,8 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board_size): 
-        self.board = np.ones((board_size,board_size), dtype=int) 
+    def __init__(self,board, board_size): 
+        self.board = board
         self.board_size = board_size
         self.string = str(self.board.ravel())
         
@@ -113,15 +113,17 @@ class Board:
         """
 
         board_size = int(stdin.readline().rstrip('\n'))
-        board = Board(board_size)
+        board = np.ones((board_size,board_size), dtype=int)
 
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value = int(values[j])
-                board.set_number(i, j, value)
+                board[i, j]= value
 
-        return board
+        new_board=Board(board,board_size)
+        
+        return new_board
 
 
 class Takuzu(Problem):
