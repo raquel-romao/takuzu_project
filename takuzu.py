@@ -158,7 +158,7 @@ class Board:
 
         board = np.array(board)
 
-        return Board(board)
+        return Board(board,board_size)
 
     # TODO: outros metodos da classe
 
