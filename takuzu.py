@@ -156,7 +156,7 @@ class Takuzu(Problem):
         new_state.board.set_number(action[0], action[1], action[2])
 
         if new_state.board.board[0:1] in self.visited_states:
-            self.visited_states[new_state.board.board[0:1]] = [hash(new_state)]
+            self.visited_states[new_state.board.board[0:1]] = np.array([hash(new_state)])
         else:
             self.visited_states[new_state.board.board[0:1]].append(hash(new_state))
 
