@@ -157,19 +157,7 @@ class Takuzu(Problem):
         new_board = state.board.copy()
         new_state = TakuzuState(new_board)
         new_state.board.set_number(action[0], action[1], action[2])
-
-        #incluir aqui cena do dicionário: se resultado da ação já tiver no dic (hash igual) [tenho que gerar], então retonar o que está lá no dicionário
-       
-        #tb vi no código do hugo que ele usou hash como key e meteu como value os vários estados and do something like:
-        #h = self.hash(new_state)
-		#if h in self.states:
-			#return self.states[h]
-            
-        if new_state.board.board[0:1] in self.visited_states:
-            self.visited_states[new_state.board.board[0:1]] = np.array([hash(new_state)])
-        else:
-            self.visited_states[new_state.board.board[0:1]].append(hash(new_state))
-
+        
         return new_state
 
 
