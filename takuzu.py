@@ -6,10 +6,8 @@
 # 92780 Raquel Romão
 
 #import sys (como estava antes)
-
 from hashlib import new
 from sys import stdin
-from unittest import result
 import numpy as np
 from search import (
     Problem,
@@ -30,52 +28,23 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        self.possible_actions= None
 
     def __lt__(self, other):
         return self.id < other.id
 
+    def __eq__(self,other):
+        return self.board.board == other.board.board
 
     def __hash__(self): #também é para pôr aqui? -> acho que no need
         return hash(self.board)
-
-
-    def actions(self):
-        if self.possible_actions == None:
-            line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-            col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
-            actions = []
-            empty = self.empty_positions()
-            if self.board.board_size % 2 == 0:
-                half = self.board.board_size //2
-            else:
-                half = self.board.board_size //2 +1
-
-            for i in empty:
-                if line[i[0]][0] < half and col[i[1]][0]< half:
-                    actions.append((i[0],i[1],0))
-                elif line[i[0]][1] < half and col[i[1]][1] < half:
-                    actions.append((i[0],i[1],1))
-                else:
-                    return []
-            self.possible_actions = actions
-        
-        return self.possible_actions
-
-    def empty_positions(self):
-        result = np.where(self.board.board == 2)
-        empty = list(zip(result[0],result[1]))
-        return empty
-            
-
 
     #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board, board_size): 
-        self.board = board 
+    def __init__(self, board_size): 
+        self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
         self.string = str(self.board.ravel())
         
@@ -130,35 +99,27 @@ class Board:
     def __hash__(self):
         return hash(self.string)
 
-    def copy(self):
-        board = self.board.copy()
-        return Board(board, self.board_size)
-
 
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
         e retorna uma instância da classe Board.
-
         Por exemplo:
             $ python3 takuzu.py < input_T01
-
             > from sys import stdin
             > stdin.readline()
         """
 
         board_size = int(stdin.readline().rstrip('\n'))
-        board = []
+        board = Board(board_size)
 
         for i in range(board_size):
-            values = stdin.readline().strip('\n').split('\t')
-            print(values)
-            print(type(values))
-            board.append(values)
+            values = stdin.readline().strip('\n').split('\t') 
+            for j in range(board_size):
+                value = int(values[j])
+                board.set_number(i, j, value)
 
-        board = np.array(board)
-
-        return Board(board,board_size)
+        return board
 
     # TODO: outros metodos da classe
 
@@ -174,7 +135,13 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
 
-        return state.actions()
+        result = np.where(state.board.board == 2)
+        empty = list(zip(result[0], result[1]))
+        
+        empty_arr = []
+        for i in empty:
+            empty_arr += [(i[0],i[1],0), (i[0],i[1],1)]
+        return empty_arr
 
 
     def result(self, state: TakuzuState, action):
@@ -184,18 +151,21 @@ class Takuzu(Problem):
         self.actions(state)."""
         
         new_board = state.board.copy()
-
-        new_board.set_number(action[0], action[1], action[2])
-
-        hash_state = hash(new_board)
-
-        #avoid creating same state, helps with space
-        if hash_state in self.visited_states:
-            return self.visited_states[hash_state]
-
         new_state = TakuzuState(new_board)
-        self.visited_states.update({hash_state: new_state})
-        
+        new_state.board.set_number(action[0], action[1], action[2])
+
+        #incluir aqui cena do dicionário: se resultado da ação já tiver no dic (hash igual) [tenho que gerar], então retonar o que está lá no dicionário
+       
+        #tb vi no código do hugo que ele usou hash como key e meteu como value os vários estados and do something like:
+        #h = self.hash(new_state)
+		#if h in self.states:
+			#return self.states[h]
+            
+        if new_state.board.board[0:1] in self.visited_states:
+            self.visited_states[new_state.board.board[0:1]] = np.array([hash(new_state)])
+        else:
+            self.visited_states[new_state.board.board[0:1]].append(hash(new_state))
+
         return new_state
 
 
@@ -208,7 +178,35 @@ class Takuzu(Problem):
 
         return unique_rows and unique_cols
 
-
+    
+    '''
+    def equal_number(self, state: TakuzuState, cord, ax): #ax=1 para linhas e ax=0 para colunas
+        "Função auxiliar que verifica, retornando True ou False, se há um número igual de 0s e 1s, para uma determinada linha (ax=1) ou coluna (ax=0)."
+        board_size = state.board.board_size
+        equal = False
+        if board_size % 2 == 0:
+            if np.sum(state.board.board, axis = ax)[cord] == board_size//2:
+                equal = True
+        else:
+            if np.sum(state.board.board, axis = ax)[cord] in [board_size//2 - 1, board_size//2 + 1] : #pode ser +1 ou -1 
+                equal = True 
+        return equal
+    
+    def equal_number_row(self, state: TakuzuState):
+        "Função auxiliar que determina se há um número igual de 0s e 1s nas totalidade das linhas."
+        board_size = state.board.board_size
+        equal_test =[]
+        for cord in (board_size - 1):
+            equal_test += self.equal_number(state, cord, 1)
+        return np.all(np.array(equal_test))
+    def equal_number_col(self, state: TakuzuState):
+        "Função auxiliar que determina se há um número igual de 0s e 1s nas totalidade das colunas."
+        board_size = state.board.board_size
+        equal_test =[]
+        for cord in (board_size - 1):
+            equal_test += self.equal_number(state, cord, 0)
+        return np.all(np.array(equal_test))
+    '''
 
     def half_half(self, state: TakuzuState):
         board_size = state.board.board_size
@@ -271,7 +269,7 @@ class Takuzu(Problem):
         #MAS por ex se faltarem muitas peças para adicionar numa linha por exemplo e tivermos bue longe do n//2, jogar um 1 seria mais relavante, devolver 0 no caso de jogar 1 (o ideal) ou devolver 1 no caso de jogar 0 (pode ajudar mas não muito)
     
     # TODO: outros metodos da classe
-'''
+
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
     board = Board.parse_instance_from_stdin()
@@ -282,27 +280,3 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
-'''
-
-board = Board.parse_instance_from_stdin()
-print(board)
-
-print(type(board[0]))
-'''
-problem = Takuzu(board)
-
-s1 =TakuzuState(board)
-s2= problem.result(s1,(0,0,0))
-s2 = problem.result(s2,(0,1,1))
-s2 = problem.result(s2,(1,2,0))
-s2 = problem.result(s2,(2,1,1))
-s2 = problem.result(s2,(3,1,0))
-s2 = problem.result(s2,(3,2,1))
-s2 = problem.result(s2,(3,3,0))
-print(s1.board)
-print(s2.board)
-print(type(s2))
-print(ty)
-
-print(problem.goal_test(s2))
-'''
