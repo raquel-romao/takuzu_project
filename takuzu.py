@@ -43,7 +43,7 @@ class Board:
     def __init__(self, board_size): 
         self.board = np.ones((board_size,board_size), dtype=int) 
         self.board_size = board_size
-        self.hash = str(self.board.ravel())
+ 
         
         
     
@@ -59,7 +59,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row,col] = value
-        self.hash = str(self.board.ravel())
+
         
 
     def get_number(self, row: int, col: int) -> int:
@@ -95,8 +95,8 @@ class Board:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
 
-    def __hash__(self):
-        return self.hash
+    def __hash__(self): # é isto?
+        return str(self.board.ravel())
 
 
     @staticmethod
@@ -246,7 +246,7 @@ class Takuzu(Problem):
 
     # TODO: outros metodos da classe
 
-'''
+
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
     board = Board.parse_instance_from_stdin()
@@ -258,15 +258,7 @@ if __name__ == "__main__":
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
     print(hash(goal_node.state))
-'''
 
-board = Board.parse_instance_from_stdin()
-problem = Takuzu(board)
-s0=TakuzuState(board)
-print(s0.board)
 
-s1 = problem.result(s0,(0,0,1))
 
-print(s0.board)
-print(s1.board)
 
