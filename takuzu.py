@@ -45,6 +45,7 @@ class TakuzuState:
             col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
             actions = []
             empty = self.empty_positions()
+
             if self.board.board_size % 2 == 0:
                 half = self.board.board_size //2
             else:
@@ -201,35 +202,6 @@ class Takuzu(Problem):
 
         return unique_rows and unique_cols
 
-    
-    '''
-    def equal_number(self, state: TakuzuState, cord, ax): #ax=1 para linhas e ax=0 para colunas
-        "Função auxiliar que verifica, retornando True ou False, se há um número igual de 0s e 1s, para uma determinada linha (ax=1) ou coluna (ax=0)."
-        board_size = state.board.board_size
-        equal = False
-        if board_size % 2 == 0:
-            if np.sum(state.board.board, axis = ax)[cord] == board_size//2:
-                equal = True
-        else:
-            if np.sum(state.board.board, axis = ax)[cord] in [board_size//2 - 1, board_size//2 + 1] : #pode ser +1 ou -1 
-                equal = True 
-        return equal
-    
-    def equal_number_row(self, state: TakuzuState):
-        "Função auxiliar que determina se há um número igual de 0s e 1s nas totalidade das linhas."
-        board_size = state.board.board_size
-        equal_test =[]
-        for cord in (board_size - 1):
-            equal_test += self.equal_number(state, cord, 1)
-        return np.all(np.array(equal_test))
-    def equal_number_col(self, state: TakuzuState):
-        "Função auxiliar que determina se há um número igual de 0s e 1s nas totalidade das colunas."
-        board_size = state.board.board_size
-        equal_test =[]
-        for cord in (board_size - 1):
-            equal_test += self.equal_number(state, cord, 0)
-        return np.all(np.array(equal_test))
-    '''
 
     def half_half(self, state: TakuzuState):
         board_size = state.board.board_size
@@ -296,6 +268,7 @@ class Takuzu(Problem):
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
     board = Board.parse_instance_from_stdin()
+    print(board)
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
