@@ -256,7 +256,7 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
-    print(hash(goal_node.state))
+
 
 
 
