@@ -179,7 +179,7 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        new_board = state.board.copy()
+        new_board = state.board.board.copy()
         
         new_board.set_number(action[0], action[1], action[2])
 
