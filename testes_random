@@ -61,7 +61,7 @@ s2 = problem.result(s1,(0,1,0))
 print(s0.board)
 print(s1.board)
 print(s2.board)
-'''
+
 
 a = np.array([[1,2,1],[1,4,0]])
 print(a)
@@ -82,3 +82,10 @@ b[0,0]=99
 print(b, '=b')
 print(a, '=a')
 
+'''
+
+a=0
+b=1
+c=0
+d=1
+print((a==0 or b==0) and c==0)
