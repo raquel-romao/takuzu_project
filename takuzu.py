@@ -63,6 +63,11 @@ class TakuzuState:
 
         else:
             return self.possible_actions
+
+    def empty_positions(self):
+        result = np.where(state.board.board == 2)
+        empty = list(zip(result[0],result[1]))
+        return empty
             
 
 
