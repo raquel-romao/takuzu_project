@@ -297,5 +297,7 @@ s2 = problem.result(s2,(3,2,1))
 s2 = problem.result(s2,(3,3,0))
 print(s1.board)
 print(s2.board)
+print(type(s2))
+print(type(s2.board.board))
 
 print(problem.goal_test(s2))
