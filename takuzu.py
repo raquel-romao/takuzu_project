@@ -94,10 +94,10 @@ class Board:
         else:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
-'''
+    '''
     def __hash__(self): # é isto?
         return str(self.board.ravel())
-'''
+    '''
 
     @staticmethod
     def parse_instance_from_stdin():
