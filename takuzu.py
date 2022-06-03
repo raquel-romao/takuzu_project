@@ -194,7 +194,7 @@ class Takuzu(Problem):
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
-        self.visited_stated.update({hash_state: new_state})
+        self.visited_states.update({hash_state: new_state})
         
         return new_state
 
