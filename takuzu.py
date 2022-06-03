@@ -35,9 +35,10 @@ class TakuzuState:
     def __eq__(self,other):
         return self.board.board == other.board.board
 
-    def __hash__(self): #também é para pôr aqui?
+    def __hash__(self): #também é para pôr aqui? -> acho que no need
         return hash(self.board)
 
+    #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
@@ -129,6 +130,7 @@ class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
         self.initial = TakuzuState(board)
+        #self.states ={}
 
 
     def actions(self, state: TakuzuState):
@@ -153,6 +155,13 @@ class Takuzu(Problem):
         new_board = state.board.copy()
         new_state = TakuzuState(new_board)
         new_state.board.set_number(action[0], action[1], action[2])
+
+        #incluir aqui cena do dicionário: se resultado da ação já tiver no dic (hash igual) [tenho que gerar], então retonar o que está lá no dicionário
+       
+        #tb vi no código do hugo que ele usou hash como key e meteu como value os vários estados and do something like:
+        #h = self.hash(new_state)
+		#if h in self.states:
+			#return self.states[h]
 
         return new_state
 
@@ -233,11 +242,32 @@ class Takuzu(Problem):
 
 
 
-    def h(self, node: Node):
+    def h(self, node: Node): #for each state we have to define an heuristic
         """Função heuristica utilizada para a procura A*."""
-        # TODO
-        pass
 
+        current_state = node.state
+        #com node.parent consigo aceder ao nó pai e comparar o que mudou -> ou então adicionar função à classe State que me dá a última jogada
+
+        #g = node.state.id #pensei usar o id do node mas não é apenas isto -> not sure até que ponto é necessário somar -> ya acho que é só mesmo para devolver f
+
+
+
+        if self.goal_test(current_state):
+            f = 0
+
+        elif not self.half_half(current_state) or not self.dif_rows_cols(current_state) or not self.adjacent(current_state):
+            f = 10
+        
+        #h = f + g (g = shortest path from the start node to node n) -> acho que no need, apenas f suficiente
+        
+
+
+        #ideias para heurísticas:
+        #devolver 0 se não violar nenhuma regra
+        #aumentat 10 ou assim por cada regra que se viola
+        #devolver um numero bue alto para jogadas inválidas 
+        #MAS por ex se faltarem muitas peças para adicionar numa linha por exemplo e tivermos bue longe do n//2, jogar um 1 seria mais relavante, devolver 0 no caso de jogar 1 (o ideal) ou devolver 1 no caso de jogar 0 (pode ajudar mas não muito)
+    
     # TODO: outros metodos da classe
 
 if __name__ == "__main__":
