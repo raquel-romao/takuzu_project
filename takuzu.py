@@ -159,8 +159,8 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        new_board = copy.deepcopy(state.board)
-        new_state = TakuzuState(new_board)
+        #new_board = copy.deepcopy(state.board)
+        new_state = TakuzuState(state.board)
         new_state.board.set_number(action[0],action[1],action[2])
 
 
