@@ -6,7 +6,7 @@
 # 92780 Raquel Romão
 
 #import sys (como estava antes)
-
+import copy
 from hashlib import new
 from sys import stdin
 from unittest import result
@@ -181,7 +181,7 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
-        new_board = state.board.copy()
+        new_board = copy.deepcopy(state.board)
 
         new_board.set_number(action[0], action[1], action[2])
 
@@ -287,8 +287,8 @@ print(board)
 
 problem = Takuzu(board)
 
-s1 =TakuzuState(board)
-s2= problem.result(s1,(0,0,0))
+s1 = TakuzuState(board)
+s2 = problem.result(s1,(0,0,0))
 s2 = problem.result(s2,(0,1,1))
 s2 = problem.result(s2,(1,2,0))
 s2 = problem.result(s2,(2,1,1))
