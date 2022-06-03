@@ -33,7 +33,8 @@ class TakuzuState:
     def __lt__(self, other):
         return self.id < other.id
 
-    # TODO: outros metodos da classe
+    def __hash__(self): #também é para pôr aqui?
+        return hash(self.board)
 
 
 class Board:
