@@ -56,7 +56,7 @@ class TakuzuState:
                     actions.append((i[0],i[1],0))
                 if line[i[0]][1] < half and col[i[1]][1] < half:
                     actions.append((i[0],i[1],1))
-                    
+
             self.possible_actions = actions
         
         return self.possible_actions
@@ -267,7 +267,7 @@ class Takuzu(Problem):
         #MAS por ex se faltarem muitas peças para adicionar numa linha por exemplo e tivermos bue longe do n//2, jogar um 1 seria mais relavante, devolver 0 no caso de jogar 1 (o ideal) ou devolver 1 no caso de jogar 0 (pode ajudar mas não muito)
     
     # TODO: outros metodos da classe
-'''
+
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
     board = Board.parse_instance_from_stdin()
@@ -279,12 +279,7 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
-'''
 
-board = Board.parse_instance_from_stdin()
-print(board)
 
-state = TakuzuState(board)
 
-print(state.actions())
 
