@@ -66,6 +66,9 @@ class TakuzuState:
         result = np.where(self.board.board == 2)
         empty = list(zip(result[0],result[1]))
         return empty
+    
+    def set_actions(self):
+        self.possible_actions = []
 
     #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não
 
@@ -185,6 +188,7 @@ class Takuzu(Problem):
 
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
+            self.visited_states[hash_state].set_actions()
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
@@ -233,7 +237,7 @@ class Takuzu(Problem):
             return False
         else:
             return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state)
-                
+
 
 
 
@@ -246,14 +250,13 @@ class Takuzu(Problem):
         #g = node.state.id #pensei usar o id do node mas não é apenas isto -> not sure até que ponto é necessário somar -> ya acho que é só mesmo para devolver f
 
 
-
         if self.goal_test(current_state):
             f = 0
 
         elif not self.half_half(current_state) or not self.dif_rows_cols(current_state) or not self.adjacent(current_state):
             f = 10
         
-        #h = f + g (g = shortest path from the start node to node n) -> acho que no need, apenas f suficiente
+        #h = f + g (g = shortest path from the start node to node n, acho que isto é path cost, path vai ter sempre o mesmo tamanho (preencher as caixas vazias)) -> acho que no need, apenas f suficiente
         
 
 
