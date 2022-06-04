@@ -7,7 +7,7 @@
 
 #import sys (como estava antes)
 
-import copy
+
 from hashlib import new
 from sys import stdin
 import numpy as np
