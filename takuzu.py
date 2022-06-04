@@ -28,6 +28,7 @@ class TakuzuState:
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.possible_actions = None
+        self.actions()
 
     def __lt__(self, other):
         return self.id < other.id
