@@ -91,4 +91,4 @@ d=1
 print((a==0 or b==0) and c==0)
 '''
 a = np.array([[1,2,1],[1,4,0]])
-print(type(a[0]))
+print(len(np.where(a[:,0] == 2)))

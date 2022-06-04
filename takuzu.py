@@ -1,6 +1,3 @@
-# Devem alterar as classes e funções neste ficheiro de acordo com as instruções do enunciado.
-# Além das funções e classes já definidas, podem acrescentar outras que considerem pertinentes.
-
 # Grupo 00:
 # 92759 Laura Quintas
 # 92780 Raquel Romão
@@ -49,10 +46,10 @@ class TakuzuState:
             if self.board.board_size % 2 == 0:
                 half = self.board.board_size //2
             else:
-                half = self.board.board_size //2 +1
+                half = self.board.board_size //2 + 1
 
             for i in empty:
-                if line[i[0]][0] < half and col[i[1]][0]< half:
+                if line[i[0]][0] < half and col[i[1]][0] < half:
                     actions.append((i[0],i[1],0))
                 if line[i[0]][1] < half and col[i[1]][1] < half:
                     actions.append((i[0],i[1],1))
@@ -69,19 +66,19 @@ class TakuzuState:
     def reset_actions(self):
         self.possible_actions = [] 
 
-    #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não
+    #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não -> afinal o próprio node tem em si essa variável!
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self,board, board_size): 
+    def __init__(self, board, board_size): 
         self.board = board
         self.board_size = board_size
         self.string = str(self.board.ravel())
         
     
     def __str__(self):
-        prettyprint=''
+        prettyprint = ''
         for i in self.board:
             for j in range(len(i)):
                 if j == len(i)-1:
@@ -131,7 +128,7 @@ class Board:
         return hash(self.string)
 
     def copy(self):
-        new_board= self.board.copy()
+        new_board = self.board.copy()
         return Board(new_board, self.board_size)
 
 
@@ -139,22 +136,18 @@ class Board:
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
         e retorna uma instância da classe Board.
-        Por exemplo:
-            $ python3 takuzu.py < input_T01
-            > from sys import stdin
-            > stdin.readline()
         """
 
         board_size = int(stdin.readline().rstrip('\n'))
-        board = np.ones((board_size,board_size), dtype=int)
+        board = np.ones((board_size, board_size), dtype=int)
 
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value = int(values[j])
-                board[i, j]= value
+                board[i, j] = value
 
-        new_board=Board(board,board_size)
+        new_board = Board(board, board_size)
 
         return new_board
 
@@ -241,30 +234,56 @@ class Takuzu(Problem):
 
 
 
-    def h(self, node: Node): #for each state we have to define an heuristic
+    def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
 
         current_state = node.state
-        #com node.parent consigo aceder ao nó pai e comparar o que mudou -> ou então adicionar função à classe State que me dá a última jogada
+        parent_state = node.parent
+        last_action = node.action
+        board_size = node.state.board.board_size
 
-        #g = node.state.id #pensei usar o id do node mas não é apenas isto -> not sure até que ponto é necessário somar -> ya acho que é só mesmo para devolver f
+        lin_changed = last_action[0]
+        col_changed = last_action[1]
+        val_inserted = last_action[2]
 
+        f = 0
 
         if self.goal_test(current_state):
-            f = 0
+            return 0
 
-        elif not self.half_half(current_state) or not self.dif_rows_cols(current_state) or not self.adjacent(current_state):
-            f = 10
+        #aumento de 10 por cada regra violada (peso de 10 mandado ao ar)
+        elif not self.half_half(current_state): 
+            f += 10
+
+        elif not self.dif_rows_cols(current_state):
+            f += 10
+
+        elif not self.adjacent(current_state):
+            f += 10
         
-        #h = f + g (g = shortest path from the start node to node n, acho que isto é path cost, path vai ter sempre o mesmo tamanho (preencher as caixas vazias)) -> acho que no need, apenas f suficiente
+        #se ainda tivermos muita falta de 1's, jogar um 1 pode ser mais relavente (mandei o valor de ainda nos faltar mais de 40% (mais ou menos, depende se estamos a falar de impar ou par) para termos o nr de 1s final)
+        elif np.count_nonzero(parent_state.board.board[lin_changed, :] == 1) < 0.6*(board_size//2): 
+            if val_inserted == 1:
+                f += 0
+            elif val_inserted == 0:
+                f += 1
+
+        elif np.count_nonzero(parent_state.board.board[:, col_changed] == 1) < 0.6*(board_size//2): 
+            if val_inserted == 1:
+                f += 0
+            elif val_inserted == 0:
+                f += 1
+
+        #pensei pegar nas ações possíveis para contabilizar o número de restrições (inversamente) -> quanto + ações possíveis, mais longe do objetivo estamos
+        f += current_state.possible_actions
+
+        return f 
         
-
-
         #ideias para heurísticas:
         #devolver 0 se não violar nenhuma regra
         #aumentat 10 ou assim por cada regra que se viola
-        #devolver um numero bue alto para jogadas inválidas 
         #MAS por ex se faltarem muitas peças para adicionar numa linha por exemplo e tivermos bue longe do n//2, jogar um 1 seria mais relavante, devolver 0 no caso de jogar 1 (o ideal) ou devolver 1 no caso de jogar 0 (pode ajudar mas não muito)
+        #Contar o numero de restrições do state e fazer f+= restrições
     
     # TODO: outros metodos da classe
 
@@ -275,7 +294,7 @@ if __name__ == "__main__":
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = depth_first_tree_search(problem)
+    goal_node = astar_search(problem)
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
