@@ -259,7 +259,7 @@ class Takuzu(Problem):
                         broken_rule += 10
                 
                 #se encontrar alguma linha igual
-                if np.any(board_np == board_np[line, :]):
+                if np.any(board_np == board_np[line, :]): #-> arranjar outra forma
                     broken_rule += 10
 
                 
@@ -272,7 +272,7 @@ class Takuzu(Problem):
                         broken_rule += 10
 
                 #se encontrar alguma coluna igual
-                if np.any(board_np == board_np[:, col]):
+                if np.any(board_np == board_np[:, col], axis=0): #-> afinal acho que não posso fazer isto
                     broken_rule += 10
            
             #aumento de 10 por cada regra violada (peso de 10 mandado ao ar)
