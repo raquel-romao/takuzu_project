@@ -36,7 +36,7 @@ class TakuzuState:
         return self.id < other.id
 
 
-    def __hash__(self): #também é para pôr aqui? -> acho que no need
+    def __hash__(self): #também é para pôr aqui? -> acho que no need -> deixei pq acabas por ter maneira de saber o estado pq ta sempre só associado a uma board
         return hash(self.board)
 
     def actions(self):
@@ -59,7 +59,7 @@ class TakuzuState:
 
             self.possible_actions = actions
         
-        return self.possible_actions
+        return self.possible_actions #se calhar agora podemos só fazer return de actions para não ocuparmos espaço na memória
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
@@ -92,7 +92,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        self.string = str(self.board.ravel)
+        self.string = str(self.board.ravel) # atualiza o hash value
         
         
     def get_number(self, row: int, col: int) -> int:
