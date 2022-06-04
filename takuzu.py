@@ -53,10 +53,9 @@ class TakuzuState:
                     actions.append((i[0],i[1],0))
                 if line[i[0]][1] < half and col[i[1]][1] < half:
                     actions.append((i[0],i[1],1))
-
-            return actions
-        else:
-            return self.possible_actions
+            self.possible_actions = actions
+ 
+        return self.possible_actions
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
