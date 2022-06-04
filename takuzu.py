@@ -240,8 +240,9 @@ class Takuzu(Problem):
         current_state = node.state
         parent_node = node.parent
         last_action = node.action
-        board = node.state.board.board
-        board_size = node.state.board.board_size
+        board = node.state.board
+        board_np = node.state.board.board
+        board_size = board.board_size
 
         f = 0
 
@@ -250,7 +251,7 @@ class Takuzu(Problem):
 
         broken_rule = 0
         for line in range(board_size):
-            if 2 not in board[line, :]: #linha completa
+            if 2 not in board_np[line, :]: #linha completa
                
                 #teste à adjacência na linha
                 for j in range(board_size):
@@ -258,12 +259,12 @@ class Takuzu(Problem):
                         broken_rule += 10
                 
                 #se encontrar alguma linha igual
-                if np.any(board == board[line, :]):
+                if np.any(board_np == board_np[line, :]):
                     broken_rule += 10
 
                 
         for col in range(board_size):
-            if 2 not in board[:, col]: #coluna completa
+            if 2 not in board_np[:, col]: #coluna completa
 
                 #teste à adjacência na coluna
                 for i in range(board_size):
@@ -271,7 +272,7 @@ class Takuzu(Problem):
                         broken_rule += 10
 
                 #se encontrar alguma coluna igual
-                if np.any(board == board[:, col]):
+                if np.any(board_np == board_np[:, col]):
                     broken_rule += 10
            
             #aumento de 10 por cada regra violada (peso de 10 mandado ao ar)
