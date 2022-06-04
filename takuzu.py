@@ -66,7 +66,7 @@ class TakuzuState:
         empty = list(zip(result[0],result[1]))
         return empty
     
-    def set_actions(self):
+    def reset_actions(self):
         self.possible_actions = []
 
     #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não
@@ -188,7 +188,7 @@ class Takuzu(Problem):
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
             #avoids going through a path that was already visited
-            self.visited_states[hash_state].set_actions()
+            self.visited_states[hash_state].reset_actions()
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
