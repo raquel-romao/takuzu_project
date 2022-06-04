@@ -219,7 +219,7 @@ class Takuzu(Problem):
             lin = np.where(sum_lines == half+1, half, sum_lines)
             return np.all(col==half) and np.all(lin==half)
 
-    def adjacent(self, state: TakuzuState):
+    def adjacent(self, state: TakuzuState): #podemos otimizar visto que nao precisamos de ver adjacentes verticais para a primeira e ultima linha e nao precisamos de ver adjacentes horizontais para a primeira e ultima coluna
         board = state.board
         for i in range(board.board_size):
             for j in range(board.board_size):
