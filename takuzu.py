@@ -57,9 +57,9 @@ class TakuzuState:
                 if line[i[0]][1] < half and col[i[1]][1] < half:
                     actions.append((i[0],i[1],1))
 
-            self.possible_actions = actions
-        
-        return self.possible_actions #se calhar agora podemos só fazer return de actions para não ocuparmos espaço na memória
+            return actions
+        else:
+            return self.possible_actions
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
