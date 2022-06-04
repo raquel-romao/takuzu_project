@@ -188,7 +188,7 @@ class Takuzu(Problem):
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
             #avoids going through a path that was already visited
-            self.visited_states[hash_state].reset_actions() # o que tenho escrito nas actions no return
+            self.visited_states[hash_state].reset_actions()
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
