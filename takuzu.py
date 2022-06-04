@@ -240,6 +240,7 @@ class Takuzu(Problem):
         current_state = node.state
         parent_node = node.parent
         last_action = node.action
+        board = node.state.board.board
         board_size = node.state.board.board_size
 
         f = 0
@@ -247,16 +248,34 @@ class Takuzu(Problem):
         if self.goal_test(current_state):
             return 0
 
-        #aumento de 10 por cada regra violada (peso de 10 mandado ao ar)
-        elif not self.half_half(current_state): 
-            f += 10
+        broken_rule = 0
+        for line in range(board_size):
+            if 2 not in board[line, :]: #linha completa
+               
+                #teste à adjacência na linha
+                for j in range(board_size):
+                    if board.adjacent_vertical_numbers(line,j).count(board.get_number(line,j))==2 or board.adjacent_horizontal_numbers(line,j).count(board.get_number(line,j))==2:
+                        broken_rule += 10
+                
+                #se encontrar alguma linha igual
+                if np.any(board == board[line, :]):
+                    broken_rule += 10
 
-        elif not self.dif_rows_cols(current_state):
-            f += 10
+                
+        for col in range(board_size):
+            if 2 not in board[:, col]: #coluna completa
 
-        elif not self.adjacent(current_state):
-            f += 10
-        
+                #teste à adjacência na coluna
+                for i in range(board_size):
+                    if board.adjacent_vertical_numbers(i,col).count(board.get_number(i,col))==2 or board.adjacent_horizontal_numbers(i,col).count(board.get_number(i,col))==2:
+                        broken_rule += 10
+
+                #se encontrar alguma coluna igual
+                if np.any(board == board[:, col]):
+                    broken_rule += 10
+           
+            #aumento de 10 por cada regra violada (peso de 10 mandado ao ar)
+            
         if last_action != None and parent_node != None:
           parent_state = parent_node.state
           lin_changed = last_action[0]
@@ -280,7 +299,7 @@ class Takuzu(Problem):
         if current_state.possible_actions != None:
           f += len(current_state.possible_actions)
 
-        return f 
+        return f + broken_rule
         
         
         #ideias para heurísticas:
