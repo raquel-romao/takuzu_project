@@ -67,7 +67,7 @@ class TakuzuState:
         return empty
     
     def reset_actions(self):
-        self.possible_actions = []
+        self.possible_actions = [] 
 
     #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não
 
@@ -92,7 +92,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        self.string = str(self.board.ravel) # atualiza o hash value
+        self.string = str(self.board.ravel) # atualiza o hash value. sque não é preciso isto aqui
         
         
     def get_number(self, row: int, col: int) -> int:
@@ -188,7 +188,7 @@ class Takuzu(Problem):
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
             #avoids going through a path that was already visited
-            self.visited_states[hash_state].reset_actions()
+            self.visited_states[hash_state].reset_actions() # o que tenho escrito nas actions no return
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
