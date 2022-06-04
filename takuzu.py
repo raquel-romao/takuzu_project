@@ -163,7 +163,7 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
 
-        return state.actions()
+        return state.possible_actions
 
 
     def result(self, state: TakuzuState, action):
