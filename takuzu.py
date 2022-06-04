@@ -238,13 +238,9 @@ class Takuzu(Problem):
         """Função heuristica utilizada para a procura A*."""
 
         current_state = node.state
-        parent_state = node.parent
+        parent_node = node.parent
         last_action = node.action
         board_size = node.state.board.board_size
-
-        lin_changed = last_action[0]
-        col_changed = last_action[1]
-        val_inserted = last_action[2]
 
         f = 0
 
@@ -261,23 +257,31 @@ class Takuzu(Problem):
         elif not self.adjacent(current_state):
             f += 10
         
+        if last_action != None and parent_node != None:
+          parent_state = parent_node.state
+          lin_changed = last_action[0]
+          col_changed = last_action[1]
+          val_inserted = last_action[2]
+        
         #se ainda tivermos muita falta de 1's, jogar um 1 pode ser mais relavente (mandei o valor de ainda nos faltar mais de 40% (mais ou menos, depende se estamos a falar de impar ou par) para termos o nr de 1s final)
-        elif np.count_nonzero(parent_state.board.board[lin_changed, :] == 1) < 0.6*(board_size//2): 
-            if val_inserted == 1:
-                f += 0
-            elif val_inserted == 0:
-                f += 1
+          if np.count_nonzero(parent_state.board.board[lin_changed, :] == 1) < 0.6*(board_size//2): 
+              if val_inserted == 1:
+                  f += 0
+              elif val_inserted == 0:
+                  f += 1
 
-        elif np.count_nonzero(parent_state.board.board[:, col_changed] == 1) < 0.6*(board_size//2): 
-            if val_inserted == 1:
-                f += 0
-            elif val_inserted == 0:
-                f += 1
+          elif np.count_nonzero(parent_state.board.board[:, col_changed] == 1) < 0.6*(board_size//2): 
+              if val_inserted == 1:
+                  f += 0
+              elif val_inserted == 0:
+                  f += 1
 
         #pensei pegar nas ações possíveis para contabilizar o número de restrições (inversamente) -> quanto + ações possíveis, mais longe do objetivo estamos
-        f += current_state.possible_actions
+        if current_state.possible_actions != None:
+          f += len(current_state.possible_actions)
 
         return f 
+        
         
         #ideias para heurísticas:
         #devolver 0 se não violar nenhuma regra
