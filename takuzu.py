@@ -37,6 +37,7 @@ class TakuzuState:
     def __hash__(self): #também é para pôr aqui? -> acho que no need -> deixei pq acabas por ter maneira de saber o estado pq ta sempre só associado a uma board
         return hash(self.board)
 
+    #ideia: dar prioridade a certas ações aqui, ordenação da lista de ações (?)
     def actions(self):
         if self.possible_actions == None:
             line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
@@ -272,7 +273,7 @@ class Takuzu(Problem):
                         broken_rule += 10
 
                 #se encontrar alguma coluna igual
-                if np.any(board_np == board_np[:, col], axis=0): #-> afinal acho que não posso fazer isto
+                if np.any(board_np == board_np[:, col], axis=0): #-> afinal acho que não posso fazer isto (está a dar erro, mudar!)
                     broken_rule += 10
            
             #aumento de 10 por cada regra violada (peso de 10 mandado ao ar)
@@ -318,7 +319,7 @@ if __name__ == "__main__":
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = astar_search(problem)
+    goal_node = breadth_first_tree_search(problem)
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
