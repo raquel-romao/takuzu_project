@@ -94,7 +94,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        self.string = str(self.board.ravel) # atualiza o hash value. sque não é preciso isto aqui
+        self.string = str(self.board.ravel) # atualiza o hash value.
         
         
     def get_number(self, row: int, col: int) -> int:
