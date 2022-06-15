@@ -1,4 +1,4 @@
-# Grupo 00:
+# Grupo 30:
 # 92759 Laura Quintas
 # 92780 Raquel Romão
 
@@ -27,6 +27,7 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
+        self.open = False
         self.possible_actions = None
         self.actions()
 
@@ -51,9 +52,9 @@ class TakuzuState:
                 half = self.board.board_size //2 + 1
 
             for i in empty:
-                if line[i[0]][0] < half and col[i[1]][0] < half:
+                if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)==2:
                     actions.append((i[0],i[1],0))
-                if line[i[0]][1] < half and col[i[1]][1] < half:
+                if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)==2:
                     actions.append((i[0],i[1],1))
             self.possible_actions = actions
  
@@ -64,8 +65,9 @@ class TakuzuState:
         empty = list(zip(result[0],result[1]))
         return empty
     
-    def reset_actions(self):
-        self.possible_actions = [] 
+    def expand(self):
+        self.open = True
+    
 
     #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não -> afinal o próprio node tem em si essa variável!
 
@@ -163,8 +165,11 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-
-        return state.possible_actions
+        if not state.open:
+            state.expand()
+            return state.possible_actions
+        else:
+            return []
 
 
     def result(self, state: TakuzuState, action):
@@ -181,8 +186,6 @@ class Takuzu(Problem):
 
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
-            #avoids going through a path that was already visited
-            self.visited_states[hash_state].reset_actions()
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
