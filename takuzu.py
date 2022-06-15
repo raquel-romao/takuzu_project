@@ -29,7 +29,7 @@ class TakuzuState:
         TakuzuState.state_id += 1
         self.open = False
         self.possible_actions = None
-        self.actions()
+
 
     def __lt__(self, other):
         return self.id < other.id
@@ -167,7 +167,7 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
         if not state.open:
             state.expand()
-            return state.possible_actions
+            return state.actions()
         else:
             return []
 
