@@ -53,10 +53,10 @@ class TakuzuState:
 
             for i in empty:
                 #and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)==2
-                if line[i[0]][0] < half and col[i[1]][0] < half :
+                if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2:
                     actions.append((i[0],i[1],0))
                 #and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)==2
-                if line[i[0]][1] < half and col[i[1]][1] < half :
+                if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2:
                     actions.append((i[0],i[1],1))
             self.possible_actions = actions
  
