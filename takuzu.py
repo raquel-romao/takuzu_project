@@ -45,7 +45,7 @@ class TakuzuState:
                 line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
-                empty = self.empty_positions()
+                empty = self.board.empty
 
                 if self.board.board_size % 2 == 0:
                     half = self.board.board_size //2
@@ -78,10 +78,7 @@ class TakuzuState:
         else:
             return []
 
-    def empty_positions(self):
-        result = np.where(self.board.board == 2)
-        empty = list(zip(result[0],result[1]))
-        return empty
+
     
     def expand(self):
         self.open = True
@@ -91,9 +88,10 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board, board_size): 
+    def __init__(self, board, board_size, empty): 
         self.board = board
         self.board_size = board_size
+        self.empty = empty
         self.string = str(self.board.ravel())
         
     
@@ -109,6 +107,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
+        self.empty.delete((row,col))
         self.string = str(self.board.ravel) # atualiza o hash value.
         
         
@@ -149,7 +148,8 @@ class Board:
 
     def copy(self):
         new_board = self.board.copy()
-        return Board(new_board, self.board_size)
+        return Board(new_board, self.board_size, self.empty)
+
 
 
     @staticmethod
@@ -160,14 +160,17 @@ class Board:
 
         board_size = int(stdin.readline().rstrip('\n'))
         board = np.ones((board_size, board_size), dtype=int)
-
+        empty = np.array([])
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value = int(values[j])
                 board[i, j] = value
+                if value ==2:
+                    empty.append((i,j))
 
-        new_board = Board(board, board_size)
+
+        new_board = Board(board, board_size, empty)
 
         return new_board
 
