@@ -269,6 +269,7 @@ class Takuzu(Problem):
         for line in board_np:
             if 2 not in line:
                 count_filled += 1
+        return count_filled
 
 
     def h(self, node: Node):
@@ -285,25 +286,34 @@ class Takuzu(Problem):
 
         if self.goal_test(current_state):
             return 0
-           
-        broken_rule = 0  
+        
+        broken_rule = 0
         if parent_node != None:
-          parent_state = parent_node.state
-          lin_changed = last_action[0]
-          col_changed = last_action[1]
-          #val_inserted = last_action[2]
+            parent_state = parent_node.state
+            lin_changed = last_action[0]
+            col_changed = last_action[1]
+            #val_inserted = last_action[2]
 
-          broken_rule = self.find_broken_rules(node, board_np, lin_changed)
-          broken_rule += self.find_broken_rules(node, np.transpose(board_np), col_changed)
+            broken_rule = self.find_broken_rules(node, board_np, lin_changed)
+            broken_rule += self.find_broken_rules(node, np.transpose(board_np), col_changed)
+
+            if broken_rule!=0:
+                return broken_rule
+
+            f += parent_state.possible_actions.index(last_action)
+
+            number_actions = len(current_state.actions())
+            if number_actions == 0:
+                return board_size**3
+
+            else:
+                f += number_actions
 
         f += board_size - self.count_filled(board_np)
         f += board_size - self.count_filled(np.transpose(board_np))
 
-        #posição da ação -> possible_actions
-        # se actions = [] e ainda não tiver preenchida, nem vale a pena olhar para esse -> board_size**2
 
-        #pensei pegar nas ações possíveis para contabilizar o número de restrições (inversamente) -> quanto + ações possíveis, mais longe do objetivo estamos
-        f += len(current_state.actions()) #nunca vai ter mais None se for feito assim 
+        # se actions = [] e ainda não tiver preenchida, nem vale a pena olhar para esse -> board_size**2
 
         return f + broken_rule
         
