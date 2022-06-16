@@ -90,5 +90,9 @@ c=0
 d=1
 print((a==0 or b==0) and c==0)
 '''
-a = np.array([[1,2,1],[1,4,0]])
-print(np.any(a == [1,1]))
+a = np.array([[1,2,1],[1,4,0], [1,2,1]])
+indices = np.arange(3)
+print(np.any(a[indices != 0, :] == a[0, :]))
+print(a[indices != 1, :])
+
+print(np.count_nonzero(a[1, :] == 1))

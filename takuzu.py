@@ -1,4 +1,4 @@
-# Grupo 00:
+# Grupo 30:
 # 92759 Laura Quintas
 # 92780 Raquel Romão
 
@@ -67,7 +67,6 @@ class TakuzuState:
     def reset_actions(self):
         self.possible_actions = [] 
 
-    #quando gero um estado posso meter aqui qual a jogada que me fez chegar ao estado -> posso depois ver se na heurística foi quebrada alguma regra com esta jogada ou não -> afinal o próprio node tem em si essa variável!
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
@@ -251,17 +250,18 @@ class Takuzu(Problem):
             return 0
 
         broken_rule = 0
+        indices = np.arange(board_size)
         for line in range(board_size):
             if 2 not in board_np[line, :]: #linha completa
                
                 #teste à adjacência na linha
                 for j in range(board_size):
                     if board.adjacent_vertical_numbers(line,j).count(board.get_number(line,j))==2 or board.adjacent_horizontal_numbers(line,j).count(board.get_number(line,j))==2:
-                        broken_rule += 10
+                        broken_rule += 100
                 
                 #se encontrar alguma linha igual
-                if np.any(board_np == board_np[line, :]): #-> arranjar outra forma
-                    broken_rule += 10
+                if np.any(board_np[indices != line, :] == board_np[line, :]): #indices != line para ir comparar a todas as outras linhas menos na que estou a mexer
+                    broken_rule += 100
 
                 
         for col in range(board_size):
@@ -270,13 +270,12 @@ class Takuzu(Problem):
                 #teste à adjacência na coluna
                 for i in range(board_size):
                     if board.adjacent_vertical_numbers(i,col).count(board.get_number(i,col))==2 or board.adjacent_horizontal_numbers(i,col).count(board.get_number(i,col))==2:
-                        broken_rule += 10
+                        broken_rule += 100
 
                 #se encontrar alguma coluna igual
-                if np.any(board_np == board_np[:, col], axis=0): #-> afinal acho que não posso fazer isto (está a dar erro, mudar!)
-                    broken_rule += 10
+                if np.any(board_np[indices != col, :] == board_np[:, col]): #também podiamos fazer a comparação para colunas que já estão completas mas idk
+                    broken_rule += 100
            
-            #aumento de 10 por cada regra violada (peso de 10 mandado ao ar)
             
         if last_action != None and parent_node != None:
           parent_state = parent_node.state
