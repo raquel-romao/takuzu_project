@@ -208,6 +208,7 @@ class Takuzu(Problem):
         new_board.set_number(action[0], action[1], action[2])
 
         print(new_board.empty)
+        print(new_board)
         hash_state = hash(new_board)
 
         #avoid creating same state, helps with space
