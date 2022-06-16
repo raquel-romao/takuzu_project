@@ -316,19 +316,8 @@ class Takuzu(Problem):
         f += board_size - self.count_filled(board_np)
         f += board_size - self.count_filled(np.transpose(board_np))
 
-
-        # se actions = [] e ainda não tiver preenchida, nem vale a pena olhar para esse -> board_size**2
-
         return f + broken_rule
-        
-        
-        #ideias para heurísticas:
-        #devolver 0 se não violar nenhuma regra
-        #aumentat 10 ou assim por cada regra que se viola
-        #MAS por ex se faltarem muitas peças para adicionar numa linha por exemplo e tivermos bue longe do n//2, jogar um 1 seria mais relavante, devolver 0 no caso de jogar 1 (o ideal) ou devolver 1 no caso de jogar 0 (pode ajudar mas não muito)
-        #Contar o numero de restrições do state e fazer f+= restrições
-    
-    # TODO: outros metodos da classe
+
 
 if __name__ == "__main__":
     # $ python3 takuzu < i1.txt
