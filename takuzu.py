@@ -266,9 +266,11 @@ class Takuzu(Problem):
 
     def count_filled(self, board_np):
         count_filled = 0
+        
         for line in board_np:
             if 2 not in line:
                 count_filled += 1
+
         return count_filled
 
 
