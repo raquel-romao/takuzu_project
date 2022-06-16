@@ -126,13 +126,7 @@ if last_action != None and parent_node != None:
 """
 a = np.array([[1,2,1],[1,4,1], [1,2,1]])
 indices = np.arange(3)
-print(np.any(a[:, indices != 0] == a[0, :]))
-print(a[:, indices != 0])
+###print(np.where(a == 2))
 
-print(np.count_nonzero(a[1, :] == 1))
-
-print(indices)
-
-indices = np.delete(indices, 0)
-
-print(indices)
+for i in a:
+    print(i)

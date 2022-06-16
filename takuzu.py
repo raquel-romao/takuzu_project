@@ -264,7 +264,11 @@ class Takuzu(Problem):
 
         return 0
 
-
+    def count_filled(self, board_np):
+        count_filled = 0
+        for line in board_np:
+            if 2 not in line:
+                count_filled += 1
 
 
     def h(self, node: Node):
@@ -283,7 +287,7 @@ class Takuzu(Problem):
             return 0
            
         broken_rule = 0  
-        if last_action != None and parent_node != None: #pode ser redundante, testar
+        if parent_node != None:
           parent_state = parent_node.state
           lin_changed = last_action[0]
           col_changed = last_action[1]
@@ -291,11 +295,10 @@ class Takuzu(Problem):
 
           broken_rule = self.find_broken_rules(node, board_np, lin_changed)
           broken_rule += self.find_broken_rules(node, np.transpose(board_np), col_changed)
-        
-        
-        
 
-        #numero total de linhas - preenchidas  & colunas
+        f += board_size - self.count_filled(board_np)
+        f += board_size - self.count_filled(np.transpose(board_np))
+
         #posição da ação -> possible_actions
         # se actions = [] e ainda não tiver preenchida, nem vale a pena olhar para esse -> board_size**2
 
