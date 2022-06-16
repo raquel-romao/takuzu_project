@@ -45,7 +45,7 @@ class TakuzuState:
                 line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
-                empty = self.board.empty
+                empty = self.empty_positions()
 
                 if self.board.board_size % 2 == 0:
                     half = self.board.board_size //2
@@ -78,7 +78,10 @@ class TakuzuState:
         else:
             return []
 
-
+    def empty_positions(self):
+        result = np.where(self.board.board == 2)
+        empty = list(zip(result[0],result[1]))
+        return empty
     
     def expand(self):
         self.open = True
@@ -108,7 +111,7 @@ class Board:
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
         print((row,col))
-        self.empty.remove((row,col))
+        #self.empty.remove((row,col))
         self.string = str(self.board.ravel) # atualiza o hash value.
         
         
