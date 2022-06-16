@@ -107,7 +107,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        self.empty.delete((row,col))
+        self.empty = np.delete(self.empty, (row,col))
         self.string = str(self.board.ravel) # atualiza o hash value.
         
         
@@ -167,7 +167,7 @@ class Board:
                 value = int(values[j])
                 board[i, j] = value
                 if value ==2:
-                    empty.append((i,j))
+                    empty =np.append(empty, (i,j))
 
 
         new_board = Board(board, board_size, empty)
