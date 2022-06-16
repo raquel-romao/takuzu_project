@@ -53,7 +53,7 @@ class TakuzuState:
                     half = self.board.board_size //2 + 1
 
                 for i in empty:
-                    position_actions =[]
+                    position_actions = []
 
                     if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
                         position_actions.append((i[0],i[1],0))
@@ -313,7 +313,7 @@ class Takuzu(Problem):
                 return board_size**3
 
             else:
-                f += number_actions
+                f += number_actions - len(current_state.empty_positions()) 
 
         f += board_size - self.count_filled(board_np)
         f += board_size - self.count_filled(np.transpose(board_np))
