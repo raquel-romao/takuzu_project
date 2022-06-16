@@ -254,21 +254,19 @@ class Takuzu(Problem):
         board = node.state.board
         board_size = board.board_size
 
-        broken_rule = 0
         indices = np.arange(board_size)
         for i in range(board_size):
-            if 2 not in board_np[i, :]: #linha completa
-               
-                #teste à adjacência na linha
-                for j in range(board_size):
-                    if board.adjacent_vertical_numbers(i,j).count(board.get_number(i,j))==2 or board.adjacent_horizontal_numbers(i,j).count(board.get_number(i,j))==2:
-                        broken_rule += 100
-                
-                #se encontrar alguma linha igual
-                if np.any(board_np[indices != i, :] == board_np[i, :]): #indices != line para ir comparar a todas as outras linhas menos na que estou a mexer
-                    broken_rule += 100
+            if 2 not in board_np[i, :]: 
 
-        return broken_rule
+                indices = np.delete(indices, 0)
+                
+                if np.any(board_np[indices, :] == board_np[i, :]):
+                    return board_size**3
+                
+            else:
+                indices = np.delete(indices, 0)
+
+        return 0
 
 
 
@@ -299,21 +297,15 @@ class Takuzu(Problem):
           col_changed = last_action[1]
           val_inserted = last_action[2]
         
-        #se ainda tivermos muita falta de 1's, jogar um 1 pode ser mais relavente (mandei o valor de ainda nos faltar mais de 40% (mais ou menos, depende se estamos a falar de impar ou par) para termos o nr de 1s final)
-          if np.count_nonzero(parent_state.board.board[lin_changed, :] == 1) < 0.6*(board_size//2): 
-              if val_inserted == 1:
-                  f += 0
-              elif val_inserted == 0:
-                  f += 1
+        
+        
 
-          elif np.count_nonzero(parent_state.board.board[:, col_changed] == 1) < 0.6*(board_size//2): 
-              if val_inserted == 1:
-                  f += 0
-              elif val_inserted == 0:
-                  f += 1
+        #numero total de linhas - preenchidas  & colunas
+        #posição da ação -> possible_actions
+        # se actions = [] e ainda não tiver preenchida, nem vale a pena olhar para esse -> board_size**2
 
         #pensei pegar nas ações possíveis para contabilizar o número de restrições (inversamente) -> quanto + ações possíveis, mais longe do objetivo estamos
-        f += len(current_state.actions()) #nunca vai ter mais None se for feito assim
+        f += len(current_state.actions()) #nunca vai ter mais None se for feito assim 
 
         return f + broken_rule
         
@@ -333,7 +325,7 @@ if __name__ == "__main__":
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = breadth_first_tree_search(problem)
+    goal_node = astar_search(problem)
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)

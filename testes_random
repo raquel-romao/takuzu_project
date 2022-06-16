@@ -104,9 +104,35 @@ for col in range(board_size):
                 if np.any(board_np[:, indices != col] == board_np[:, col]): #também podiamos fazer a comparação para colunas que já estão completas mas idk
                     broken_rule += 100
 """
+"""
+if last_action != None and parent_node != None:
+          parent_state = parent_node.state
+          lin_changed = last_action[0]
+          col_changed = last_action[1]
+          val_inserted = last_action[2]
+
+#se ainda tivermos muita falta de 1's, jogar um 1 pode ser mais relavente (mandei o valor de ainda nos faltar mais de 40% (mais ou menos, depende se estamos a falar de impar ou par) para termos o nr de 1s final)
+          if np.count_nonzero(parent_state.board.board[lin_changed, :] == 1) < 0.6*(board_size//2): 
+              if val_inserted == 1:
+                  f += 0
+              elif val_inserted == 0:
+                  f += 1
+
+          elif np.count_nonzero(parent_state.board.board[:, col_changed] == 1) < 0.6*(board_size//2): 
+              if val_inserted == 1:
+                  f += 0
+              elif val_inserted == 0:
+                  f += 1
+"""
 a = np.array([[1,2,1],[1,4,1], [1,2,1]])
 indices = np.arange(3)
 print(np.any(a[:, indices != 0] == a[0, :]))
 print(a[:, indices != 0])
 
 print(np.count_nonzero(a[1, :] == 1))
+
+print(indices)
+
+indices = np.delete(indices, 0)
+
+print(indices)
