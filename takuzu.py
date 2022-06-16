@@ -35,10 +35,10 @@ class TakuzuState:
         return self.id < other.id
 
 
-    def __hash__(self): #também é para pôr aqui? -> acho que no need -> deixei pq acabas por ter maneira de saber o estado pq ta sempre só associado a uma board
+    def __hash__(self): 
         return hash(self.board)
 
-    #ideia: dar prioridade a certas ações aqui, ordenação da lista de ações (?)
+
     def actions(self):
         if not self.open:
             if self.possible_actions == None:
