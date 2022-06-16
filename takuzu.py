@@ -107,7 +107,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        self.empty.delete((row,col))
+        self.empty.remove((row,col))
         self.string = str(self.board.ravel) # atualiza o hash value.
         
         
