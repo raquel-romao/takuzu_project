@@ -90,9 +90,23 @@ c=0
 d=1
 print((a==0 or b==0) and c==0)
 '''
-a = np.array([[1,2,1],[1,4,0], [1,2,1]])
+
+"""
+for col in range(board_size):
+            if 2 not in board_np[:, col]: #coluna completa
+
+                #teste à adjacência na coluna
+                for i in range(board_size):
+                    if board.adjacent_vertical_numbers(i,col).count(board.get_number(i,col))==2 or board.adjacent_horizontal_numbers(i,col).count(board.get_number(i,col))==2:
+                        broken_rule += 100
+
+                #se encontrar alguma coluna igual
+                if np.any(board_np[:, indices != col] == board_np[:, col]): #também podiamos fazer a comparação para colunas que já estão completas mas idk
+                    broken_rule += 100
+"""
+a = np.array([[1,2,1],[1,4,1], [1,2,1]])
 indices = np.arange(3)
-print(np.any(a[indices != 0, :] == a[0, :]))
-print(a[indices != 1, :])
+print(np.any(a[:, indices != 0] == a[0, :]))
+print(a[:, indices != 0])
 
 print(np.count_nonzero(a[1, :] == 1))
