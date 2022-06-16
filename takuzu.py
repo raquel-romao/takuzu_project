@@ -166,11 +166,13 @@ class Board:
             for j in range(board_size):
                 value = int(values[j])
                 board[i, j] = value
-                if value ==2:
+                if value == 2:
                     empty.append((i,j))
 
 
         new_board = Board(board, board_size, empty)
+
+        print(empty)
 
         return new_board
 
