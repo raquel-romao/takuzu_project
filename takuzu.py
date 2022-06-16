@@ -288,6 +288,10 @@ class Takuzu(Problem):
 
         if self.goal_test(current_state):
             return 0
+
+        number_actions = len(current_state.actions())
+        if number_actions == 0:
+            return board_size**3
         
         broken_rule = 0
         if parent_node != None:
@@ -308,9 +312,7 @@ class Takuzu(Problem):
 
             f += parent_state.possible_actions.index(last_action)
 
-            number_actions = len(current_state.actions())
-            if number_actions == 0:
-                return board_size**3
+            
 
 
         f += board_size - self.count_filled(board_np)
