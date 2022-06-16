@@ -312,8 +312,6 @@ class Takuzu(Problem):
             if number_actions == 0:
                 return board_size**3
 
-            else:
-                f += number_actions
 
         f += board_size - self.count_filled(board_np)
         f += board_size - self.count_filled(np.transpose(board_np))
