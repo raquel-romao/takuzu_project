@@ -190,6 +190,7 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
         actions = state.actions()
         state.expand()
+        print(actions)
         return actions
 
 
