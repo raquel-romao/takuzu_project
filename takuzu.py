@@ -312,7 +312,7 @@ class Takuzu(Problem):
         # se actions = [] e ainda não tiver preenchida, nem vale a pena olhar para esse -> board_size**2
 
         #pensei pegar nas ações possíveis para contabilizar o número de restrições (inversamente) -> quanto + ações possíveis, mais longe do objetivo estamos
-        f += len(current_state.actions()) #nunca vai ter mais None se for feito assim 
+        #nunca vai ter mais None se for feito assim 
 
         return f + broken_rule
         
