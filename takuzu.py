@@ -55,10 +55,10 @@ class TakuzuState:
                 for i in empty:
                     position_actions =[]
 
-                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2:
+                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
                         position_actions.append((i[0],i[1],0))
 
-                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2:
+                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
                         position_actions.append((i[0],i[1],1))
                     
                     if len(position_actions)==2:
@@ -69,7 +69,8 @@ class TakuzuState:
                         actions.insert(0,position_actions[0])
 
                     else:
-                        return []
+                        self.possible_actions = []
+                        return self.possible_actions
 
                 self.possible_actions = actions
     
