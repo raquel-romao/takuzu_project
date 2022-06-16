@@ -295,7 +295,11 @@ class Takuzu(Problem):
             #val_inserted = last_action[2]
 
             broken_rule = self.find_broken_rules(node, board_np, lin_changed)
-            broken_rule += self.find_broken_rules(node, np.transpose(board_np), col_changed)
+
+            if broken_rule!=0:
+                return broken_rule
+            
+            broken_rule = self.find_broken_rules(node, np.transpose(board_np), col_changed)
 
             if broken_rule!=0:
                 return broken_rule
