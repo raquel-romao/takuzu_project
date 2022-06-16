@@ -123,6 +123,11 @@ if last_action != None and parent_node != None:
                   f += 0
               elif val_inserted == 0:
                   f += 1
+
+    def empty_positions(self):
+        result = np.where(self.board.board == 2)
+        empty = list(zip(result[0],result[1]))
+        return empty
 """
 a = np.array([[1,2,1],[1,4,1], [1,2,1]])
 indices = np.arange(3)

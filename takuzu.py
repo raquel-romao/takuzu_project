@@ -35,17 +35,17 @@ class TakuzuState:
         return self.id < other.id
 
 
-    def __hash__(self): #também é para pôr aqui? -> acho que no need -> deixei pq acabas por ter maneira de saber o estado pq ta sempre só associado a uma board
+    def __hash__(self): 
         return hash(self.board)
 
-    #ideia: dar prioridade a certas ações aqui, ordenação da lista de ações (?)
+
     def actions(self):
         if not self.open:
             if self.possible_actions == None:
                 line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
-                empty = self.empty_positions()
+                empty = self.board.empty
 
                 if self.board.board_size % 2 == 0:
                     half = self.board.board_size //2
@@ -78,10 +78,7 @@ class TakuzuState:
         else:
             return []
 
-    def empty_positions(self):
-        result = np.where(self.board.board == 2)
-        empty = list(zip(result[0],result[1]))
-        return empty
+
     
     def expand(self):
         self.open = True
@@ -91,9 +88,10 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board, board_size): 
+    def __init__(self, board, board_size, empty): 
         self.board = board
         self.board_size = board_size
+        self.empty = empty
         self.string = str(self.board.ravel())
         
     
@@ -109,6 +107,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
+        self.empty.remove((row,col))
         self.string = str(self.board.ravel) # atualiza o hash value.
         
         
@@ -149,7 +148,8 @@ class Board:
 
     def copy(self):
         new_board = self.board.copy()
-        return Board(new_board, self.board_size)
+        return Board(new_board, self.board_size, self.empty)
+
 
 
     @staticmethod
@@ -160,14 +160,17 @@ class Board:
 
         board_size = int(stdin.readline().rstrip('\n'))
         board = np.ones((board_size, board_size), dtype=int)
-
+        empty = []
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value = int(values[j])
                 board[i, j] = value
+                if value ==2:
+                    empty.append((i,j))
 
-        new_board = Board(board, board_size)
+
+        new_board = Board(board, board_size, empty)
 
         return new_board
 
@@ -288,6 +291,10 @@ class Takuzu(Problem):
 
         if self.goal_test(current_state):
             return 0
+
+        number_actions = len(current_state.actions())
+        if number_actions == 0:
+            return board_size**3
         
         broken_rule = 0
         if parent_node != None:
@@ -308,17 +315,11 @@ class Takuzu(Problem):
 
             f += parent_state.possible_actions.index(last_action)
 
-            number_actions = len(current_state.actions())
-            if number_actions == 0:
-                return board_size**3
-
-            else:
-                f += number_actions - len(current_state.empty_positions()) 
-
+            
         f += board_size - self.count_filled(board_np)
         f += board_size - self.count_filled(np.transpose(board_np))
 
-        return f + broken_rule
+        return f 
 
 
 if __name__ == "__main__":
@@ -328,7 +329,7 @@ if __name__ == "__main__":
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = astar_search(problem)
+    goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
