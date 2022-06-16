@@ -251,21 +251,16 @@ class Takuzu(Problem):
             return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state)
 
     
-    def find_broken_rules(self, node: Node, board_np):
+    def find_broken_rules(self, node: Node, board_np, i):
         board = node.state.board
         board_size = board.board_size
 
         indices = np.arange(board_size)
-        for i in range(board_size):
-            if 2 not in board_np[i, :]: 
-
-                indices = np.delete(indices, 0)
+        
+        if 2 not in board_np[i, :]: 
                 
-                if np.any(board_np[indices, :] == board_np[i, :]):
-                    return board_size**3
-                
-            else:
-                indices = np.delete(indices, 0)
+            if np.any(board_np[indices != i, :] == board_np[i, :]):
+                return board_size**3
 
         return 0
 
@@ -286,17 +281,16 @@ class Takuzu(Problem):
 
         if self.goal_test(current_state):
             return 0
-
-        broken_rule = self.find_broken_rules(node, board_np)
-
-        broken_rule += self.find_broken_rules(node, np.transpose(board_np))
            
-            
-        if last_action != None and parent_node != None:
+        broken_rule = 0  
+        if last_action != None and parent_node != None: #pode ser redundante, testar
           parent_state = parent_node.state
           lin_changed = last_action[0]
           col_changed = last_action[1]
-          val_inserted = last_action[2]
+          #val_inserted = last_action[2]
+
+          broken_rule = self.find_broken_rules(node, board_np, lin_changed)
+          broken_rule += self.find_broken_rules(node, np.transpose(board_np), col_changed)
         
         
         
