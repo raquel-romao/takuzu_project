@@ -27,8 +27,9 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
+        self.open = False
         self.possible_actions = None
-        self.actions()
+
 
     def __lt__(self, other):
         return self.id < other.id
@@ -39,33 +40,39 @@ class TakuzuState:
 
     #ideia: dar prioridade a certas ações aqui, ordenação da lista de ações (?)
     def actions(self):
-        if self.possible_actions == None:
-            line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-            col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
-            actions = []
-            empty = self.empty_positions()
+        if not self.open:
+            if self.possible_actions == None:
+                line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
+                col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+                actions = []
+                empty = self.empty_positions()
 
-            if self.board.board_size % 2 == 0:
-                half = self.board.board_size //2
-            else:
-                half = self.board.board_size //2 + 1
+                if self.board.board_size % 2 == 0:
+                    half = self.board.board_size //2
+                else:
+                    half = self.board.board_size //2 + 1
 
-            for i in empty:
-                if line[i[0]][0] < half and col[i[1]][0] < half:
-                    actions.append((i[0],i[1],0))
-                if line[i[0]][1] < half and col[i[1]][1] < half:
-                    actions.append((i[0],i[1],1))
-            self.possible_actions = actions
- 
-        return self.possible_actions
+                for i in empty:
+
+                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2:
+                        actions.append((i[0],i[1],0))
+
+                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2:
+                        actions.append((i[0],i[1],1))
+                self.possible_actions = actions
+    
+            return self.possible_actions
+        else:
+            return []
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
         empty = list(zip(result[0],result[1]))
         return empty
     
-    def reset_actions(self):
-        self.possible_actions = [] 
+    def expand(self):
+        self.open = True
+    
 
 
 class Board:
@@ -89,7 +96,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        self.string = str(self.board.ravel) # atualiza o hash value. sque não é preciso isto aqui
+        self.string = str(self.board.ravel) # atualiza o hash value.
         
         
     def get_number(self, row: int, col: int) -> int:
@@ -162,8 +169,9 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-
-        return state.possible_actions
+        actions = state.actions()
+        state.expand()
+        return actions
 
 
     def result(self, state: TakuzuState, action):
@@ -180,8 +188,6 @@ class Takuzu(Problem):
 
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
-            #avoids going through a path that was already visited
-            self.visited_states[hash_state].reset_actions()
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
@@ -297,8 +303,7 @@ class Takuzu(Problem):
                   f += 1
 
         #pensei pegar nas ações possíveis para contabilizar o número de restrições (inversamente) -> quanto + ações possíveis, mais longe do objetivo estamos
-        if current_state.possible_actions != None:
-          f += len(current_state.possible_actions)
+        f += len(current_state.actions()) #nunca vai ter mais None se for feito assim
 
         return f + broken_rule
         
