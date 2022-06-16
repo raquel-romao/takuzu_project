@@ -69,7 +69,8 @@ class TakuzuState:
                         actions.insert(0,position_actions[0])
 
                     else:
-                        return []
+                        self.possible_actions = []
+                        return self.possible_actions
 
                 self.possible_actions = actions
     
