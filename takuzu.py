@@ -284,14 +284,26 @@ class Takuzu(Problem):
            
         broken_rule = 0  
         if last_action != None and parent_node != None: #pode ser redundante, testar
-          parent_state = parent_node.state
-          lin_changed = last_action[0]
-          col_changed = last_action[1]
-          #val_inserted = last_action[2]
+            parent_state = parent_node.state
+            lin_changed = last_action[0]
+            col_changed = last_action[1]
+            #val_inserted = last_action[2]
 
-          broken_rule = self.find_broken_rules(node, board_np, lin_changed)
-          broken_rule += self.find_broken_rules(node, np.transpose(board_np), col_changed)
-        
+            broken_rule = self.find_broken_rules(node, board_np, lin_changed)
+            broken_rule += self.find_broken_rules(node, np.transpose(board_np), col_changed)
+
+            if broken_rule!=0:
+                return broken_rule
+
+            f += parent_state.possible_actions.index(last_action)
+
+            number_actions = len(current_state.actions())
+            if number_actions == 0:
+                return board_size**3
+
+            else:
+                f += number_actions
+
         
         
 
