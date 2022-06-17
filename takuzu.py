@@ -177,7 +177,7 @@ class Board:
 
         new_board = Board(board, board_size, empty)
 
-        print(empty)
+
 
         return new_board
 
