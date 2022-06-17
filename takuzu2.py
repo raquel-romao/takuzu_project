@@ -5,8 +5,8 @@
 #import sys (como estava antes)
 
 
-from hashlib import new
 from sys import stdin
+import copy
 import numpy as np
 from search import (
     Problem,
@@ -16,7 +16,6 @@ from search import (
     depth_first_tree_search,
     greedy_search,
     recursive_best_first_search,
-    InstrumentedProblem,
 )
 
 
@@ -27,19 +26,14 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
+        self.empty = board.empty
         self.open = False
-        self.possible_actions = None
-
 
     def __lt__(self, other):
         return self.id < other.id
 
-
-    def __hash__(self): 
+    def __hash__(self):
         return hash(self.board)
-
-    def __eq__(self,state):
-        return hash(self.board) == hash(state.board)
 
 
     def actions(self):
@@ -48,32 +42,31 @@ class TakuzuState:
                 line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
+                empty = self.board.empty
 
-                #if self.find_broken_rules():
-                    #return []
-
-                empty = self.empty_positions()
 
                 if self.board.board_size % 2 == 0:
                     half = self.board.board_size //2
                 else:
                     half = self.board.board_size //2 + 1
 
+
                 for i in empty:
                     position_actions = []
 
                     if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
+                        
                         position_actions.append((i[0],i[1],0))
 
                     if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
                         position_actions.append((i[0],i[1],1))
                     
                     if len(position_actions)==2:
-                        actions.insert(0, position_actions[0])
-                        actions.insert(0, position_actions[1])
+                        actions.append(position_actions[0])
+                        actions.append(position_actions[1])
                     
                     elif len(position_actions)==1:
-                        actions.append(position_actions[0])
+                        actions.insert(0,position_actions[0])
 
                     else:
                         self.possible_actions = []
@@ -86,50 +79,23 @@ class TakuzuState:
             return []
 
 
-    def empty_positions(self):
-        result = np.where(self.board.board == 2)
-        empty = list(zip(result[0],result[1]))
-        return empty
+    #def find_broken_rule(self, row: int, col: int, value: int):
+
 
 
     def expand(self):
         self.open = True
 
 
-    def find_broken_rules(self):
-        board = self.board.board
-        board_t = np.transpose(board)
-        board_size = len(board)
-        indices = np.arange(board_size)
-        
-        for i in range(board_size):
-            if 2 not in board[i, :]: 
-                
-                if np.any(board[indices[i+1:], :] == board[i, :]):
-                    return True
-
-            if 2 not in board_t[i,:]:
-                if np.any(board_t[indices[i+1:], :] == board_t[i,:]):
-                    return True
-
-
-        return False
-    
-
-    
-
-
 class Board:
-    """Representação interna de um tabuleiro de Takuzu.""" 
-
-    def __init__(self, board, board_size, empty): 
+    """Representação interna de um tabuleiro de Takuzu."""
+    def __init__(self, board, board_size: int, empty: list):
         self.board = board
         self.board_size = board_size
         self.empty = empty
         self.string = str(self.board.ravel())
-        
-    
-    def __str__(self):
+
+    def __repr__(self):
         prettyprint = ''
         for i in self.board:
             for j in range(len(i)):
@@ -139,21 +105,21 @@ class Board:
                     prettyprint += f'{i[j]}    '
         return prettyprint
 
+
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        #print((row,col))
-        #self.empty.remove((row,col))
-        self.string = str(self.board.ravel()) # atualiza o hash value.
-        
-        
-    def get_number(self, row: int, col: int) -> int:
+        self.empty.remove((row,col))
+        self.string = str(self.board.ravel()) # atualiza o hash value. -> não sei se é necessário atualizar aqui ou se atualiza depois automaticamente
+
+
+    def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
-        return self.board[row, col] 
+        return self.board[row, col]
+
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
-        
         if row == 0:
             return (None, self.get_number(row + 1, col))
         
@@ -167,7 +133,6 @@ class Board:
     def adjacent_horizontal_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
-      
         if col == 0:
             return (None, self.get_number(row, col + 1))
         
@@ -177,22 +142,28 @@ class Board:
         else:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
-
+    
     def __hash__(self):
         return hash(self.string)
 
+
     def copy(self):
         new_board = self.board.copy()
-        return Board(new_board, self.board_size, self.empty)
-
+        empty = copy.copy(self.empty)
+        return Board(new_board, self.board_size, empty)
 
 
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
         e retorna uma instância da classe Board.
-        """
 
+        Por exemplo:
+            $ python3 takuzu.py < input_T01
+
+            > from sys import stdin
+            > stdin.readline()
+        """
         board_size = int(stdin.readline().rstrip('\n'))
         board = np.ones((board_size, board_size), dtype=int)
         empty = []
@@ -207,9 +178,11 @@ class Board:
 
         new_board = Board(board, board_size, empty)
 
-        print(empty)
-
         return new_board
+
+    
+
+    # TODO: outros metodos da classe
 
 
 class Takuzu(Problem):
@@ -222,10 +195,8 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        actions = state.actions()
-        state.expand()
-        print(actions)
-        return actions
+        # TODO
+        pass
 
 
     def result(self, state: TakuzuState, action):
@@ -233,25 +204,19 @@ class Takuzu(Problem):
         'state' passado como argumento. A ação a executar deve ser uma
         das presentes na lista obtida pela execução de
         self.actions(state)."""
-        
         new_board = state.board.copy()
 
         new_board.set_number(action[0], action[1], action[2])
 
-
         hash_state = hash(new_board)
 
-        #avoid creating same state, helps with space
         if hash_state in self.visited_states:
 
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
- 
         self.visited_states.update({hash_state: new_state})
         
-        print(len(self.visited_states))
-
         return new_state
 
 
@@ -265,7 +230,6 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
 
-    #simplifiquei a parte final do half_half
     def half_half(self, state: TakuzuState):
         board_size = state.board.board_size
         half = board_size // 2
@@ -290,7 +254,6 @@ class Takuzu(Problem):
 
         return rows and cols
 
-
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
@@ -302,75 +265,26 @@ class Takuzu(Problem):
             return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state)
 
     
-    def find_broken_rules(self, node: Node, board_np, i):
 
-        board_size = len(board_np)
-        indices = np.arange(board_size)
-        
-        if 2 not in board_np[i, :]: 
-                
-            if np.any(board_np[indices != i, :] == board_np[i, :]):
-                return board_size**3
-
-        return 0
-
+    def goal_test(self, state: TakuzuState):
+        """Retorna True se e só se o estado passado como argumento é
+        um estado objetivo. Deve verificar se todas as posições do tabuleiro
+        estão preenchidas com uma sequência de números adjacentes."""
+        # TODO
+        pass
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
+        # TODO
+        pass
 
-        current_state = node.state
-        parent_node = node.parent
-        last_action = node.action
-        board = node.state.board
-        board_np = node.state.board.board
-        board_size = board.board_size
-
-        f = 0
-
-        if self.goal_test(current_state):
-            return 0
-
-        number_actions = len(current_state.actions())
-        if number_actions == 0:
-            return board_size**3
-        
-        broken_rule = 0
-        if parent_node != None:
-            parent_state = parent_node.state
-            lin_changed = last_action[0]
-            col_changed = last_action[1]
-            #val_inserted = last_action[2]
-
-            broken_rule = self.find_broken_rules(node, board_np, lin_changed)
-
-            if broken_rule!=0:
-                return broken_rule
-            
-            broken_rule = self.find_broken_rules(node, np.transpose(board_np), col_changed)
-
-            if broken_rule!=0:
-                return broken_rule
-
-            f += parent_state.possible_actions.index(last_action) #isto aqui já não me está a fazer sentido, as cenas de dar prioridade a certas ações fazem-me + sentido fazer na heuristica senão ela deixa de ter gd função idk
-
-            f += len(parent_state.possible_actions) - len(current_state.possible_actions) # recompensa aquele que o numero de açoes nao diminui muito 
-
-
-        f += board_size - np.count_nonzero((board_np == 2).sum(axis=0)) #rows_filled -> não sei até que ponto isto ajuda na heurístics tho
-        f += board_size - np.count_nonzero((board_np == 2).sum(axis=1)) #cols_filled
-
-        return f 
+    # TODO: outros metodos da classe
 
 
 if __name__ == "__main__":
-    
-    board = Board.parse_instance_from_stdin()
-    print(board)
-    # Criar uma instância de Takuzu:
-    problem = Takuzu(board)
-    # Obter o nó solução usando a procura em profundidade:
-    goal_node = depth_first_tree_search(problem)
-    # Verificar se foi atingida a solução
-    print("Is goal?", problem.goal_test(goal_node.state))
-    print("Solution:\n", goal_node.state.board)
-
+    # TODO:
+    # Ler o ficheiro de input de sys.argv[1],
+    # Usar uma técnica de procura para resolver a instância,
+    # Retirar a solução a partir do nó resultante,
+    # Imprimir para o standard output no formato indicado.
+    pass
