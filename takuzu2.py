@@ -333,19 +333,7 @@ if __name__ == "__main__":
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    state = TakuzuState(board)
+    goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
-    state1 = TakuzuState(board)
-
-    print(hash(state))
-    print(hash(state1))
-
-    state = problem.result(state, (1, 0, 0))
-    state1 = problem.result(state1, (1, 0, 0))
-
-    print(hash(state))
-    print(hash(state1))
-
-    #print("Is goal?", problem.goal_test(goal_node.state))
-    #print("Solution:\n", goal_node.state.board)
-
+    print("Is goal?", problem.goal_test(goal_node.state))
+    print("Solution:\n", goal_node.state.board)
