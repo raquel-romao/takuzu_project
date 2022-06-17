@@ -194,7 +194,6 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
         actions = state.actions()
         state.expand()
-        print(actions)
         return actions
 
 
@@ -212,13 +211,12 @@ class Takuzu(Problem):
 
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
-            print('olá')
+
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
         self.visited_states.update({hash_state: new_state})
         
-        print(len(self.visited_states))
         return new_state
 
 
@@ -329,13 +327,12 @@ class Takuzu(Problem):
 if __name__ == "__main__":
     
     board = Board.parse_instance_from_stdin()
-    print(board)
+
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
     goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
-    print("Is goal?", problem.goal_test(goal_node.state))
-    print("Solution:\n", goal_node.state.board)
+
 
 
