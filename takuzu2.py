@@ -38,6 +38,9 @@ class TakuzuState:
     def __hash__(self): 
         return hash(self.board)
 
+    def __eq__(self,state):
+        return hash(self.board) == hash(state.board)
+
 
     def actions(self):
         if not self.open:
@@ -45,6 +48,10 @@ class TakuzuState:
                 line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
+
+                #if self.find_broken_rules():
+                    #return []
+
                 empty = self.empty_positions()
 
                 if self.board.board_size % 2 == 0:
@@ -62,11 +69,11 @@ class TakuzuState:
                         position_actions.append((i[0],i[1],1))
                     
                     if len(position_actions)==2:
-                        actions.append(position_actions[0])
-                        actions.append(position_actions[1])
+                        actions.insert(0, position_actions[0])
+                        actions.insert(0, position_actions[1])
                     
                     elif len(position_actions)==1:
-                        actions.insert(0,position_actions[0])
+                        actions.append(position_actions[0])
 
                     else:
                         self.possible_actions = []
@@ -78,13 +85,37 @@ class TakuzuState:
         else:
             return []
 
+
     def empty_positions(self):
         result = np.where(self.board.board == 2)
         empty = list(zip(result[0],result[1]))
         return empty
-    
+
+
     def expand(self):
         self.open = True
+
+
+    def find_broken_rules(self):
+        board = self.board.board
+        board_t = np.transpose(board)
+        board_size = len(board)
+        indices = np.arange(board_size)
+        
+        for i in range(board_size):
+            if 2 not in board[i, :]: 
+                
+                if np.any(board[indices[i+1:], :] == board[i, :]):
+                    return True
+
+            if 2 not in board_t[i,:]:
+                if np.any(board_t[indices[i+1:], :] == board_t[i,:]):
+                    return True
+
+
+        return False
+    
+
     
 
 
@@ -110,7 +141,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        print((row,col))
+        #print((row,col))
         #self.empty.remove((row,col))
         self.string = str(self.board.ravel()) # atualiza o hash value.
         
@@ -207,18 +238,20 @@ class Takuzu(Problem):
 
         new_board.set_number(action[0], action[1], action[2])
 
-        print(new_board.empty)
-        print(new_board)
+
         hash_state = hash(new_board)
 
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
+
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
+ 
         self.visited_states.update({hash_state: new_state})
         
         print(len(self.visited_states))
+
         return new_state
 
 
@@ -230,6 +263,7 @@ class Takuzu(Problem):
         unique_cols = len(col_counts) == state.board.board_size
 
         return unique_rows and unique_cols
+
 
     #simplifiquei a parte final do half_half
     def half_half(self, state: TakuzuState):
@@ -256,6 +290,7 @@ class Takuzu(Problem):
 
         return rows and cols
 
+
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
@@ -268,9 +303,8 @@ class Takuzu(Problem):
 
     
     def find_broken_rules(self, node: Node, board_np, i):
-        board = node.state.board
-        board_size = board.board_size
 
+        board_size = len(board_np)
         indices = np.arange(board_size)
         
         if 2 not in board_np[i, :]: 
@@ -317,9 +351,11 @@ class Takuzu(Problem):
             if broken_rule!=0:
                 return broken_rule
 
-            f += parent_state.possible_actions.index(last_action)
+            f += parent_state.possible_actions.index(last_action) #isto aqui já não me está a fazer sentido, as cenas de dar prioridade a certas ações fazem-me + sentido fazer na heuristica senão ela deixa de ter gd função idk
 
-            
+            f += len(parent_state.possible_actions) - len(current_state.possible_actions) # recompensa aquele que o numero de açoes nao diminui muito 
+
+
         f += board_size - np.count_nonzero((board_np == 2).sum(axis=0)) #rows_filled -> não sei até que ponto isto ajuda na heurístics tho
         f += board_size - np.count_nonzero((board_np == 2).sum(axis=1)) #cols_filled
 
@@ -337,3 +373,4 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
+
