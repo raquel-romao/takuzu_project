@@ -1,6 +1,8 @@
 import numpy as np
 import sys
 
+from pyppeteer import launch
+
 
 
 '''
@@ -129,9 +131,18 @@ if last_action != None and parent_node != None:
         empty = list(zip(result[0],result[1]))
         return empty
 """
+'''
 a = np.array([[1,2,1],[1,4,1], [1,2,1]])
 indices = np.arange(3)
 ###print(np.where(a == 2))
 
 for i in a:
     print(i)
+'''
+a='lau'
+print(hash(a))
+
+b='lau'
+print(hash(b))
+
+print(a==b)
