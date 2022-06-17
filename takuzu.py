@@ -27,7 +27,6 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        #self.open = False
         self.possible_actions = None
 
 
@@ -40,7 +39,7 @@ class TakuzuState:
 
 
     def actions(self):
-        #if not self.open:
+        
         if self.possible_actions == None:
             line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
             col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
@@ -75,16 +74,14 @@ class TakuzuState:
             self.possible_actions = actions
 
         return self.possible_actions
-        #else:
-            #return []
+        
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
         empty = list(zip(result[0],result[1]))
         return empty
     
-    #def expand(self):
-        #self.open = True
+
     
 
 
@@ -191,10 +188,7 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        actions = state.actions()
-        #state.expand()
-        print(actions)
-        return actions
+        return state.actions()
 
 
     def result(self, state: TakuzuState, action):
@@ -212,15 +206,14 @@ class Takuzu(Problem):
 
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
-            print('olá')
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
-        print(hash(new_state))
+ 
         self.visited_states.update({hash_state: new_state})
         
         print(len(self.visited_states))
-        print(new_state.board)
+
         return new_state
 
 
@@ -234,18 +227,6 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
 
-    """def half_half(self, state: TakuzuState):
-        board_size = state.board.board_size
-        half = board_size //2
-        sum_col = np.sum(state.board.board, axis=0)
-        sum_lines = np.sum(state.board.board, axis=1)
-        if board_size % 2 == 0:
-            return np.all(sum_col==half) and np.all(sum_lines==half) 
-        else:
-            col = np.where(sum_col == half+1, half, sum_col)
-            lin = np.where(sum_lines == half+1, half, sum_lines)
-            return np.all(col==half) and np.all(lin==half)"""
-
     #simplifiquei a parte final do half_half
     def half_half(self, state: TakuzuState):
         board_size = state.board.board_size
@@ -258,13 +239,6 @@ class Takuzu(Problem):
         else:
             return np.all(np.isin(sum_col, (half, half+1))) and np.all(np.isin(sum_lines,(half, half+1)))
 
-    """def adjacent(self, state: TakuzuState): #podemos otimizar visto que nao precisamos de ver adjacentes verticais para a primeira e ultima linha e nao precisamos de ver adjacentes horizontais para a primeira e ultima coluna
-        board = state.board
-        for i in range(board.board_size):
-            for j in range(board.board_size):
-                if board.adjacent_vertical_numbers(i,j).count(board.get_number(i,j))==2 or board.adjacent_horizontal_numbers(i,j).count(board.get_number(i,j))==2:
-                    return False
-        return True"""
 
     def adjacent(self, state: TakuzuState):
         board = state.board.board
@@ -277,6 +251,7 @@ class Takuzu(Problem):
         cols = np.all(np.isin(v, (1, 2)))
 
         return rows and cols
+
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
