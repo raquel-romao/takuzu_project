@@ -278,6 +278,7 @@ def best_first_graph_search(problem, f, display=False):
             return node
         explored.add(node.state)
         for child in node.expand(problem):
+            print(explored)
             if child.state not in explored and child not in frontier:
                 frontier.append(child)
             elif child in frontier:
