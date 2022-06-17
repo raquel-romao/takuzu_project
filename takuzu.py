@@ -36,7 +36,7 @@ class TakuzuState:
 
     
     def __str__(self):
-        return self.board
+        return str(self.board)
 
 
     def __hash__(self): 
