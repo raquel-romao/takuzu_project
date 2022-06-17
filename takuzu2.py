@@ -28,6 +28,7 @@ class TakuzuState:
         TakuzuState.state_id += 1
         self.empty = board.empty
         self.open = False
+        self.possible_actions = None
 
     def __lt__(self, other):
         return self.id < other.id
