@@ -43,6 +43,7 @@ class TakuzuState:
                 line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
+                print(empty)
                 empty = self.board.empty
 
 
@@ -198,6 +199,7 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
         actions = state.actions()
         state.expand()
+        print(actions)
         return actions
 
 
