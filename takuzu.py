@@ -34,10 +34,6 @@ class TakuzuState:
     def __lt__(self, other):
         return self.id < other.id
 
-    
-    def __str__(self):
-        return str(self.board)
-
 
     def __hash__(self): 
         return hash(self.board)
@@ -52,6 +48,10 @@ class TakuzuState:
                 line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
+
+                if self.find_broken_rules():
+                    return []
+
                 empty = self.empty_positions()
 
                 if self.board.board_size % 2 == 0:
@@ -69,11 +69,11 @@ class TakuzuState:
                         position_actions.append((i[0],i[1],1))
                     
                     if len(position_actions)==2:
-                        actions.append(position_actions[0])
-                        actions.append(position_actions[1])
+                        actions.insert(0, position_actions[0])
+                        actions.insert(0, position_actions[1])
                     
                     elif len(position_actions)==1:
-                        actions.insert(0,position_actions[0])
+                        actions.append(position_actions[0])
 
                     else:
                         self.possible_actions = []
@@ -85,13 +85,35 @@ class TakuzuState:
         else:
             return []
 
+
     def empty_positions(self):
         result = np.where(self.board.board == 2)
         empty = list(zip(result[0],result[1]))
         return empty
-    
+
+
     def expand(self):
         self.open = True
+
+
+    def find_broken_rules(self):
+        board = self.board.board
+        board_t = np.transpose(board)
+        board_size = len(board)
+        indices = np.arange(board_size)
+        
+        for i in range(board_size):
+            if 2 not in board[i, :]: 
+                
+                if np.any(board[indices[i+1:], :] == board[i, :]):
+                    return True
+
+            if 2 not in board_t[i,:]:
+                if np.any(board_t[indices[i+1:], :] == board_t[i,:]):
+                    return True
+
+
+        return False
     
 
     
