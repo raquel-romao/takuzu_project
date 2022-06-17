@@ -45,7 +45,6 @@ class TakuzuState:
                 actions = []
                 
                 empty = self.board.empty
-                print(empty)
 
 
                 if self.board.board_size % 2 == 0:
@@ -79,7 +78,8 @@ class TakuzuState:
     
             return self.possible_actions
         else:
-            return []
+            self.possible_actions = []
+            return self.possible_actions
 
 
     #def find_broken_rule(self, row: int, col: int, value: int):
@@ -185,7 +185,7 @@ class Board:
 
     
 
-    # TODO: outros metodos da classe
+
 
 
 class Takuzu(Problem):
@@ -200,7 +200,6 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
         actions = state.actions()
         state.expand()
-        print(actions)
         return actions
 
 
