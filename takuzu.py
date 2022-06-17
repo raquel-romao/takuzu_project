@@ -212,6 +212,7 @@ class Takuzu(Problem):
 
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
+            print('olá')
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
@@ -219,6 +220,7 @@ class Takuzu(Problem):
         self.visited_states.update({hash_state: new_state})
         
         print(len(self.visited_states))
+
         return new_state
 
 
