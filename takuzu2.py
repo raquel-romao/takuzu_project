@@ -29,6 +29,8 @@ class TakuzuState:
         self.empty = board.empty
         self.open = False
         self.possible_actions = None
+        #self.filled_rows = set()
+        #self.filled_cols = set()
 
     def __lt__(self, other):
         return self.id < other.id
@@ -64,11 +66,11 @@ class TakuzuState:
                         position_actions.append((i[0],i[1],1))
                     
                     if len(position_actions)==2:
-                        actions.append(position_actions[0])
-                        actions.append(position_actions[1])
+                        actions.insert(0,position_actions[0])
+                        actions.insert(0,position_actions[1])
                     
                     elif len(position_actions)==1:
-                        actions.insert(0,position_actions[0])
+                        actions.append(position_actions[0])
 
                     else:
                         self.possible_actions = []
@@ -112,7 +114,7 @@ class Board:
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
         self.empty.remove((row,col))
-        self.string = str(self.board.ravel()) # atualiza o hash value. -> não sei se é necessário atualizar aqui ou se atualiza depois automaticamente
+        self.string = str(self.board.ravel()) # atualiza o hash value -> não sei se é necessário atualizar aqui ou se atualiza depois automaticamente
 
 
     def get_number(self, row: int, col: int):
