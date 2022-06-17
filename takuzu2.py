@@ -263,7 +263,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        if np.isin(state.board.board, 2):
+        if 2 in state.board.board:
             return False
         else:
             return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state)
