@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 
-from pyppeteer import launch
+#from pyppeteer import launch
 
 
 
@@ -146,3 +146,12 @@ b='lau'
 print(hash(b))
 
 print(a==b)
+
+c=np.array([1,2,3])
+d=np.array([4,5,6])
+cs = np.column_stack((c,d))
+cs_zip = list(zip(c,d))
+print(cs)
+print(list(zip(c,d)))
+print(cs[0][1])
+#print(list(zip(c,d)))
