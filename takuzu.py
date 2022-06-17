@@ -27,6 +27,7 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
+        self.opne = False
         self.possible_actions = None
 
 
