@@ -339,6 +339,13 @@ if __name__ == "__main__":
 
     print(hash(state))
     print(hash(state1))
+
+    state = problem.result(state, (1, 0, 0))
+    state1 = problem.result(state1, (1, 0, 0))
+
+    print(hash(state))
+    print(hash(state1))
+
     #print("Is goal?", problem.goal_test(goal_node.state))
     #print("Solution:\n", goal_node.state.board)
 
