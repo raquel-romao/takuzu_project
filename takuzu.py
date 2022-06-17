@@ -49,8 +49,8 @@ class TakuzuState:
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
 
-                if self.find_broken_rules():
-                    return []
+                #if self.find_broken_rules():
+                    #return []
 
                 empty = self.empty_positions()
 
