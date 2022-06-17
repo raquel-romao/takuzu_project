@@ -209,6 +209,7 @@ class Takuzu(Problem):
 
         #avoid creating same state, helps with space
         if hash_state in self.visited_states:
+            print('olá')
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
