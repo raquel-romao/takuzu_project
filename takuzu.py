@@ -232,7 +232,7 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
 
-    def half_half(self, state: TakuzuState):
+    """def half_half(self, state: TakuzuState):
         board_size = state.board.board_size
         half = board_size //2
         sum_col = np.sum(state.board.board, axis=0)
@@ -242,16 +242,39 @@ class Takuzu(Problem):
         else:
             col = np.where(sum_col == half+1, half, sum_col)
             lin = np.where(sum_lines == half+1, half, sum_lines)
-            return np.all(col==half) and np.all(lin==half)
+            return np.all(col==half) and np.all(lin==half)"""
 
-    def adjacent(self, state: TakuzuState): #podemos otimizar visto que nao precisamos de ver adjacentes verticais para a primeira e ultima linha e nao precisamos de ver adjacentes horizontais para a primeira e ultima coluna
+    #simplifiquei a parte final do half_half
+    def half_half(self, state: TakuzuState):
+        board_size = state.board.board_size
+        half = board_size // 2
+        sum_col = np.sum(state.board.board, axis=0)
+        sum_lines = np.sum(state.board.board, axis=1)
+    
+        if board_size % 2 == 0:
+            return np.all(sum_col == half) and np.all(sum_lines == half)
+        else:
+            return np.all(np.isin(sum_col, (half, half+1))) and np.all(np.isin(sum_lines,(half, half+1)))
+
+    """def adjacent(self, state: TakuzuState): #podemos otimizar visto que nao precisamos de ver adjacentes verticais para a primeira e ultima linha e nao precisamos de ver adjacentes horizontais para a primeira e ultima coluna
         board = state.board
         for i in range(board.board_size):
             for j in range(board.board_size):
                 if board.adjacent_vertical_numbers(i,j).count(board.get_number(i,j))==2 or board.adjacent_horizontal_numbers(i,j).count(board.get_number(i,j))==2:
                     return False
-        return True
+        return True"""
 
+    def adjacent(self, state: TakuzuState):
+        board = state.board.board
+        v = np.lib.stride_tricks.sliding_window_view(board, 3, axis=1)
+        v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
+        rows = np.all(np.isin(v, (1, 2)))
+
+        v = np.lib.stride_tricks.sliding_window_view(board, 3, axis=0)
+        v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
+        cols = np.all(np.isin(v, (1, 2)))
+
+        return rows and cols
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
@@ -276,15 +299,6 @@ class Takuzu(Problem):
                 return board_size**3
 
         return 0
-
-    def count_filled(self, board_np):
-        count_filled = 0
-        
-        for line in board_np:
-            if 2 not in line:
-                count_filled += 1
-
-        return count_filled
 
 
     def h(self, node: Node):
@@ -326,20 +340,20 @@ class Takuzu(Problem):
             f += parent_state.possible_actions.index(last_action)
 
             
-        f += board_size - self.count_filled(board_np)
-        f += board_size - self.count_filled(np.transpose(board_np))
+        f += board_size - np.count_nonzero((board_np == 2).sum(axis=0)) #rows_filled -> não sei até que ponto isto ajuda na heurístics tho
+        f += board_size - np.count_nonzero((board_np == 2).sum(axis=1)) #cols_filled
 
         return f 
 
 
 if __name__ == "__main__":
-    # $ python3 takuzu < i1.txt
+    
     board = Board.parse_instance_from_stdin()
     print(board)
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = breadth_first_tree_search(problem)
+    goal_node = astar_search(problem)
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
