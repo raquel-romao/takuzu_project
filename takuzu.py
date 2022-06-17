@@ -38,7 +38,6 @@ class TakuzuState:
         return hash(self.board)
 
     def __eq__(self,state):
-
         return hash(self.board) == hash(state.board)
 
 
