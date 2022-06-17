@@ -22,15 +22,15 @@ from search import (
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board):
+    def __init__(self, board, rows, cols):
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.empty = board.empty
         self.open = False
         self.possible_actions = None
-        #self.filled_rows = set()
-        #self.filled_cols = set()
+        self.filled_rows = rows
+        self.filled_cols = cols
 
     def __lt__(self, other):
         return self.id < other.id
@@ -70,7 +70,8 @@ class TakuzuState:
                         actions.insert(0,position_actions[1])
                     
                     elif len(position_actions)==1:
-                        actions.append(position_actions[0])
+                        a = position_actions[0]
+                        self.board.set_number(a[0], a[1], a[2])
 
                     else:
                         self.possible_actions = []
@@ -184,9 +185,6 @@ class Board:
         new_board = Board(board, board_size, empty)
 
         return new_board
-
-    
-
 
 
 
