@@ -42,47 +42,51 @@ class TakuzuState:
 
 
     def actions(self):
-        
-        if self.possible_actions == None:
-            line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-            col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
-            actions = []
-            empty = self.empty_positions()
+        if not self.open:
+            if self.possible_actions == None:
+                line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
+                col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+                actions = []
+                empty = self.empty_positions()
 
-            if self.board.board_size % 2 == 0:
-                half = self.board.board_size //2
-            else:
-                half = self.board.board_size //2 + 1
-
-            for i in empty:
-                position_actions = []
-
-                if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
-                    position_actions.append((i[0],i[1],0))
-
-                if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
-                    position_actions.append((i[0],i[1],1))
-                
-                if len(position_actions)==2:
-                    actions.append(position_actions[0])
-                    actions.append(position_actions[1])
-                
-                elif len(position_actions)==1:
-                    actions.insert(0,position_actions[0])
-
+                if self.board.board_size % 2 == 0:
+                    half = self.board.board_size //2
                 else:
-                    self.possible_actions = []
-                    return self.possible_actions
+                    half = self.board.board_size //2 + 1
 
-            self.possible_actions = actions
+                for i in empty:
+                    position_actions = []
 
-        return self.possible_actions
-        
+                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
+                        position_actions.append((i[0],i[1],0))
+
+                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
+                        position_actions.append((i[0],i[1],1))
+                    
+                    if len(position_actions)==2:
+                        actions.append(position_actions[0])
+                        actions.append(position_actions[1])
+                    
+                    elif len(position_actions)==1:
+                        actions.insert(0,position_actions[0])
+
+                    else:
+                        self.possible_actions = []
+                        return self.possible_actions
+
+                self.possible_actions = actions
+    
+            return self.possible_actions
+        else:
+            return []
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
         empty = list(zip(result[0],result[1]))
         return empty
+    
+    def expand(self):
+        self.open = True
     
 
     
@@ -191,7 +195,10 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        return state.actions()
+        actions = state.actions()
+        state.expand()
+        print(actions)
+        return actions
 
 
     def result(self, state: TakuzuState, action):
@@ -319,7 +326,9 @@ class Takuzu(Problem):
 
             f += parent_state.possible_actions.index(last_action) #isto aqui já não me está a fazer sentido, as cenas de dar prioridade a certas ações fazem-me + sentido fazer na heuristica senão ela deixa de ter gd função idk
 
-            
+            f += len(parent_state.possible_actions) - len(current_state.possible_actions) # recompensa aquele que o numero de açoes nao diminui muito 
+
+
         f += board_size - np.count_nonzero((board_np == 2).sum(axis=0)) #rows_filled -> não sei até que ponto isto ajuda na heurístics tho
         f += board_size - np.count_nonzero((board_np == 2).sum(axis=1)) #cols_filled
 
