@@ -220,7 +220,7 @@ class Takuzu(Problem):
         self.visited_states.update({hash_state: new_state})
         
         print(len(self.visited_states))
-        print(new_state.board)
+
         return new_state
 
 
@@ -354,7 +354,7 @@ if __name__ == "__main__":
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = astar_search(problem)
+    goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
