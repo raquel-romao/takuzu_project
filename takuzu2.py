@@ -195,8 +195,9 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        # TODO
-        pass
+        actions = state.actions()
+        state.expand()
+        return actions
 
 
     def result(self, state: TakuzuState, action):
