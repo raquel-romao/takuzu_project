@@ -43,8 +43,9 @@ class TakuzuState:
                 line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
-                print(empty)
+                
                 empty = self.board.empty
+                print(empty)
 
 
                 if self.board.board_size % 2 == 0:
