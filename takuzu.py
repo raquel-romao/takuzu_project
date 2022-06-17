@@ -286,9 +286,8 @@ class Takuzu(Problem):
 
     
     def find_broken_rules(self, node: Node, board_np, i):
-        board = node.state.board
-        board_size = board.board_size
 
+        board_size = len(board_np)
         indices = np.arange(board_size)
         
         if 2 not in board_np[i, :]: 
@@ -335,7 +334,7 @@ class Takuzu(Problem):
             if broken_rule!=0:
                 return broken_rule
 
-            f += parent_state.possible_actions.index(last_action)
+            f += parent_state.possible_actions.index(last_action) #isto aqui já não me está a fazer sentido, as cenas de dar prioridade a certas ações fazem-me + sentido fazer na heuristica senão ela deixa de ter gd função idk
 
             
         f += board_size - np.count_nonzero((board_np == 2).sum(axis=0)) #rows_filled -> não sei até que ponto isto ajuda na heurístics tho
