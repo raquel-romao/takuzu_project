@@ -22,15 +22,15 @@ from search import (
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board, rows, cols):
+    def __init__(self, board):
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.empty = board.empty
         self.open = False
         self.possible_actions = None
-        self.filled_rows = rows
-        self.filled_cols = cols
+        self.filled_rows = None
+        self.filled_cols = None
 
     def __lt__(self, other):
         return self.id < other.id
