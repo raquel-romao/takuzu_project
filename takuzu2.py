@@ -281,17 +281,11 @@ class Takuzu(Problem):
 
 
 if __name__ == "__main__":
-    # TODO:
-    # Ler o ficheiro de input de sys.argv[1],
-    # Usar uma técnica de procura para resolver a instância,
-    # Retirar a solução a partir do nó resultante,
-    # Imprimir para o standard output no formato indicado.
     board = Board.parse_instance_from_stdin()
 
-    # Criar uma instância de Takuzu:
     problem = Takuzu(board)
-    # Obter o nó solução usando a procura em profundidade:
+
     goal_node = depth_first_tree_search(problem)
-    # Verificar se foi atingida a solução
+
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
