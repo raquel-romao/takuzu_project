@@ -220,7 +220,7 @@ class Takuzu(Problem):
         self.visited_states.update({hash_state: new_state})
         
         print(len(self.visited_states))
-
+        print(state.board)
         return new_state
 
 
