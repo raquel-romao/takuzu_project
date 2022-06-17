@@ -269,14 +269,7 @@ class Takuzu(Problem):
         else:
             return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state)
 
-    
 
-    def goal_test(self, state: TakuzuState):
-        """Retorna True se e só se o estado passado como argumento é
-        um estado objetivo. Deve verificar se todas as posições do tabuleiro
-        estão preenchidas com uma sequência de números adjacentes."""
-        # TODO
-        pass
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
