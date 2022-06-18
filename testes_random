@@ -131,18 +131,14 @@ if last_action != None and parent_node != None:
         empty = list(zip(result[0],result[1]))
         return empty
 """
-'''
+
 a = np.array([[1,2,1],[1,4,1], [1,2,1]])
-indices = np.arange(3)
-###print(np.where(a == 2))
+b = np.transpose(a)
+a= a[np.all(a != 2, axis=1), :]
+b= b[np.all(b!=2, axis=1),:]
+print(a)
+print(b)
 
-for i in a:
-    print(i)
-'''
-a='lau'
-print(hash(a))
 
-b='lau'
-print(hash(b))
 
-print(a==b)
+

@@ -18,18 +18,21 @@ from search import (
     greedy_search,
     recursive_best_first_search,
     InstrumentedProblem,
-)
+)   
 
 
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board):
+    def __init__(self, board, rows, cols):
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.open = False
         self.possible_actions = None
+        self.board_t = np.transpose(self.board.board)
+        self.rows = None
+        self.cols = None
 
 
     def __lt__(self, other):
@@ -38,6 +41,29 @@ class TakuzuState:
 
     def __hash__(self): 
         return hash(self.board)
+
+
+    def completed_rows(self):
+        if self.rows == None:
+            return set(self.board.board[np.all(self.board.board != 2, axis=1), :])
+        else:
+            return self.cols
+
+
+    def completed_cols(self):
+        if self.cols == None:
+            return set(self.board_t[np.all(self.board_t != 2, axis=1), :])
+        else:
+            return self.cols
+
+
+
+    def add_row_col(self, action):
+        if 2 not in self.board.board[action[0]]:
+            self.rows.add(self.board.board[action[0]])
+        if 2 not in self.board_t[action[1]]:
+            self.cols.add(self.board_t[action[1]])
+
 
 
     def actions(self):
@@ -56,10 +82,31 @@ class TakuzuState:
                 for i in empty:
                     position_actions = []
 
-                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
-                        position_actions.append((i[0],i[1],0))
+                    row =[]
+                    column =[]
 
-                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
+
+                    if self.board.board[i[0]].count(2)==1:
+                        row = self.board.board[i[0]].copy()
+                    if self.board_t[i[1]].count(2)==1:
+                        column = self.board_t[i[1]].copy()
+
+                    if row !=[]:
+                        row[i[1]] = 0
+                    if column!=[]:
+                        column[i[0]] = 0
+
+
+                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2 and row not in self.rows and column not in self.cols:
+                            position_actions.append((i[0],i[1],0))
+                    
+                    if row !=[]:
+                        row[i[1]] = 1
+
+                    if column != []:
+                        column[i[0]] = 1
+
+                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2 and row not in self.rows and column not in self.cols:
                         position_actions.append((i[0],i[1],1))
                     
                     if len(position_actions)==2:
@@ -68,7 +115,17 @@ class TakuzuState:
                     
                     elif len(position_actions)==1:
                         a = position_actions[0]
+                        if row!=[]:
+                            row[i[1]] = a[2]
+                            self.rows.add(row)
+                        if column!=[]:
+                            column[i[0]] = a[2]
+                            self.cols.add(column)
+
                         self.board.set_number(a[0],a[1],a[2])
+
+                        if 2 not in self.board.board:
+                            actions.append(a)
 
                     else:
                         self.possible_actions = []
@@ -93,10 +150,9 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board, board_size, empty): 
+    def __init__(self, board, board_size): 
         self.board = board
         self.board_size = board_size
-        self.empty = empty
         self.string = str(self.board.ravel())
         
     
@@ -115,9 +171,10 @@ class Board:
         self.string = str(self.board.ravel()) # atualiza o hash value.
         
         
-    def get_number(self, row: int, col: int) -> int:
+    def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
+
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -214,6 +271,7 @@ class Takuzu(Problem):
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
+        new_state.add_row_col(action)
         self.visited_states.update({hash_state: new_state})
         
         return new_state
