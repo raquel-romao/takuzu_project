@@ -43,8 +43,8 @@ class TakuzuState:
     def actions(self):
         if not self.open:
             if self.possible_actions == None:
-                line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-                col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+                line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
+                col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
                 empty = self.empty_positions()
 
@@ -85,7 +85,7 @@ class TakuzuState:
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
-        empty = list(zip(result[0],result[1]))
+        empty = np.column_stack((result[0],result[1]))
         return empty
     
     def expand(self):
