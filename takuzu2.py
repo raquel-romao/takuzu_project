@@ -83,8 +83,8 @@ class TakuzuState:
                 for i in empty:
                     position_actions = []
 
-                    row =[]
-                    column =[]
+                    row =None
+                    column =None
 
 
                     if np.count_nonzero(self.board.board[i[0]] == 2)==1:
@@ -92,19 +92,19 @@ class TakuzuState:
                     if np.count_nonzero(self.board_t[i[1]] == 2)==1:
                         column = self.board_t[i[1]].copy()
 
-                    if row !=[]:
+                    if row !=None:
                         row[i[1]] = 0
-                    if column!=[]:
+                    if column!=None:
                         column[i[0]] = 0
 
 
                     if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2 and row not in self.rows and column not in self.cols:
                         position_actions.append((i[0],i[1],0))
                     
-                    if row !=[]:
+                    if row !=None:
                         row[i[1]] = 1
 
-                    if column != []:
+                    if column != None:
                         column[i[0]] = 1
 
                     if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2 and row not in self.rows and column not in self.cols:
@@ -116,10 +116,10 @@ class TakuzuState:
                     
                     elif len(position_actions)==1:
                         a = position_actions[0]
-                        if row!=[]:
+                        if row!=None:
                             row[i[1]] = a[2]
                             self.rows.add(row)
-                        if column!=[]:
+                        if column!=None:
                             column[i[0]] = a[2]
                             self.cols.add(column)
 
