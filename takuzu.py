@@ -323,9 +323,7 @@ class Takuzu(Problem):
         f += board_size - np.count_nonzero((board_np == 2).sum(axis=0)) #rows_filled -> não sei até que ponto isto ajuda na heurístics tho
         f += board_size - np.count_nonzero((board_np == 2).sum(axis=1)) #cols_filled
 
-        return f 
-
-
+        return np.count_nonzero((board_np == 2)) #f #como estava antes mas decidi meter o número de casas vazias como h p experimentar, quero fechar a árvore o mais rápido possível e tentar primeiro os estados com menos casas
 if __name__ == "__main__":
     
     board = Board.parse_instance_from_stdin()
