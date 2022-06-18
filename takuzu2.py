@@ -47,15 +47,17 @@ class TakuzuState:
     def completed_rows(self):
         if self.rows == None:
             a=self.board.board[np.all(self.board.board != 2, axis=1), :]
-            return set([",".join(item) for item in a.astype(str)])
+            self.rows = set([",".join(item) for item in a.astype(str)])
+            return self.rows
         else:
-            return self.cols
+            return self.rows
 
 
     def completed_cols(self):
         if self.cols == None:
             b=self.board_t[np.all(self.board_t != 2, axis=1), :]
-            return set([",".join(item) for item in b.astype(str)])
+            self.cols = set([",".join(item) for item in b.astype(str)])
+            return self.cols
         else:
             return self.cols
 
@@ -126,10 +128,10 @@ class TakuzuState:
                         a = position_actions[0]
                         if row!=[]:
                             row[i[1]] = a[2]
-                            self.rows.add(row)
+                            self.completed_rows().add(row)
                         if column!=[]:
                             column[i[0]] = a[2]
-                            self.cols.add(column)
+                            self.completed_cols().add(column)
 
                         self.board.set_number(a[0],a[1],a[2])
 
