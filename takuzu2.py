@@ -99,7 +99,7 @@ class TakuzuState:
 
 
                     if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2 and row not in self.rows and column not in self.cols:
-                            position_actions.append((i[0],i[1],0))
+                        position_actions.append((i[0],i[1],0))
                     
                     if row !=[]:
                         row[i[1]] = 1
