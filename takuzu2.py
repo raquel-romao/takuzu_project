@@ -35,9 +35,6 @@ class TakuzuState:
         return self.id < other.id
 
 
-    def hash(self): 
-        return self.board.string
-
     
     def __str__(self):
         print(self.board)
