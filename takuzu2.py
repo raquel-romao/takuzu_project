@@ -28,7 +28,6 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        self.open = False
         self.possible_actions = None
 
 
@@ -42,6 +41,7 @@ class TakuzuState:
     
     def __str__(self):
         print(self.board)
+        print(self.possible_actions)
 
 
     def actions(self):
@@ -77,7 +77,7 @@ class TakuzuState:
                 self.possible_actions = []
                 return self.possible_actions
 
-        if 2 not in self.board.board and actions ==[]: 
+        if 2 not in self.board.board and len(actions) ==0 and len(empty)!=0: 
             self.possible_actions = position_actions
 
         self.possible_actions = actions
@@ -116,7 +116,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        #self.string = str(self.board.ravel()) # atualiza o hash value.
+        self.string = str(self.board.ravel()) # atualiza o hash value.
         
         
     def get_number(self, row: int, col: int) -> int:
@@ -159,7 +159,6 @@ class Board:
         return Board(new_board, self.board_size)
 
 
-
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
@@ -179,8 +178,6 @@ class Board:
 
 
         new_board = Board(board, board_size)
-
-
 
         return new_board
 
@@ -215,13 +212,15 @@ class Takuzu(Problem):
 
 
         if hash_state in self.visited_states:
+            print('hey')
             self.visited_states[hash_state].eliminate_actions()
+            print(self.visited_states)
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
         new_state.actions()
-        self.visited_states[hash_state]= new_state
-        
+        self.visited_states[hash(new_state)]= new_state
+        print(self.visited_states)
         return new_state
 
 
