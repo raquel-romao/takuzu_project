@@ -231,7 +231,7 @@ class Takuzu(Problem):
 
         return unique_rows and unique_cols
 
-    #simplifiquei a parte final do half_half
+
     def half_half(self, state: TakuzuState):
         board_size = state.board.board_size
         half = board_size // 2
