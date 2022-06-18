@@ -77,10 +77,10 @@ class TakuzuState:
                     self.possible_actions = []
                     return self.possible_actions
 
-            self.possible_actions = actions
-            
             if 2 not in self.board.board and actions ==[]: 
                 self.possible_actions = position_actions
+
+            self.possible_actions = actions
 
         return self.possible_actions
 
@@ -89,6 +89,9 @@ class TakuzuState:
         result = np.where(self.board.board == 2)
         empty = np.column_stack((result[0],result[1]))
         return empty
+
+    def eliminate_actions(self):
+        self.possible_actions = []
 
 
 class Board:
@@ -192,7 +195,8 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        actions = state.actions()
+        actions = state.possible_actions
+        state.eliminate_actions()
         return actions
 
 
@@ -210,7 +214,7 @@ class Takuzu(Problem):
 
 
         if hash_state in self.visited_states:
-
+            self.visited_states[hash_state].eliminate_actions()
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
