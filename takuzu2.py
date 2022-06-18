@@ -101,11 +101,11 @@ class TakuzuState:
 
                     if row !=[]:
                         row[i[1]] = 0
-                        str_row= str(row)
+                        str_row= ",".join(row.astype(str))
                         
                     if column!=[]:
                         column[i[0]] = 0
-                        str_col = str(column)
+                        str_col = ",".join(column.astype(str))
 
 
                     if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2 and str_row not in self.completed_rows() and str_col not in self.completed_cols():
