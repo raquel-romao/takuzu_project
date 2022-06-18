@@ -61,11 +61,11 @@ class TakuzuState:
 
                     if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
                         position_actions.append((i[0],i[1],1))
-                    
+
                     if len(position_actions)==2:
                         actions.append(position_actions[0])
                         actions.append(position_actions[1])
-                    
+
                     elif len(position_actions)==1:
                         a=position_actions[0]
                         self.board.set_number(a[0],a[1],a[2])
