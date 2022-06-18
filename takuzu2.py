@@ -7,6 +7,7 @@
 
 
 from hashlib import new
+import copy
 from sys import stdin
 import numpy as np
 from search import (
@@ -24,7 +25,7 @@ from search import (
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board, rows, cols):
+    def __init__(self, board, rows = None, cols = None):
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
@@ -146,6 +147,12 @@ class TakuzuState:
         self.open = True
     
 
+    def copy_row_col(self):
+        self.rows = copy.copy(self.rows)
+        self.cols = copy.copy(self.cols)
+
+
+
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
@@ -207,6 +214,7 @@ class Board:
     def __hash__(self):
         return hash(self.string)
 
+
     def copy(self):
         new_board = self.board.copy()
         return Board(new_board, self.board_size, self.empty)
@@ -221,17 +229,16 @@ class Board:
 
         board_size = int(stdin.readline().rstrip('\n'))
         board = np.ones((board_size, board_size), dtype=int)
-        empty = []
+
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value = int(values[j])
                 board[i, j] = value
-                if value == 2:
-                    empty.append((i,j))
+                
 
 
-        new_board = Board(board, board_size, empty)
+        new_board = Board(board, board_size)
 
 
 
@@ -270,7 +277,8 @@ class Takuzu(Problem):
 
             return self.visited_states[hash_state]
 
-        new_state = TakuzuState(new_board)
+        new_state = TakuzuState(new_board, state.rows, state.cols)
+        new_state.copy_row_col()
         new_state.add_row_col(action)
         self.visited_states.update({hash_state: new_state})
         
@@ -285,6 +293,7 @@ class Takuzu(Problem):
         unique_cols = len(col_counts) == state.board.board_size
 
         return unique_rows and unique_cols
+
 
     #simplifiquei a parte final do half_half
     def half_half(self, state: TakuzuState):
@@ -390,5 +399,5 @@ if __name__ == "__main__":
     # Obter o nó solução usando a procura em profundidade:
     goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
-    print("Is goal?", problem.goal_test(goal_node.state))
-    print("Solution:\n", goal_node.state.board)
+    #print("Is goal?", problem.goal_test(goal_node.state))
+    #print("Solution:\n", goal_node.state.board)

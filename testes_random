@@ -132,12 +132,18 @@ if last_action != None and parent_node != None:
         return empty
 """
 
-a = np.array([[1,2,1],[1,4,1], [1,2,1]])
+a = np.array([[1,2,1],[1,2,1], [1,2,1]])
 b = np.transpose(a)
-a= a[np.all(a != 2, axis=1), :]
-b= b[np.all(b!=2, axis=1),:]
-print(a)
-print(b)
+
+c= a[np.all(a != 2, axis=1), :]
+d= b[np.all(b != 2 , axis=1),:]
+
+print(b[1])
+
+
+
+print(c)
+print(d)
 
 
 
