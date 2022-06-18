@@ -87,9 +87,9 @@ class TakuzuState:
                     column =[]
 
 
-                    if self.board.board[i[0]].count(2)==1:
+                    if np.count_nonzero(self.board.board[i[0]] == 2)==1:
                         row = self.board.board[i[0]].copy()
-                    if self.board_t[i[1]].count(2)==1:
+                    if np.count_nonzero(self.board_t[i[1]] == 2)==1:
                         column = self.board_t[i[1]].copy()
 
                     if row !=[]:
