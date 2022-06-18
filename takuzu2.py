@@ -77,7 +77,7 @@ class TakuzuState:
                 self.possible_actions = []
                 return self.possible_actions
 
-        if 2 not in self.board.board and actions ==[]: 
+        if 2 not in self.board.board and actions ==[] and empty!=[]: 
             self.possible_actions = position_actions
 
         self.possible_actions = actions
@@ -218,7 +218,7 @@ class Takuzu(Problem):
 
         new_state = TakuzuState(new_board)
         new_state.actions()
-        self.visited_states[hash_state]= new_state
+        self.visited_states[hash(new_state)]= new_state
         
         return new_state
 
