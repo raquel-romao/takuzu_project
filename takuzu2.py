@@ -32,8 +32,8 @@ class TakuzuState:
         self.open = False
         self.possible_actions = None
         self.board_t = np.transpose(self.board.board)
-        self.rows = None
-        self.cols = None
+        self.rows = rows
+        self.cols = cols
 
 
     def __lt__(self, other):
