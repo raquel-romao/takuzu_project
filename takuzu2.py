@@ -208,7 +208,7 @@ class Takuzu(Problem):
 
         new_board.set_number(action[0], action[1], action[2])
 
-        hash_state = hash(new_board)
+        hash_state = new_board.hash()
 
 
         if hash_state in self.visited_states:
@@ -219,7 +219,7 @@ class Takuzu(Problem):
 
         new_state = TakuzuState(new_board)
         new_state.actions()
-        self.visited_states[hash(new_state)]= new_state
+        self.visited_states[hash_state]= new_state
         print(self.visited_states)
         return new_state
 
