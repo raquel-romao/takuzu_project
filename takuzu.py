@@ -67,7 +67,10 @@ class TakuzuState:
                         actions.append(position_actions[1])
                     
                     elif len(position_actions)==1:
-                        actions.insert(0,position_actions[0])
+                        self.board.set_number(a[0],a[1],a[2])
+
+                        if 2 not in self.board.board:
+                            actions.append(a)
 
                     else:
                         self.possible_actions = []
