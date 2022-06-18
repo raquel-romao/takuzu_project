@@ -39,67 +39,64 @@ class TakuzuState:
     def __hash__(self): 
         return hash(self.board)
 
+    
+    def __str__(self):
+        print(self.board)
+
 
     def actions(self):
-        if not self.open:
-            if self.possible_actions == None:
-                line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-                col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
-                actions = []
-                empty = self.empty_positions()
+        if self.possible_actions == None:
+            line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
+            col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+            actions = []
+            empty = self.empty_positions()
 
-                if self.board.board_size % 2 == 0:
-                    half = self.board.board_size //2
+            if self.board.board_size % 2 == 0:
+                half = self.board.board_size //2
+            else:
+                half = self.board.board_size //2 + 1
+
+            for i in empty:
+                position_actions = []
+
+                if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
+                    position_actions.append((i[0],i[1],0))
+
+                if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
+                    position_actions.append((i[0],i[1],1))
+
+                if len(position_actions)==2:
+                    actions.append(position_actions[0])
+                    actions.append(position_actions[1])
+
+                elif len(position_actions)==1:
+                    a=position_actions[0]
+                    self.board.set_number(a[0],a[1],a[2])
+
                 else:
-                    half = self.board.board_size //2 + 1
+                    self.possible_actions = []
+                    return self.possible_actions
 
-                for i in empty:
-                    position_actions = []
+            self.possible_actions = actions
+            
+            if 2 not in self.board.board and actions ==[]: 
+                self.possible_actions = position_actions
 
-                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
-                        position_actions.append((i[0],i[1],0))
+        return self.possible_actions
 
-                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
-                        position_actions.append((i[0],i[1],1))
-
-                    if len(position_actions)==2:
-                        actions.append(position_actions[0])
-                        actions.append(position_actions[1])
-
-                    elif len(position_actions)==1:
-                        a=position_actions[0]
-                        self.board.set_number(a[0],a[1],a[2])
-
-                        if 2 not in self.board.board:
-                            actions.append(a)
-
-                    else:
-                        self.possible_actions = []
-                        return self.possible_actions
-
-                self.possible_actions = actions
-    
-            return self.possible_actions
-        else:
-            return []
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
         empty = np.column_stack((result[0],result[1]))
         return empty
-    
-    def expand(self):
-        self.open = True
-    
 
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board, board_size, empty): 
+    def __init__(self, board, board_size): 
         self.board = board
         self.board_size = board_size
-        self.empty = empty
         self.string = str(self.board.ravel())
         
     
@@ -113,9 +110,10 @@ class Board:
                     prettyprint += f'{i[j]}    '
         return prettyprint
 
+
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        self.string = str(self.board.ravel()) # atualiza o hash value.
+        #self.string = str(self.board.ravel()) # atualiza o hash value.
         
         
     def get_number(self, row: int, col: int) -> int:
@@ -155,7 +153,7 @@ class Board:
 
     def copy(self):
         new_board = self.board.copy()
-        return Board(new_board, self.board_size, self.empty)
+        return Board(new_board, self.board_size)
 
 
 
@@ -177,7 +175,7 @@ class Board:
                     empty.append((i,j))
 
 
-        new_board = Board(board, board_size, empty)
+        new_board = Board(board, board_size)
 
 
 
@@ -195,7 +193,6 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         actions = state.actions()
-        state.expand()
         return actions
 
 
@@ -217,7 +214,7 @@ class Takuzu(Problem):
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
-        self.visited_states.update({hash_state: new_state})
+        self.visited_states[hash_state]= new_state
         
         return new_state
 
@@ -337,4 +334,5 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
+
 
