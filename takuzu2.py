@@ -35,8 +35,8 @@ class TakuzuState:
         return self.id < other.id
 
 
-    def __hash__(self): 
-        return hash(self.board)
+    def hash(self): 
+        return self.board.string
 
     
     def __str__(self):
@@ -151,8 +151,8 @@ class Board:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
 
-    def __hash__(self):
-        return hash(self.string)
+    def hash(self):
+        return self.string
 
     def copy(self):
         new_board = self.board.copy()
