@@ -39,7 +39,7 @@ class TakuzuState:
         return hash(self.board)
 
     
-    def __repr__(self):
+    def __str__(self):
         print(self.board)
         print(self.possible_actions)
 
@@ -116,7 +116,7 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        #self.string = str(self.board.ravel()) # atualiza o hash value.
+        self.string = str(self.board.ravel()) # atualiza o hash value.
         
         
     def get_number(self, row: int, col: int) -> int:
