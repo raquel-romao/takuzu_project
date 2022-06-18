@@ -77,7 +77,7 @@ class TakuzuState:
                 self.possible_actions = []
                 return self.possible_actions
 
-        if 2 not in self.board.board and actions ==[] and empty!=[]: 
+        if 2 not in self.board.board and len(actions) ==0 and len(empty)!=0: 
             self.possible_actions = position_actions
 
         self.possible_actions = actions
