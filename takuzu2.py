@@ -65,9 +65,9 @@ class TakuzuState:
 
     def add_row_col(self, action):
         if 2 not in self.board.board[action[0]]:
-            self.rows.add(self.board.board[action[0]])
+            self.rows.add(",".join(self.board.board[action[0]].astype(str)))
         if 2 not in self.board_t[action[1]]:
-            self.cols.add(self.board_t[action[1]])
+            self.cols.add(",".join(self.board_t[action[1]].astype(str)))
 
 
 
@@ -128,10 +128,10 @@ class TakuzuState:
                         a = position_actions[0]
                         if row!=[]:
                             row[i[1]] = a[2]
-                            self.completed_rows().add(row)
+                            self.completed_rows().add(",".join(row.astype(str)))
                         if column!=[]:
                             column[i[0]] = a[2]
-                            self.completed_cols().add(column)
+                            self.completed_cols().add(",".join(column.astype(str)))
 
                         self.board.set_number(a[0],a[1],a[2])
 
