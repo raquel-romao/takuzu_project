@@ -28,7 +28,6 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        self.open = False
         self.possible_actions = None
 
 
@@ -40,8 +39,9 @@ class TakuzuState:
         return hash(self.board)
 
     
-    def __str__(self):
+    def __repr__(self):
         print(self.board)
+        print(self.possible_actions)
 
 
     def actions(self):
@@ -214,12 +214,13 @@ class Takuzu(Problem):
         if hash_state in self.visited_states:
             print('hey')
             self.visited_states[hash_state].eliminate_actions()
+            print(self.visited_states)
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
         new_state.actions()
         self.visited_states[hash(new_state)]= new_state
-        
+        print(self.visited_states)
         return new_state
 
 
