@@ -159,7 +159,6 @@ class Board:
         return Board(new_board, self.board_size)
 
 
-
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
@@ -179,8 +178,6 @@ class Board:
 
 
         new_board = Board(board, board_size)
-
-
 
         return new_board
 
@@ -215,6 +212,7 @@ class Takuzu(Problem):
 
 
         if hash_state in self.visited_states:
+            print('hey')
             self.visited_states[hash_state].eliminate_actions()
             return self.visited_states[hash_state]
 
