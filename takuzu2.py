@@ -46,14 +46,14 @@ class TakuzuState:
 
     def completed_rows(self):
         if self.rows == None:
-            return set(self.board.board[np.all(self.board.board != 2, axis=1), :])
+            return set(self.board.board[np.all(self.board.board != 2, axis=1), :].flatten())
         else:
             return self.cols
 
 
     def completed_cols(self):
         if self.cols == None:
-            return set(self.board_t[np.all(self.board_t != 2, axis=1), :])
+            return set(self.board_t[np.all(self.board_t != 2, axis=1), :].flatten())
         else:
             return self.cols
 
