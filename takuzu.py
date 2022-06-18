@@ -30,6 +30,8 @@ class TakuzuState:
         TakuzuState.state_id += 1
         self.open = False
         self.possible_actions = None
+        self.rows = set(["".join(str(x) for x in arr) for arr in board.board])
+        self.cols = set(["".join(str(x) for x in arr) for arr in board.board.transpose()])
 
 
     def __lt__(self, other):
@@ -41,7 +43,7 @@ class TakuzuState:
 
 
     def actions(self):
-        if not self.open:
+        if not self.open: #então tiramos? -> e expand + à frente?
             if self.possible_actions == None:
                 line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
                 col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
@@ -61,6 +63,17 @@ class TakuzuState:
 
                     if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
                         position_actions.append((i[0],i[1],1))
+
+                    for a in position_actions:
+                        play = str(a[2])
+                        test_row = "".join(str(x) for x in self.board.board[a[0]])
+                        test_row = test_row[:a[1]] + play + test_row[a[1]+1:]
+
+                        test_col = "".join(str(x) for x in self.board.board[:, a[1]])
+                        test_col = test_col[:a[0]] + play + test_col[a[0]+1:]
+
+                        if test_row in self.rows or test_col in self.cols:
+                            position_actions.remove(a)
 
                     if len(position_actions)==2:
                         actions.append(position_actions[0])
@@ -324,6 +337,7 @@ class Takuzu(Problem):
         f += board_size - np.count_nonzero((board_np == 2).sum(axis=1)) #cols_filled
 
         return np.count_nonzero((board_np == 2)) #f #como estava antes mas decidi meter o número de casas vazias como h p experimentar, quero fechar a árvore o mais rápido possível e tentar primeiro os estados com menos casas
+
 if __name__ == "__main__":
     
     board = Board.parse_instance_from_stdin()
