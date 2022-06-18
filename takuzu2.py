@@ -7,7 +7,6 @@
 
 
 from hashlib import new
-import copy
 from sys import stdin
 import numpy as np
 from search import (
@@ -19,21 +18,18 @@ from search import (
     greedy_search,
     recursive_best_first_search,
     InstrumentedProblem,
-)   
+)
 
 
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board, rows = None, cols = None):
+    def __init__(self, board):
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.open = False
         self.possible_actions = None
-        self.board_t = np.transpose(self.board.board)
-        self.rows = rows
-        self.cols = cols
 
 
     def __lt__(self, other):
@@ -44,38 +40,11 @@ class TakuzuState:
         return hash(self.board)
 
 
-    def completed_rows(self):
-        if self.rows == None:
-            a=self.board.board[np.all(self.board.board != 2, axis=1), :]
-            self.rows = set([",".join(item) for item in a.astype(str)])
-            return self.rows
-        else:
-            return self.rows
-
-
-    def completed_cols(self):
-        if self.cols == None:
-            b=self.board_t[np.all(self.board_t != 2, axis=1), :]
-            self.cols = set([",".join(item) for item in b.astype(str)])
-            return self.cols
-        else:
-            return self.cols
-
-
-
-    def add_row_col(self, action):
-        if 2 not in self.board.board[action[0]]:
-            self.rows.add(",".join(self.board.board[action[0]].astype(str)))
-        if 2 not in self.board_t[action[1]]:
-            self.cols.add(",".join(self.board_t[action[1]].astype(str)))
-
-
-
     def actions(self):
         if not self.open:
             if self.possible_actions == None:
-                line = list(zip((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-                col = list(zip((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+                line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
+                col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
                 actions = []
                 empty = self.empty_positions()
 
@@ -87,52 +56,18 @@ class TakuzuState:
                 for i in empty:
                     position_actions = []
 
-                    row =[]
-                    column =[]
-
-                    str_row=''
-                    str_col=''
-
-
-                    if np.count_nonzero(self.board.board[i[0]] == 2)==1:
-                        row = self.board.board[i[0]].copy()
-                    if np.count_nonzero(self.board_t[i[1]] == 2)==1:
-                        column = self.board_t[i[1]].copy()
-
-                    if row !=[]:
-                        row[i[1]] = 0
-                        str_row= ",".join(row.astype(str))
-                        
-                    if column!=[]:
-                        column[i[0]] = 0
-                        str_col = ",".join(column.astype(str))
-
-
-                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2 and str_row not in self.completed_rows() and str_col not in self.completed_cols():
+                    if line[i[0]][0] < half and col[i[1]][0] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
                         position_actions.append((i[0],i[1],0))
-                    
-                    if row !=[]:
-                        row[i[1]] = 1
 
-                    if column != []:
-                        column[i[0]] = 1
-
-                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2 and str_row not in self.completed_rows() and str_col not in self.completed_cols():
+                    if line[i[0]][1] < half and col[i[1]][1] < half and self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
                         position_actions.append((i[0],i[1],1))
-                    
+
                     if len(position_actions)==2:
                         actions.append(position_actions[0])
                         actions.append(position_actions[1])
-                    
-                    elif len(position_actions)==1:
-                        a = position_actions[0]
-                        if row!=[]:
-                            row[i[1]] = a[2]
-                            self.completed_rows().add(",".join(row.astype(str)))
-                        if column!=[]:
-                            column[i[0]] = a[2]
-                            self.completed_cols().add(",".join(column.astype(str)))
 
+                    elif len(position_actions)==1:
+                        a=position_actions[0]
                         self.board.set_number(a[0],a[1],a[2])
 
                         if 2 not in self.board.board:
@@ -150,26 +85,21 @@ class TakuzuState:
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
-        empty = list(zip(result[0],result[1]))
+        empty = np.column_stack((result[0],result[1]))
         return empty
     
     def expand(self):
         self.open = True
     
 
-    def copy_row_col(self):
-        self.rows = copy.copy(self.rows)
-        self.cols = copy.copy(self.cols)
-
-
-
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board, board_size): 
+    def __init__(self, board, board_size, empty): 
         self.board = board
         self.board_size = board_size
+        self.empty = empty
         self.string = str(self.board.ravel())
         
     
@@ -188,10 +118,9 @@ class Board:
         self.string = str(self.board.ravel()) # atualiza o hash value.
         
         
-    def get_number(self, row: int, col: int):
+    def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
-
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -224,7 +153,6 @@ class Board:
     def __hash__(self):
         return hash(self.string)
 
-
     def copy(self):
         new_board = self.board.copy()
         return Board(new_board, self.board_size, self.empty)
@@ -239,16 +167,17 @@ class Board:
 
         board_size = int(stdin.readline().rstrip('\n'))
         board = np.ones((board_size, board_size), dtype=int)
-
+        empty = []
         for i in range(board_size):
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value = int(values[j])
                 board[i, j] = value
-                
+                if value == 2:
+                    empty.append((i,j))
 
 
-        new_board = Board(board, board_size)
+        new_board = Board(board, board_size, empty)
 
 
 
@@ -287,9 +216,7 @@ class Takuzu(Problem):
 
             return self.visited_states[hash_state]
 
-        new_state = TakuzuState(new_board, state.rows, state.cols)
-        new_state.copy_row_col()
-        new_state.add_row_col(action)
+        new_state = TakuzuState(new_board)
         self.visited_states.update({hash_state: new_state})
         
         return new_state
@@ -305,7 +232,6 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
 
-    #simplifiquei a parte final do half_half
     def half_half(self, state: TakuzuState):
         board_size = state.board.board_size
         half = board_size // 2
@@ -411,3 +337,4 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
+
