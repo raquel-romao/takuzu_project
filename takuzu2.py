@@ -117,9 +117,10 @@ class Board:
         self.string = str(self.board.ravel()) # atualiza o hash value.
         
         
-    def get_number(self, row: int, col: int) -> int:
+    def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
+
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
