@@ -77,7 +77,7 @@ class TakuzuState:
                 else:
                     if 2 not in test_row:
                         self.rows.add(str(test_row))
-                    if 2 not in test_col
+                    if 2 not in test_col:
                         self.cols.add(str(test_col))
 
             if len(position_actions)==2:
