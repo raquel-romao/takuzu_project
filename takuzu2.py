@@ -72,7 +72,7 @@ class TakuzuState:
                 test_col[b[0]] = b[2]
 
                 if str(test_row) in self.rows or str(test_col) in self.cols:
-                    position_actions.remove(a)
+                    position_actions.remove(b)
                 
                 else:
                     if 2 not in test_row:
