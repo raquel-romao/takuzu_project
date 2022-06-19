@@ -201,7 +201,7 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         actions = state.possible_actions
-        state.eliminate_actions()
+        
         print(actions)
         return actions
 
@@ -212,6 +212,8 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
+        state.eliminate_actions()
+
         new_board = state.board.copy()
 
         new_board.set_number(action[0], action[1], action[2])
