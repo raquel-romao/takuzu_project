@@ -42,9 +42,8 @@ class TakuzuState:
 
 
     def actions(self):
-
-        line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-        col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+        line =self.board.rows
+        col =self.board.cols
         actions = []
         empty = self.empty_positions()
 
@@ -94,10 +93,11 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board, board_size): 
+    def __init__(self, board, board_size, rows, cols): 
         self.board = board
         self.board_size = board_size
-        self.string = str(self.board.ravel())
+        self.rows = rows
+        self.cols = cols
         
     
     def __str__(self):
@@ -113,12 +113,13 @@ class Board:
 
     def set_number(self, row: int, col: int, value): 
         self.board[row, col] = value
-        self.string = str(self.board.ravel()) # atualiza o hash value.
+        self.update_rows_cols((row,col,value))
         
         
-    def get_number(self, row: int, col: int) -> int:
+    def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
+
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -149,11 +150,18 @@ class Board:
 
 
     def hash(self):
-        return self.string
+        return str(self.board.ravel())
 
     def copy(self):
         new_board = self.board.copy()
-        return Board(new_board, self.board_size)
+        rows = self.rows.copy()
+        cols = self.cols.copy()
+        return Board(new_board, self.board_size, rows, cols)
+
+    def update_rows_cols(self, action):
+        self.rows[action[0]][action[2]] +=1
+        self.cols[action[1]][action[2]] +=1
+
 
 
     @staticmethod
@@ -173,8 +181,10 @@ class Board:
                 if value == 2:
                     empty.append((i,j))
 
+        rows = np.column_stack(((board==0).sum(axis=1), (board==1).sum(axis=1)))
+        cols = np.column_stack(((board==0).sum(axis=0), (board==1).sum(axis=0)))
 
-        new_board = Board(board, board_size)
+        new_board = Board(board, board_size, rows, cols)
 
         return new_board
 
@@ -191,7 +201,8 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         actions = state.possible_actions
-        state.eliminate_actions()
+        
+        print(actions)
         return actions
 
 
@@ -201,12 +212,15 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
         
+        state.eliminate_actions()
+
         new_board = state.board.copy()
 
         new_board.set_number(action[0], action[1], action[2])
 
-        hash_state = new_board.hash()
+        new_board.update_rows_cols(action)
 
+        hash_state = new_board.hash()
 
         if hash_state in self.visited_states:
             print('hey')
@@ -215,8 +229,11 @@ class Takuzu(Problem):
             return self.visited_states[hash_state]
 
         new_state = TakuzuState(new_board)
+        
         new_state.actions()
+
         self.visited_states[hash_state]= new_state
+
         print(self.visited_states)
         return new_state
 
