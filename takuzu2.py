@@ -41,8 +41,7 @@ class TakuzuState:
     def actions(self):
         actions = []
         empty = self.empty_positions()
-        line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-        col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
+
 
         if self.board.board_size % 2 == 0:
             half = self.board.board_size //2
@@ -53,11 +52,11 @@ class TakuzuState:
             row_idx, col_idx = i
             position_actions = []
 
-            if line[row_idx][0] < half and col[col_idx][0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
+            if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
                 position_actions.append((row_idx, col_idx, 0))
 
 
-            if line[row_idx][1] < half and col[col_idx][1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
+            if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
             '''
@@ -75,6 +74,7 @@ class TakuzuState:
                 if 2 not in test_col and str(test_col) not in self.cols:
                     self.cols.add(str(test_col))
             '''
+
             if len(position_actions)==2:
                 actions.append(position_actions[0])
                 actions.append(position_actions[1])
@@ -82,8 +82,7 @@ class TakuzuState:
             elif len(position_actions)==1:
                 a=position_actions[0]
                 self.board.set_number(*a)
-                line[row_idx][a[2]] += 1
-                col[col_idx][a[2]] += 1
+
 
                 if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
                     actions.append(a)
@@ -105,11 +104,13 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
 
-    def __init__(self, board, board_size, empty): 
+    def __init__(self, board, board_size, rows, cols): 
         self.board = board
         self.board_size = board_size
-        self.empty = empty
         self.string = str(self.board)
+
+        self.rows = rows
+        self.cols = cols
         
     
     def __str__(self):
@@ -123,10 +124,16 @@ class Board:
         return prettyprint.rstrip('\n')
 
     def set_number(self, row: int, col: int, value): 
+        print(f'{row},{col},{value}')
         self.board[row, col] = value
+        self.rows[row, value] += 1
+        self.cols[col,value] += 1
+        print(self.rows)
+        print(self.cols)
         self.string = str(self.board.ravel()) # atualiza o hash value.
         
-    def get_number(self, row: int, col: int) -> int:
+
+    def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
 
@@ -195,9 +202,12 @@ class Board:
     def __hash__(self):
         return hash(self.string)
 
+
     def copy(self):
         new_board = self.board.copy()
-        return Board(new_board, self.board_size, self.empty)
+        new_line = self.rows.copy()
+        new_col = self.cols.copy()
+        return Board(new_board, self.board_size,  new_line, new_col)
 
 
 
@@ -209,16 +219,23 @@ class Board:
 
         board_size = int(stdin.readline().rstrip('\n'))
         board = np.ones((board_size, board_size), dtype=int)
-        empty = []
+
+
         for i in range(board_size):
+
             values = stdin.readline().strip('\n').split('\t') 
             for j in range(board_size):
                 value = int(values[j])
                 board[i, j] = value
-                if value == 2:
-                    empty.append((i,j))
 
-        new_board = Board(board, board_size, empty)
+
+        line = np.column_stack(((board==0).sum(axis=1), (board==1).sum(axis=1)))
+        col = np.column_stack(((board==0).sum(axis=0), (board==1).sum(axis=0)))
+
+        print(line)
+        print(col)
+
+        new_board = Board(board, board_size, line,col)
         return new_board
 
 
@@ -233,7 +250,6 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         actions = state.actions()
-        #state.expand()
         return actions
 
 
