@@ -145,8 +145,9 @@ print(np.count_nonzero(a==2))
 print(c)
 print(d)
 '''
-a=(1,2,1)
-print(len(a))
+a = np.array([[1,2,1],[1,2,1], [1,2,1]])
+print(a.transpose())
+print(a)
 
 
 

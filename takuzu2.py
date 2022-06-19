@@ -27,7 +27,7 @@ class TakuzuState:
         TakuzuState.state_id += 1
         self.open = False
         self.rows = set(str(arr) for arr in board.board)
-        self.cols = set(str(arr) for arr in np.transpose(board.board))
+        self.cols = set(str(arr) for arr in board.board.transpose())
 
 
     def __lt__(self, other):
@@ -39,7 +39,6 @@ class TakuzuState:
 
 
     def actions(self):
-        #if not self.open: #então tiramos? -> e expand + à frente?
         actions = []
         empty = self.empty_positions()
         line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
@@ -61,11 +60,11 @@ class TakuzuState:
             if line[row_idx][1] < half and col[col_idx][1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-            a=()
+            '''
             for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
-                test_col = np.transpose(self.board.board)[:,a[1]].copy()
+                test_col = self.board.board.transpose()[:,a[1]].copy()
                 test_col[a[0]] = a[2]
 
                 if str(test_row) in self.rows or str(test_col) in self.cols:
@@ -75,7 +74,7 @@ class TakuzuState:
                     self.rows.add(str(test_row))
                 if 2 not in test_col and str(test_col) not in self.cols:
                     self.cols.add(str(test_col))
-            
+            '''
             if len(position_actions)==2:
                 actions.append(position_actions[0])
                 actions.append(position_actions[1])
@@ -86,12 +85,12 @@ class TakuzuState:
                 line[row_idx][a[2]] += 1
                 col[col_idx][a[2]] += 1
 
-            #else:
-                #actions = []
-                #return actions
+            else:
+                actions = []
+                return actions
 
-                if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
-                    actions.append(a)
+            if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
+                actions.append(a)
         
         return actions
 
@@ -99,9 +98,6 @@ class TakuzuState:
         result = np.where(self.board.board == 2)
         empty = np.column_stack(result)
         return empty
-    
-    #def expand(self):
-        #self.open = True
     
 
 class Board:
