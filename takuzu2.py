@@ -27,7 +27,7 @@ class TakuzuState:
         TakuzuState.state_id += 1
         self.open = False
         self.rows = set(str(arr) for arr in board.board)
-        self.cols = set(str(arr) for arr in board.board.transpose())
+        self.cols = set(str(arr) for arr in np.transpose(board.board.transpose))
 
 
     def __lt__(self, other):
@@ -65,15 +65,15 @@ class TakuzuState:
             for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
-                test_col = self.board.board.transpose()[:,a[1]].copy()
+                test_col = np.transpose(self.board.board)[:,a[1]].copy()
                 test_col[a[0]] = a[2]
 
                 if str(test_row) in self.rows or str(test_col) in self.cols:
                     position_actions.remove(a)
 
-                if 2 not in test_row and str(test_row) in self.rows:
+                if 2 not in test_row and str(test_row) not in self.rows:
                     self.rows.add(str(test_row))
-                if 2 not in test_col and str(test_col) in self.cols:
+                if 2 not in test_col and str(test_col) not in self.cols:
                     self.cols.add(str(test_col))
             
             if len(position_actions)==2:
