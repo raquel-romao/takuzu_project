@@ -202,6 +202,7 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
         actions = state.possible_actions
         state.eliminate_actions()
+        print(actions)
         return actions
 
 
