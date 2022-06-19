@@ -63,16 +63,22 @@ class TakuzuState:
             if line[row_idx][1] < half and col[col_idx][1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-            '''
-            for a in position_actions:
-                test_row = self.board.board[a[0]].copy()
-                test_row[a[1]] = a[2] 
-                test_col = self.board.board[:,a[1]].copy()
-                test_col[a[0]] = a[2]
+            
+            for b in position_actions:
+                test_row = self.board.board[b[0]].copy()
+                test_row[b[1]] = b[2] 
+                
+                test_col = self.board.board.transpose()[b[1]].copy()
+                test_col[b[0]] = b[2]
 
                 if str(test_row) in self.rows or str(test_col) in self.cols:
                     position_actions.remove(a)
-            '''
+                
+                else:
+                    if 2 not in test_row:
+                        self.rows.add(str(test_row))
+                    if 2 not in test_col
+                        self.cols.add(str(test_col))
 
             if len(position_actions)==2:
                 actions.append(position_actions[0])
@@ -97,9 +103,7 @@ class TakuzuState:
         result = np.where(self.board.board == 2)
         empty = np.column_stack(result)
         return empty
-    
-    def expand(self):
-        self.open = True
+
     
 
 class Board:
@@ -235,7 +239,6 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         actions = state.actions()
-        #state.expand()
         return actions
 
 
