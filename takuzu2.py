@@ -85,12 +85,14 @@ class TakuzuState:
                 line[row_idx][a[2]] += 1
                 col[col_idx][a[2]] += 1
 
+                if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
+                    actions.append(a)
+
             else:
                 actions = []
                 return actions
 
-            if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
-                actions.append(a)
+            
         
         return actions
 
