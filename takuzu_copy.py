@@ -98,13 +98,13 @@ class TakuzuState:
         empty = np.column_stack((result[0],result[1]))
         return empty
 
-    def prioritize(self, actions): #para depois aplicar à actions a devolver
-        board = self.board.board
+    """def prioritize(self, actions): #para depois aplicar à actions a devolver
+        #board = self.board.board
 
-        for a in actions:
+        #for a in actions:
             
                 
-                """if self.board.adjacent_vertical_numbers(a[0],a[1])==1 and self.board.get_number(a[0]-1, a[1])==1:
+                if self.board.adjacent_vertical_numbers(a[0],a[1])==1 and self.board.get_number(a[0]-1, a[1])==1:
                     #priotitize
                 elif self.board.get_number(a[0]+1, a[1])==1 and self.board.get_number(a[0]+2, a[1])==1:
                     #prioritize
@@ -322,45 +322,13 @@ class Takuzu(Problem):
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
-
+        
         current_state = node.state
         parent_node = node.parent
         last_action = node.action
         board = node.state.board
         board_np = node.state.board.board
         board_size = board.board_size
-
-        f = 0
-
-        if self.goal_test(current_state):
-            return 0
-
-        number_actions = len(current_state.actions())
-        if number_actions == 0:
-            return board_size**3
-        
-        broken_rule = 0
-        if parent_node != None:
-            parent_state = parent_node.state
-            lin_changed = last_action[0]
-            col_changed = last_action[1]
-            #val_inserted = last_action[2]
-
-            broken_rule = self.find_broken_rules(node, board_np, lin_changed)
-
-            if broken_rule!=0:
-                return broken_rule
-            
-            broken_rule = self.find_broken_rules(node, np.transpose(board_np), col_changed)
-
-            if broken_rule!=0:
-                return broken_rule
-
-            f += parent_state.possible_actions.index(last_action)
-
-            
-        f += board_size - np.count_nonzero((board_np == 2).sum(axis=0)) #rows_filled -> não sei até que ponto isto ajuda na heurístics tho
-        f += board_size - np.count_nonzero((board_np == 2).sum(axis=1)) #cols_filled
 
         return np.count_nonzero((board_np == 2)) #f #como estava antes mas decidi meter o número de casas vazias como h p experimentar, quero fechar a árvore o mais rápido possível e tentar primeiro os estados com menos casas
 
@@ -371,7 +339,7 @@ if __name__ == "__main__":
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = depth_first_tree_search(problem)
+    goal_node = astar_search(problem)
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
     print("Solution:\n", goal_node.state.board)
