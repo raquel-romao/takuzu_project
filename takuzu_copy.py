@@ -39,7 +39,6 @@ class TakuzuState:
 
 
     def actions(self):
-        #if not self.open: #então tiramos? -> e expand + à frente?
         actions = []
         empty = self.empty_positions()
         line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
@@ -61,7 +60,7 @@ class TakuzuState:
             if line[row_idx][1] < half and col[col_idx][1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-            #a=()
+
             """for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
@@ -81,12 +80,12 @@ class TakuzuState:
                 line[row_idx][a[2]] += 1
                 col[col_idx][a[2]] += 1
 
-            #else:
-                #actions = []
-                #return actions
-
                 if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
                     actions.append(a)
+
+            else:
+                actions = []
+                return actions
         
         return actions
 
@@ -94,9 +93,7 @@ class TakuzuState:
         result = np.where(self.board.board == 2)
         empty = np.column_stack(result)
         return empty
-    
-    #def expand(self):
-        #self.open = True
+
     
 
 class Board:
@@ -330,7 +327,7 @@ if __name__ == "__main__":
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = astar_search(problem)
+    goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
     print(goal_node.state.board)
