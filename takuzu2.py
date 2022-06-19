@@ -63,7 +63,7 @@ class TakuzuState:
             if line[row_idx][1] < half and col[col_idx][1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-
+            '''
             for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
@@ -72,7 +72,8 @@ class TakuzuState:
 
                 if str(test_row) in self.rows or str(test_col) in self.cols:
                     position_actions.remove(a)
-
+            '''
+            
             if len(position_actions)==2:
                 actions.append(position_actions[0])
                 actions.append(position_actions[1])
