@@ -62,19 +62,6 @@ class TakuzuState:
             if line[row_idx][1] < half and col[col_idx][1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-
-            """
-
-            if line[i[0]][0] < half and col[i[1]][0] < half and \
-                self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and \
-                    self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
-                position_actions.append((i[0],i[1],0))
-
-            if line[i[0]][1] < half and col[i[1]][1] < half and \
-                self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and \
-                    self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
-                position_actions.append((i[0],i[1],1))
-            """
             for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
