@@ -73,7 +73,7 @@ class TakuzuState:
                 if str(test_row) in self.rows or str(test_col) in self.cols:
                     position_actions.remove(a)
             '''
-            
+
             if len(position_actions)==2:
                 actions.append(position_actions[0])
                 actions.append(position_actions[1])
@@ -297,7 +297,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board
+        return 2 not in state.board.board and self.dif_rows_cols(state) and self.half_half(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
