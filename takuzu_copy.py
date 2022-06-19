@@ -91,8 +91,8 @@ class TakuzuState:
         empty = np.column_stack(result)
         return empty
     
-    def expand(self):
-        self.open = True
+    #def expand(self):
+        #self.open = True
     
 
 class Board:
