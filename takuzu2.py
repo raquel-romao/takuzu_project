@@ -49,6 +49,8 @@ class TakuzuState:
         else:
             half = self.board.board_size //2 + 1
 
+        a=()
+
         for i in empty:
             row_idx, col_idx = i
 
@@ -97,7 +99,7 @@ class TakuzuState:
                 actions = []
                 return actions
 
-        if 2 not in self.board.board and len(actions)==0 and len(position_actions)!=0:
+        if 2 not in self.board.board and len(actions)==0 and len(a)!=0:
             actions.append(a)
         
         return actions

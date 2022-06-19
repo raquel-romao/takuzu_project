@@ -131,7 +131,7 @@ if last_action != None and parent_node != None:
         empty = list(zip(result[0],result[1]))
         return empty
 """
-
+'''
 a = np.array([[1,2,1],[1,2,1], [1,2,1]])
 b = np.transpose(a)
 
@@ -144,7 +144,9 @@ print(np.count_nonzero(a==2))
 
 print(c)
 print(d)
-
+'''
+a=(1,2,1)
+print(len(a))
 
 
 
