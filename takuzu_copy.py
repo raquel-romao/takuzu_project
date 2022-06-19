@@ -26,8 +26,8 @@ class TakuzuState:
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.open = False
-        self.rows = set(str(arr) for arr in board.board)
-        self.cols = set(str(arr) for arr in board.board.transpose())
+        #self.rows = set(str(arr) for arr in board.board)
+        #self.cols = set(str(arr) for arr in board.board.transpose())
 
 
     def __lt__(self, other):
@@ -40,10 +40,10 @@ class TakuzuState:
 
     def actions(self):
         #if not self.open: #então tiramos? -> e expand + à frente?
-        line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-        col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
         actions = []
         empty = self.empty_positions()
+        line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
+        col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
 
         if self.board.board_size % 2 == 0:
             half = self.board.board_size //2
@@ -52,7 +52,6 @@ class TakuzuState:
 
         for i in empty:
             row_idx, col_idx = i
-
             position_actions = []
 
             if line[row_idx][0] < half and col[col_idx][0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
@@ -62,15 +61,16 @@ class TakuzuState:
             if line[row_idx][1] < half and col[col_idx][1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-            for a in position_actions:
+            #a=()
+            """for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
                 test_col = self.board.board[:,a[1]].copy()
                 test_col[a[0]] = a[2]
 
                 if str(test_row) in self.rows or str(test_col) in self.cols:
-                    position_actions.remove(a)
-
+                    position_actions.remove(a)"""
+            
             if len(position_actions)==2:
                 actions.append(position_actions[0])
                 actions.append(position_actions[1])
@@ -81,7 +81,11 @@ class TakuzuState:
                 line[row_idx][a[2]] += 1
                 col[col_idx][a[2]] += 1
 
-                if 2 not in self.board.board:
+            #else:
+                #actions = []
+                #return actions
+
+                if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
                     actions.append(a)
         
         return actions
@@ -288,7 +292,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board
+        return 2 not in state.board.board and self.dif_rows_cols(state) and self.half_half(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
