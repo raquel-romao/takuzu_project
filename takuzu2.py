@@ -25,7 +25,6 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        self.open = False
         self.rows = set(str(arr) for arr in board.board)
         self.cols = set(str(arr) for arr in board.board.transpose())
 
@@ -92,8 +91,12 @@ class TakuzuState:
                 a=position_actions[0]
                 self.board.set_number(*a)
 
-                if 2 not in self.board.board:
-                    actions.append(a)
+            else:
+                actions = []
+                return actions
+
+        if 2 not in self.board.board and len(actions)==0 and len(position_actions)!=0:
+            actions.append(a)
         
         return actions
 
