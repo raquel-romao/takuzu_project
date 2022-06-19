@@ -35,9 +35,6 @@ class TakuzuState:
         return self.id < other.id
 
 
-    def __hash__(self): 
-        return hash(self.board)
-
     
     def __str__(self):
         print(self.board)
@@ -151,8 +148,8 @@ class Board:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
 
-    def __hash__(self):
-        return hash(self.string)
+    def hash(self):
+        return self.string
 
     def copy(self):
         new_board = self.board.copy()
@@ -208,7 +205,7 @@ class Takuzu(Problem):
 
         new_board.set_number(action[0], action[1], action[2])
 
-        hash_state = hash(new_board)
+        hash_state = new_board.hash()
 
 
         if hash_state in self.visited_states:
@@ -219,7 +216,7 @@ class Takuzu(Problem):
 
         new_state = TakuzuState(new_board)
         new_state.actions()
-        self.visited_states[hash(new_state)]= new_state
+        self.visited_states[hash_state]= new_state
         print(self.visited_states)
         return new_state
 
