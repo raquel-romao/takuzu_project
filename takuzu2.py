@@ -292,6 +292,7 @@ class Takuzu(Problem):
 
         return rows and cols
 
+
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
