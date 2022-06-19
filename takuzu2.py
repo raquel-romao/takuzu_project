@@ -53,6 +53,7 @@ class TakuzuState:
             row_idx, col_idx = i
             position_actions = []
 
+
             if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
                 position_actions.append((row_idx, col_idx, 0))
 
@@ -85,7 +86,7 @@ class TakuzuState:
                 self.board.set_number(*a)
 
 
-                if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
+                if len(actions) ==0 and 2 not in self.board.board:
                     actions.append(a)
                     #self.board.rows[a[0],a[2]] -=1
                     #self.board.cols[a[1],a[2]] -=1
@@ -309,8 +310,9 @@ class Takuzu(Problem):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
-        print(state.board.rows)
-        print(state.board.cols)
+        print('rows\n' + state.board.rows)
+        print("cols\n" + state.board.cols)
+        print(state.board)
         return 2 not in state.board.board and self.dif_rows_cols(state)
             
     
