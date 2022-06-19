@@ -309,7 +309,8 @@ class Takuzu(Problem):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
-
+        print(state.board.rows)
+        print(state.board.cols)
         return 2 not in state.board.board and self.dif_rows_cols(state)
             
     
@@ -344,11 +345,11 @@ class Takuzu(Problem):
 if __name__ == "__main__":
     
     board = Board.parse_instance_from_stdin()
-    print(board)
+
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = astar_search(problem)
+    goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
     print(goal_node.state.board)
