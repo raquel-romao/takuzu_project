@@ -91,6 +91,8 @@ class TakuzuState:
             elif len(position_actions)==1:
                 a=position_actions[0]
                 self.board.set_number(*a)
+                line[row_idx][a[2]] += 1
+                col[col_idx][a[2]] += 1
 
                 if 2 not in self.board.board:
                     actions.append(a)
