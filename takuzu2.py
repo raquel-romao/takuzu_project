@@ -25,8 +25,9 @@ class TakuzuState:
         self.board = board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        self.rows = set(str(arr) for arr in board.board)
-        self.cols = set(str(arr) for arr in board.board.transpose())
+        self.open = False
+        #self.rows = set(str(arr) for arr in board.board)
+        #self.cols = set(str(arr) for arr in board.board.transpose())
 
 
     def __lt__(self, other):
@@ -39,21 +40,18 @@ class TakuzuState:
 
     def actions(self):
         #if not self.open: #então tiramos? -> e expand + à frente?
-        line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
-        col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
         actions = []
         empty = self.empty_positions()
+        line = np.column_stack(((self.board.board==0).sum(axis=1), (self.board.board==1).sum(axis=1)))
+        col = np.column_stack(((self.board.board==0).sum(axis=0), (self.board.board==1).sum(axis=0)))
 
         if self.board.board_size % 2 == 0:
             half = self.board.board_size //2
         else:
             half = self.board.board_size //2 + 1
 
-        a=()
-
         for i in empty:
             row_idx, col_idx = i
-
             position_actions = []
 
             if line[row_idx][0] < half and col[col_idx][0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
@@ -63,23 +61,16 @@ class TakuzuState:
             if line[row_idx][1] < half and col[col_idx][1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-            
-            for b in position_actions:
-                test_row = self.board.board[b[0]].copy()
-                test_row[b[1]] = b[2] 
-                
-                test_col = self.board.board.transpose()[b[1]].copy()
-                test_col[b[0]] = b[2]
+            #a=()
+            """for a in position_actions:
+                test_row = self.board.board[a[0]].copy()
+                test_row[a[1]] = a[2] 
+                test_col = self.board.board[:,a[1]].copy()
+                test_col[a[0]] = a[2]
 
                 if str(test_row) in self.rows or str(test_col) in self.cols:
-                    position_actions.remove(b)
-                
-                else:
-                    if 2 not in test_row:
-                        self.rows.add(str(test_row))
-                    if 2 not in test_col:
-                        self.cols.add(str(test_col))
-
+                    position_actions.remove(a)"""
+            
             if len(position_actions)==2:
                 actions.append(position_actions[0])
                 actions.append(position_actions[1])
@@ -89,16 +80,13 @@ class TakuzuState:
                 self.board.set_number(*a)
                 line[row_idx][a[2]] += 1
                 col[col_idx][a[2]] += 1
-            
-            if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
-                    actions.append(a)
 
             #else:
                 #actions = []
                 #return actions
 
-        #if 2 not in self.board.board and len(actions)==0 and len(a)!=0:
-            #actions.append(a)
+                if 2 not in self.board.board: #and len(actions)==0 and len(a)!=0:
+                    actions.append(a)
         
         return actions
 
@@ -106,7 +94,9 @@ class TakuzuState:
         result = np.where(self.board.board == 2)
         empty = np.column_stack(result)
         return empty
-
+    
+    #def expand(self):
+        #self.open = True
     
 
 class Board:
@@ -138,8 +128,8 @@ class Board:
         return self.board[row, col] 
 
 
-    def count(self, t: tuple, i: int):
-        return sum(x == i for x in t)
+    """def count(self, t: tuple, i: int):
+        return sum(x == i for x in t)"""
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -184,8 +174,6 @@ class Board:
             check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
 
         return all(t.count(move) != 2 for t in check)
-
-    
 
     def adjacent_horizontal_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
@@ -242,6 +230,7 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         actions = state.actions()
+        #state.expand()
         return actions
 
 
@@ -297,7 +286,6 @@ class Takuzu(Problem):
         cols = np.all(np.isin(v, (1, 2)))
 
         return rows and cols
-
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
