@@ -49,6 +49,8 @@ class TakuzuState:
         else:
             half = self.board.board_size //2 + 1
 
+        a=()
+
         for i in empty:
             row_idx, col_idx = i
 
@@ -62,18 +64,6 @@ class TakuzuState:
                 position_actions.append((row_idx, col_idx, 1))
 
 
-            """
-
-            if line[i[0]][0] < half and col[i[1]][0] < half and \
-                self.board.adjacent_vertical_numbers(i[0],i[1]).count(0)!=2 and \
-                    self.board.adjacent_horizontal_numbers(i[0],i[1]).count(0)!=2:
-                position_actions.append((i[0],i[1],0))
-
-            if line[i[0]][1] < half and col[i[1]][1] < half and \
-                self.board.adjacent_vertical_numbers(i[0],i[1]).count(1)!=2 and \
-                    self.board.adjacent_horizontal_numbers(i[0],i[1]).count(1)!=2:
-                position_actions.append((i[0],i[1],1))
-            """
             for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
@@ -97,7 +87,7 @@ class TakuzuState:
                 actions = []
                 return actions
 
-        if 2 not in self.board.board and len(actions)==0 and len(position_actions)!=0:
+        if 2 not in self.board.board and len(actions)==0 and len(a)!=0:
             actions.append(a)
         
         return actions
