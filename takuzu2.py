@@ -23,6 +23,7 @@ class TakuzuState:
 
     def __init__(self, board):
         self.board = board
+        self.board_size = board.board_size
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.open = False
@@ -43,10 +44,10 @@ class TakuzuState:
         empty = self.empty_positions()
 
 
-        if self.board.board_size % 2 == 0:
-            half = self.board.board_size //2
+        if self.board_size % 2 == 0:
+            half = self.board_size //2
         else:
-            half = self.board.board_size //2 + 1
+            half = self.board_size //2 + 1
 
         for i in empty:
             row_idx, col_idx = i
@@ -125,13 +126,11 @@ class Board:
                     prettyprint += f'{i[j]}\t'
         return prettyprint.rstrip('\n')
 
-    def set_number(self, row: int, col: int, value): 
-        print(f'{row},{col},{value}')
+
+    def set_number(self, row: int, col: int, value):
         self.board[row, col] = value
         self.rows[row, value] += 1
         self.cols[col,value] += 1
-        print(self.rows)
-        print(self.cols)
         self.string = str(self.board.ravel()) # atualiza o hash value.
         
 
@@ -143,7 +142,7 @@ class Board:
     """def count(self, t: tuple, i: int):
         return sum(x == i for x in t)"""
 
-    def adjacent_vertical_numbers(self, row: int, col: int):
+    '''def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
 
@@ -154,7 +153,7 @@ class Board:
             return (self.get_number(row - 1, col),)
 
         else:
-            return (self.get_number(row - 1, col), self.get_number(row + 1, col))
+            return (self.get_number(row - 1, col), self.get_number(row + 1, col))'''
 
 
 
@@ -171,7 +170,7 @@ class Board:
             check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
 
 
-        return all(t.count(move) != 2 for t in check)
+        return all([t.count(move) != 2 for t in check])
 
 
     def vertical(self, row: int, col:int, move:int):
@@ -185,9 +184,9 @@ class Board:
         if (row not in (0, n-1)):
             check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
 
-        return all(t.count(move) != 2 for t in check)
+        return all([t.count(move) != 2 for t in check])
 
-    def adjacent_horizontal_numbers(self, row: int, col: int):
+    '''def adjacent_horizontal_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
       
@@ -198,7 +197,7 @@ class Board:
             return (self.get_number(row, col - 1),)
 
         else:
-            return (self.get_number(row, col - 1), self.get_number(row, col + 1))
+            return (self.get_number(row, col - 1), self.get_number(row, col + 1))'''
 
 
     def __hash__(self):
@@ -234,8 +233,6 @@ class Board:
         line = np.column_stack(((board==0).sum(axis=1), (board==1).sum(axis=1)))
         col = np.column_stack(((board==0).sum(axis=0), (board==1).sum(axis=0)))
 
-        print(line)
-        print(col)
 
         new_board = Board(board, board_size, line,col)
         return new_board
@@ -313,7 +310,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.dif_rows_cols(state) and self.half_half(state)
+        return 2 not in state.board.board and self.dif_rows_cols(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
