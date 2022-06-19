@@ -123,7 +123,7 @@ class Board:
                 if j == len(i)-1:
                     prettyprint += f'{i[j]}\n'
                 else:
-                    prettyprint += f'{i[j]}    '
+                    prettyprint += f'{i[j]}\t'
         return prettyprint
 
     def set_number(self, row: int, col: int, value): 
@@ -348,7 +348,7 @@ if __name__ == "__main__":
     goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
     print("Is goal?", problem.goal_test(goal_node.state))
-    print("Solution:\n", goal_node.state.board)
+    print(goal_node.state.board)
 
 
 

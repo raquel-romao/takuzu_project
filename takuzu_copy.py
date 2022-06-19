@@ -149,7 +149,7 @@ class Board:
                 if j == len(i)-1:
                     prettyprint += f'{i[j]}\n'
                 else:
-                    prettyprint += f'{i[j]}    '
+                    prettyprint += f'{i[j]}\t'
         return prettyprint
 
     def set_number(self, row: int, col: int, value): 
@@ -283,7 +283,7 @@ class Takuzu(Problem):
             return np.all(np.isin(sum_col, (half, half+1))) and np.all(np.isin(sum_lines,(half, half+1)))
 
 
-    def adjacent(self, state: TakuzuState):
+    """def adjacent(self, state: TakuzuState):
         board = state.board.board
         v = np.lib.stride_tricks.sliding_window_view(board, 3, axis=1)
         v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
@@ -293,7 +293,7 @@ class Takuzu(Problem):
         v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
         cols = np.all(np.isin(v, (1, 2)))
 
-        return rows and cols
+        return rows and cols"""
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
@@ -303,10 +303,10 @@ class Takuzu(Problem):
         if 2 in state.board.board:
             return False
         else:
-            return self.half_half(state) and self.dif_rows_cols(state) and self.adjacent(state)
+            return self.half_half(state) and self.dif_rows_cols(state) #and self.adjacent(state)
 
     
-    def find_broken_rules(self, node: Node, board_np, i):
+    """def find_broken_rules(self, node: Node, board_np, i):
         board = node.state.board
         board_size = board.board_size
 
@@ -317,18 +317,13 @@ class Takuzu(Problem):
             if np.any(board_np[indices != i, :] == board_np[i, :]):
                 return board_size**3
 
-        return 0
+        return 0"""
 
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
-        
-        current_state = node.state
-        parent_node = node.parent
-        last_action = node.action
-        board = node.state.board
+    
         board_np = node.state.board.board
-        board_size = board.board_size
 
         return np.count_nonzero((board_np == 2)) #f #como estava antes mas decidi meter o número de casas vazias como h p experimentar, quero fechar a árvore o mais rápido possível e tentar primeiro os estados com menos casas
 
@@ -341,8 +336,8 @@ if __name__ == "__main__":
     # Obter o nó solução usando a procura em profundidade:
     goal_node = astar_search(problem)
     # Verificar se foi atingida a solução
-    print("Is goal?", problem.goal_test(goal_node.state))
-    print("Solution:\n", goal_node.state.board)
+    #print("Is goal?", problem.goal_test(goal_node.state))
+    print(goal_node.state.board)
 
 
 
