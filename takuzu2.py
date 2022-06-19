@@ -27,7 +27,7 @@ class TakuzuState:
         TakuzuState.state_id += 1
         self.open = False
         self.rows = set(str(arr) for arr in board.board)
-        self.cols = set(str(arr) for arr in np.transpose(board.board.transpose))
+        self.cols = set(str(arr) for arr in np.transpose(board.board))
 
 
     def __lt__(self, other):
