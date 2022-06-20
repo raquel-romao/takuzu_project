@@ -371,7 +371,6 @@ if __name__ == "__main__":
     
     board = Board.parse_instance_from_stdin()
 
-    print(board)
 
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
