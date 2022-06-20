@@ -127,19 +127,19 @@ class Board:
     def __eq__(self, other):
         return self.board == other.board
 
-    def __str__(self):
+    '''def __str__(self):
         string=''
         for i in self.board:
             string += f'{str(i)}\n'
-        return string
+        return string'''
 
 
 
-    def string(self):
+    def __str__(self):
         prettyprint = ''
         for i in self.board:
-            for j in range(len(i)):
-                if j == len(i)-1:
+            for j in range(self.board_size):
+                if j == self.board_size - 1:
                     prettyprint += f'{i[j]}\n'
                 else:
                     prettyprint += f'{i[j]}\t'
@@ -343,6 +343,6 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
     print(goal_node.state.board)
-    goal_node.state.board.string()
+
 
 
