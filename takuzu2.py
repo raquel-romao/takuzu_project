@@ -127,7 +127,7 @@ class Board:
     def __eq__(self, other):
         return self.board == other.board
 
-    def __repr__(self):
+    def __str__(self):
         string=''
         for i in self.board:
             string += f'{str(i)}\n'
@@ -135,7 +135,7 @@ class Board:
 
 
 
-    def __str__(self):
+    '''def __str__(self):
         prettyprint = ''
         for i in self.board:
             for j in range(len(i)):
@@ -143,7 +143,7 @@ class Board:
                     prettyprint += f'{i[j]}\n'
                 else:
                     prettyprint += f'{i[j]}\t'
-        return prettyprint.rstrip('\n')
+        return prettyprint.rstrip('\n')'''
 
 
     def set_number(self, row: int, col: int, value):
@@ -225,8 +225,8 @@ class Board:
 
 
         new_board = Board(board, board_size, line, col)
-        #print(f' inicial:\n {new_board}')
-        new_board
+        print(f' inicial:\n {new_board}')
+
         return new_board
 
 
