@@ -27,8 +27,8 @@ class TakuzuState:
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
-        self.rows = set(str(arr) for arr in board.board)
-        self.cols = set(str(arr) for arr in board.board.transpose())
+        #self.rows = set(str(arr) for arr in board.board)
+        #self.cols = set(str(arr) for arr in board.board.transpose())
 
 
     def __lt__(self, other):
@@ -49,7 +49,7 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half):
+            if self.check_col(half) or self.check_line(half):
                 return actions
 
 
@@ -100,9 +100,20 @@ class TakuzuState:
                 actions = []
                 return actions
 
-            
-        
+
         return actions
+
+    def check_line(self, half):
+        line = self.board.board[self.actions[0]]
+        v = np.lib.stride_tricks.sliding_window_view(line, 3)
+
+        return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
+
+    def check_col(self, half):
+        col = self.board.board.transpose()[self.actions[1]]
+        v = np.lib.stride_tricks.sliding_window_view(col, 3)
+
+        return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
@@ -287,16 +298,16 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
 
-    def half_half(self, state: TakuzuState):
+    '''def half_half(self, state: TakuzuState):
         half = state.board_size //2
     
         if state.board_size % 2 == 0:
             return np.all(state.board.rows == half) and np.all(state.board.cols == half)
         else:
-            return np.all(np.isin(state.board.rows, (half, half+1))) and np.all(np.isin(state.board.cols,(half, half+1)))
+            return np.all(np.isin(state.board.rows, (half, half+1))) and np.all(np.isin(state.board.cols,(half, half+1)))'''
 
 
-    def adjacent(self, state: TakuzuState):
+    '''def adjacent(self, state: TakuzuState):
         board = state.board.board
         v = np.lib.stride_tricks.sliding_window_view(board, 3, axis=1)
         v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
@@ -306,7 +317,7 @@ class Takuzu(Problem):
         v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
         cols = np.all(np.isin(v, (1, 2)))
 
-        return rows and cols
+        return rows and cols'''
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
