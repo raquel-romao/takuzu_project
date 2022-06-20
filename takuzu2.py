@@ -162,7 +162,7 @@ class TakuzuState:
     def __init__(self, board: Board, action):
         self.board = board
         self.board_size = board.board_size
-        self.np_board = board.get_board()
+        #self.np_board = board.get_board()
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
