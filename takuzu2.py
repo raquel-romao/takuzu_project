@@ -292,7 +292,7 @@ class Takuzu(Problem):
         if state.board_size % 2 == 0:
             return np.all(state.board.rows == half) and np.all(state.board.cols == half)
         else:
-            return np.all(np.isin(state.board.rows, (half, half+1))) and np.all(np.isin(state.board.cols,(half, half+1)))
+            return np.all(state.board.rows <= half+1) and np.all(state.board.cols <= half+1)
 
 
     def adjacent(self, state: TakuzuState):
@@ -312,7 +312,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.dif_rows_cols(state)
+        return 2 not in state.board.board and self.adjacent(state) and self.dif_rows_cols(state) and self.half_half(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
