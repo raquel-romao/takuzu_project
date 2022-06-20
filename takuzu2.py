@@ -198,11 +198,11 @@ class TakuzuState:
             position_actions = []
 
 
-            if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half: #and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
+            if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
                 position_actions.append((row_idx, col_idx, 0))
 
 
-            if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half: #and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
+            if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
             '''
