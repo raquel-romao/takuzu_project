@@ -198,6 +198,7 @@ class TakuzuState:
 
         empty = self.empty_positions()
         for i in empty:
+            print(f'avaliar a posição: {i}')
             row_idx, col_idx = i
             position_actions = []
 
