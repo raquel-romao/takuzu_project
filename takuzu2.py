@@ -83,7 +83,7 @@ class Board:
         if (col not in (n-1, n-2)):
             check.append((self.get_number(row, col+1), self.get_number(row, col+2))) #guardar array de posições contíguas
         if (col not in (0, 1)):
-            check.append((self.get_number(row, col-1), self.get_number(row, col-2)))
+            check.append((self.get_number(row, col-2), self.get_number(row, col-1)))
         if (col not in (0, n-1)):
             check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
 
