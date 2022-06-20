@@ -45,9 +45,10 @@ class TakuzuState:
             half = self.board_size //2
         else:
             half = self.board_size //2 + 1
-
-        if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half):
-            return actions
+        
+        if self.last_action!=None:
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half):
+                return actions
 
         empty = self.empty_positions()
         for i in empty:
@@ -243,7 +244,7 @@ class Board:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        self.initial = TakuzuState(board)
+        self.initial = TakuzuState(board, None)
         self.visited_states = {}
 
 
