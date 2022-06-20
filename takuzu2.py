@@ -190,7 +190,7 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if self.check_col(half) or self.check_line(half):
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(*self.last_action) or self.board.vertical(*self.last_action):
                 return actions
 
 
@@ -247,7 +247,7 @@ class TakuzuState:
         return actions
 
 
-    def check_line(self, half):
+    '''def check_line(self, half):
         line = self.board.board[self.last_action[0]]
         v = np.lib.stride_tricks.sliding_window_view(line, 3)
 
@@ -257,7 +257,7 @@ class TakuzuState:
         col = self.board.board[:,self.last_action[1]]
         v = np.lib.stride_tricks.sliding_window_view(col, 3)
 
-        return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)
+        return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)'''
 
 
     def empty_positions(self):
@@ -310,13 +310,13 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
 
-    '''def half_half(self, state: TakuzuState):
+    def half_half(self, state: TakuzuState):
         half = state.board_size //2
     
         if state.board_size % 2 == 0:
             return np.all(state.board.rows == half) and np.all(state.board.cols == half)
         else:
-            return np.all(np.isin(state.board.rows, (half, half+1))) and np.all(np.isin(state.board.cols,(half, half+1)))'''
+            return np.all(np.isin(state.board.rows, (half, half+1))) and np.all(np.isin(state.board.cols,(half, half+1)))
 
 
     '''def adjacent(self, state: TakuzuState):
@@ -336,7 +336,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.dif_rows_cols(state)
+        return 2 not in state.board.board and self.dif_rows_cols(state) and self.half_half(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
