@@ -225,7 +225,7 @@ class Board:
 
 
         new_board = Board(board, board_size, line, col)
-        print(f' inicial: {new_board}')
+        print(f' inicial:\n {new_board}')
         new_board
         return new_board
 
