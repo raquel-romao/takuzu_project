@@ -190,7 +190,7 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if self.check_col or self.check_line:
+            if self.check_col(half) or self.check_line(half):
                 return actions
 
 
@@ -258,6 +258,7 @@ class TakuzuState:
         v = np.lib.stride_tricks.sliding_window_view(col, 3)
 
         return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)
+
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
