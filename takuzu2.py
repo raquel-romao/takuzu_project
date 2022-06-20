@@ -243,14 +243,13 @@ class TakuzuState:
 
 
     def check_line(self, half):
-        line = self.board.board[self.actions[0]]
+        line = self.board.board[self.last_action[0]]
         v = np.lib.stride_tricks.sliding_window_view(line, 3)
 
         return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
 
     def check_col(self, half):
-        b = np.transpose(self.board.board)
-        col = b[self.actions[1]]
+        col = self.board.board[:,self.last_action[1]]
         v = np.lib.stride_tricks.sliding_window_view(col, 3)
 
         return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)
