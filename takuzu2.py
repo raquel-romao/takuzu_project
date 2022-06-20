@@ -87,6 +87,7 @@ class Board:
         if (col not in (0, n-1)):
             check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
 
+        print (check)
 
         return all(t.count(move) != 2 for t in check)
 
@@ -101,6 +102,8 @@ class Board:
             check.append((self.get_number(row-1, col), self.get_number(row-2, col)))
         if (row not in (0, n-1)):
             check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
+
+        print(check)
 
         return all(t.count(move) != 2 for t in check)
 
@@ -162,7 +165,7 @@ class TakuzuState:
     def __init__(self, board: Board, action):
         self.board = board
         self.board_size = board.board_size
-        self.np_board = board.get_board()
+        self.np_board = board.board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
@@ -179,7 +182,7 @@ class TakuzuState:
 
 
     def actions(self):
-
+        print(self.last_action)
         actions =[]
 
         if self.board_size % 2 == 0:
@@ -188,7 +191,7 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half):
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
                 print('oi')
                 return actions
 
@@ -239,6 +242,9 @@ class TakuzuState:
             else:
                 actions = []
                 return actions
+        
+        print(actions)
+        print(self.np_board)
 
         return actions
 
