@@ -321,7 +321,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.adjacent(state) and self.dif_rows_cols(state) and self.half_half(state)
+        return 2 not in state.board.board and self.adjacent(state) and self.dif_rows_cols(state) #and self.half_half(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
