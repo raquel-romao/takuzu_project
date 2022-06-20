@@ -92,8 +92,8 @@ class TakuzuState:
 
                 if len(actions) ==0 and 2 not in self.board.board:
                     actions.append(a)
-                    self.board.rows[a[0],a[2]] -=1
-                    self.board.cols[a[1],a[2]] -=1
+                    #self.board.rows[a[0],a[2]] -=1
+                    #self.board.cols[a[1],a[2]] -=1
 
             else:
                 actions = []
