@@ -141,7 +141,16 @@ class Board:
 
     def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
-        return self.board[row, col] 
+        return self.board[row, col]
+
+    def check_line(self, action):
+        #fazer sliding window da linha da last_action
+        #verificar se os numeros na 0s e 1s nao sao maiores que half nessa linha
+        pass
+
+    def check_row(self, action):
+        # o mesmo que o de cima
+        pass
 
 
     """def count(self, t: tuple, i: int):
