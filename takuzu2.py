@@ -27,8 +27,8 @@ class TakuzuState:
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
-        self.rows = set(str(arr) for arr in board.board)
-        self.cols = set(str(arr) for arr in board.board.transpose())
+        self.rows = set(str(arr) for arr in board.board if 2 not in arr)
+        self.cols = set(str(arr) for arr in board.board.transpose() if 2 not in arr)
 
 
     def __lt__(self, other):
@@ -41,7 +41,7 @@ class TakuzuState:
 
     def actions(self):
 
-        actions =[]
+        actions = []
 
         if self.board_size % 2 == 0:
             half = self.board_size //2
@@ -65,7 +65,7 @@ class TakuzuState:
             if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-            '''
+            """
             for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
@@ -79,7 +79,7 @@ class TakuzuState:
                     self.rows.add(str(test_row))
                 if 2 not in test_col and str(test_col) not in self.cols:
                     self.cols.add(str(test_col))
-            '''
+            """
 
             if len(position_actions)==2:
                 actions.append(position_actions[0])
@@ -239,7 +239,7 @@ class Board:
         col = np.column_stack(((board==0).sum(axis=0), (board==1).sum(axis=0)))
 
 
-        new_board = Board(board, board_size, line,col)
+        new_board = Board(board, board_size, line, col)
         return new_board
 
 
