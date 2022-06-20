@@ -144,6 +144,7 @@ class Board:
                 else:
                     prettyprint += f'{i[j]}\t'
         print(prettyprint.rstrip('\n'))
+        return prettyprint.rstrip('\n')
 
 
     def set_number(self, row: int, col: int, value):
