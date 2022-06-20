@@ -42,8 +42,8 @@ class Board:
                     prettyprint += f'{i[j]}\t'
         return prettyprint.rstrip('\n')
 
-    def get_board(self):
-        return self.board
+    '''def get_board(self):
+        return self.board'''
 
     def set_number(self, row: int, col: int, value):
         self.board[row, col] = value
@@ -162,6 +162,7 @@ class TakuzuState:
     def __init__(self, board: Board, action):
         self.board = board
         self.board_size = board.board_size
+        self.np_board = board.get_board()
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
@@ -197,11 +198,11 @@ class TakuzuState:
             position_actions = []
 
 
-            if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
+            if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half: #and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
                 position_actions.append((row_idx, col_idx, 0))
 
 
-            if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
+            if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half: #and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
             '''
@@ -248,6 +249,7 @@ class TakuzuState:
         return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
 
     def check_col(self, half):
+        print(self.board.board)
         col = self.board.board[:,self.actions[1]]
         v = np.lib.stride_tricks.sliding_window_view(col, 3)
 
