@@ -27,15 +27,12 @@ class TakuzuState:
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
-        #self.rows = set([str(arr) for arr in board.board if 2 not in arr])
-        #self.cols = set([str(arr) for arr in board.board.transpose() if 2 not in arr])
+        self.rows = set(str(arr) for arr in board.board)
+        self.cols = set(str(arr) for arr in board.board.transpose())
 
 
     def __lt__(self, other):
         return self.id < other.id
-
-    def __eq__(self,other):
-        return self.board == other.board
 
 
     def __hash__(self): 
@@ -44,19 +41,18 @@ class TakuzuState:
 
     def actions(self):
 
-        actions = []
+        actions =[]
 
         if self.board_size % 2 == 0:
             half = self.board_size //2
         else:
             half = self.board_size //2 + 1
         
-        if self.last_action != None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half): #not self.board.horizontal(self.last_action[0], self.last_action[1], self.last_action[2]) or not self.board.vertical(self.last_action[0], self.last_action[1], self.last_action[2]):
+        if self.last_action!=None:
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
                 return actions
 
         empty = self.empty_positions()
-
         for i in empty:
             row_idx, col_idx = i
             position_actions = []
@@ -69,7 +65,7 @@ class TakuzuState:
             if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
                 position_actions.append((row_idx, col_idx, 1))
 
-            """
+            '''
             for a in position_actions:
                 test_row = self.board.board[a[0]].copy()
                 test_row[a[1]] = a[2] 
@@ -83,7 +79,7 @@ class TakuzuState:
                     self.rows.add(str(test_row))
                 if 2 not in test_col and str(test_col) not in self.cols:
                     self.cols.add(str(test_col))
-            """
+            '''
 
             if len(position_actions)==2:
                 actions.append(position_actions[0])
@@ -94,7 +90,7 @@ class TakuzuState:
                 self.board.set_number(a[0],a[1],a[2])
 
 
-                if len(actions)==0 and 2 not in self.board.board:
+                if len(actions) ==0 and 2 not in self.board.board:
                     actions.append(a)
                     self.board.rows[a[0],a[2]] -=1
                     self.board.cols[a[1],a[2]] -=1
@@ -124,19 +120,15 @@ class Board:
         self.rows = rows
         self.cols = cols
         
-    def __eq__(self, other):
-        return self.board == other.board
-
-
+    
     def __str__(self):
         prettyprint = ''
         for i in self.board:
-            for j in range(self.board_size):
-                if j == self.board_size - 1:
+            for j in range(len(i)):
+                if j == len(i)-1:
                     prettyprint += f'{i[j]}\n'
                 else:
                     prettyprint += f'{i[j]}\t'
-
         return prettyprint.rstrip('\n')
 
 
@@ -150,6 +142,24 @@ class Board:
     def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
+
+
+    """def count(self, t: tuple, i: int):
+        return sum(x == i for x in t)"""
+
+    '''def adjacent_vertical_numbers(self, row: int, col: int):
+        """Devolve os valores imediatamente abaixo e acima,
+        respectivamente."""
+
+        if row == 0:
+            return (self.get_number(row + 1, col),)
+        
+        elif row == self.board_size - 1:
+            return (self.get_number(row - 1, col),)
+
+        else:
+            return (self.get_number(row - 1, col), self.get_number(row + 1, col))'''
+
 
 
     def horizontal(self, row: int, col: int, move: int):
@@ -181,6 +191,18 @@ class Board:
 
         return all([t.count(move) != 2 for t in check])
 
+    '''def adjacent_horizontal_numbers(self, row: int, col: int):
+        """Devolve os valores imediatamente à esquerda e à direita,
+        respectivamente."""
+      
+        if col == 0:
+            return (self.get_number(row, col + 1),)
+        
+        elif col == self.board_size - 1:
+            return (self.get_number(row, col - 1),)
+
+        else:
+            return (self.get_number(row, col - 1), self.get_number(row, col + 1))'''
 
 
     def __hash__(self):
@@ -191,7 +213,6 @@ class Board:
         new_board = self.board.copy()
         new_line = self.rows.copy()
         new_col = self.cols.copy()
-
         return Board(new_board, self.board_size,  new_line, new_col)
 
 
@@ -218,9 +239,7 @@ class Board:
         col = np.column_stack(((board==0).sum(axis=0), (board==1).sum(axis=0)))
 
 
-        new_board = Board(board, board_size, line, col)
-
-
+        new_board = Board(board, board_size, line,col)
         return new_board
 
 
@@ -293,7 +312,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.dif_rows_cols(state) and self.adjacent(state)
+        return 2 not in state.board.board and self.dif_rows_cols(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
@@ -330,10 +349,8 @@ if __name__ == "__main__":
 
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
-
     # Obter o nó solução usando a procura em profundidade:
     goal_node = depth_first_tree_search(problem)
-
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
     print(goal_node.state.board)
