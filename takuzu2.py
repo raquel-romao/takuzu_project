@@ -350,6 +350,9 @@ class Takuzu(Problem):
 
     def adjacent(self, state:TakuzuState):
         board = state.board.board 
+        print(board)
+        for i in board:
+            print(i)
         rows = all(self.Window_Sum(arr) for arr in board)
         cols = all(self.Window_Sum(arr) for arr in board.transpose())
 
