@@ -145,8 +145,20 @@ print(np.count_nonzero(a==2))
 print(c)
 print(d)
 '''
-a = np.array([[1,2,1],[1,2,1], [1,2,1]])
-b = set()
+a = np.array([[1,2,1],[1,2,1],[1,2,1]])
+
+def dif_rows_cols(a):
+    _, row_counts = np.unique(a, axis=0, return_counts=True)
+    unique_rows = len(row_counts) == 3
+    print(row_counts)
+    _, col_counts = np.unique(a, axis=1, return_counts=True)
+    unique_cols = len(col_counts) == 3
+    print(col_counts)
+
+    return unique_rows and unique_cols
+
+print(dif_rows_cols(a))
+
 #c =[1,0,1]
 #d=[1,0,1]
 #b.add(c)
