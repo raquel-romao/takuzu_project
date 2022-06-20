@@ -188,7 +188,8 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) :
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half):
+                print('oi')
                 return actions
 
 
