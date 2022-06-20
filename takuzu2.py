@@ -250,7 +250,7 @@ class TakuzuState:
 
     def check_col(self, half):
         b = np.transpose(self.board.board)
-        col = b[:,self.actions[1]]
+        col = b[self.actions[1]]
         v = np.lib.stride_tricks.sliding_window_view(col, 3)
 
         return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)
