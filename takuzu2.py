@@ -135,7 +135,7 @@ class Board:
 
 
 
-    '''def __str__(self):
+    def string(self):
         prettyprint = ''
         for i in self.board:
             for j in range(len(i)):
@@ -143,7 +143,7 @@ class Board:
                     prettyprint += f'{i[j]}\n'
                 else:
                     prettyprint += f'{i[j]}\t'
-        return prettyprint.rstrip('\n')'''
+        print(prettyprint.rstrip('\n'))
 
 
     def set_number(self, row: int, col: int, value):
@@ -342,5 +342,6 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
     print(goal_node.state.board)
+    print(goal_node.state.board.string())
 
 
