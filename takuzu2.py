@@ -49,7 +49,7 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(*self.last_action) or not self.board.vertical(*self.last_action):
                 return actions
 
         empty = self.empty_positions()
@@ -87,7 +87,7 @@ class TakuzuState:
 
             elif len(position_actions)==1:
                 a=position_actions[0]
-                self.board.set_number(a[0],a[1],a[2])
+                self.board.set_number(*a)
 
 
                 if len(actions) ==0 and 2 not in self.board.board:
@@ -141,16 +141,7 @@ class Board:
 
     def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
-        return self.board[row, col]
-
-    def check_line(self, action):
-        #fazer sliding window da linha da last_action
-        #verificar se os numeros na 0s e 1s nao sao maiores que half nessa linha
-        pass
-
-    def check_row(self, action):
-        # o mesmo que o de cima
-        pass
+        return self.board[row, col] 
 
 
     """def count(self, t: tuple, i: int):
@@ -177,7 +168,7 @@ class Board:
         check = []
 
         if (col not in (n-1, n-2)):
-            check.append((self.get_number(row, col+1), self.get_number(row, col+2))) 
+            check.append((self.get_number(row, col+1), self.get_number(row, col+2))) #guardar array de posições contíguas
         if (col not in (0, 1)):
             check.append((self.get_number(row, col-1), self.get_number(row, col-2)))
         if (col not in (0, n-1)):
@@ -301,7 +292,7 @@ class Takuzu(Problem):
         if state.board_size % 2 == 0:
             return np.all(state.board.rows == half) and np.all(state.board.cols == half)
         else:
-            return np.all(state.board.rows <= half+1) and np.all(state.board.cols <= half+1)
+            return np.all(np.isin(state.board.rows, (half, half+1))) and np.all(np.isin(state.board.cols,(half, half+1)))
 
 
     def adjacent(self, state: TakuzuState):
@@ -321,7 +312,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.adjacent(state) and self.dif_rows_cols(state) #and self.half_half(state)
+        return 2 not in state.board.board and self.dif_rows_cols(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
