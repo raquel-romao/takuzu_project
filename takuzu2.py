@@ -34,6 +34,9 @@ class TakuzuState:
     def __lt__(self, other):
         return self.id < other.id
 
+    def __eq__(self,other):
+        return self.board == other.board
+
 
     def __hash__(self): 
         return hash(self.board)
@@ -53,7 +56,7 @@ class TakuzuState:
                 return actions
 
         empty = self.empty_positions()
-        
+
         for i in empty:
             row_idx, col_idx = i
             position_actions = []
@@ -121,7 +124,10 @@ class Board:
         self.rows = rows
         self.cols = cols
         
-    
+    def __eq__(self, other):
+        return self.board == other.board
+
+
     def __str__(self):
         prettyprint = ''
         for i in self.board:
@@ -143,23 +149,6 @@ class Board:
     def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
-
-
-    """def count(self, t: tuple, i: int):
-        return sum(x == i for x in t)"""
-
-    '''def adjacent_vertical_numbers(self, row: int, col: int):
-        """Devolve os valores imediatamente abaixo e acima,
-        respectivamente."""
-
-        if row == 0:
-            return (self.get_number(row + 1, col),)
-        
-        elif row == self.board_size - 1:
-            return (self.get_number(row - 1, col),)
-
-        else:
-            return (self.get_number(row - 1, col), self.get_number(row + 1, col))'''
 
 
 
@@ -192,18 +181,6 @@ class Board:
 
         return all([t.count(move) != 2 for t in check])
 
-    '''def adjacent_horizontal_numbers(self, row: int, col: int):
-        """Devolve os valores imediatamente à esquerda e à direita,
-        respectivamente."""
-      
-        if col == 0:
-            return (self.get_number(row, col + 1),)
-        
-        elif col == self.board_size - 1:
-            return (self.get_number(row, col - 1),)
-
-        else:
-            return (self.get_number(row, col - 1), self.get_number(row, col + 1))'''
 
 
     def __hash__(self):
@@ -214,6 +191,7 @@ class Board:
         new_board = self.board.copy()
         new_line = self.rows.copy()
         new_col = self.cols.copy()
+
         return Board(new_board, self.board_size,  new_line, new_col)
 
 
