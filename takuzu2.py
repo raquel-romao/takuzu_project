@@ -143,7 +143,7 @@ class Board:
                     prettyprint += f'{i[j]}\n'
                 else:
                     prettyprint += f'{i[j]}\t'
-        print(prettyprint.rstrip('\n'))
+
         return prettyprint.rstrip('\n')
 
 
