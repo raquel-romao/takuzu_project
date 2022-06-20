@@ -311,9 +311,7 @@ class Takuzu(Problem):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
-        print(f'rows\n {state.board.rows}')
-        print(f"cols\n {state.board.cols}")
-        print(state.board)
+
         return 2 not in state.board.board and self.dif_rows_cols(state)
             
     
