@@ -319,7 +319,7 @@ class Takuzu(Problem):
             return np.all(np.isin(state.board.rows, [half, half +1])) and np.all(np.isin(state.board.cols, [half, half+1]))
 
 
-    def Window_Sum(arr):
+    def Window_Sum(self, arr):
 
         n = len(arr)
     
@@ -350,10 +350,8 @@ class Takuzu(Problem):
 
     def adjacent(self, state:TakuzuState):
         board = state.board.board 
-        print(board)
-        for i in board:
-            print(i)
-        rows = all(self.Window_Sum(arr) for arr in board)
+
+        rows = all([self.Window_Sum(arr) for arr in board])
         cols = all(self.Window_Sum(arr) for arr in board.transpose())
 
         return rows and cols
