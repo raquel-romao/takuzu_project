@@ -48,9 +48,9 @@ class TakuzuState:
         else:
             half = self.board_size //2 + 1
         
-        if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
-                return actions
+        #if self.last_action!=None:
+            #if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
+                #return actions
 
         empty = self.empty_positions()
         for i in empty:
@@ -92,8 +92,8 @@ class TakuzuState:
 
                 if len(actions) ==0 and 2 not in self.board.board:
                     actions.append(a)
-                    #self.board.rows[a[0],a[2]] -=1
-                    #self.board.cols[a[1],a[2]] -=1
+                    self.board.rows[a[0],a[2]] -=1
+                    self.board.cols[a[1],a[2]] -=1
 
             else:
                 actions = []
