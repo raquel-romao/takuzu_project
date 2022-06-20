@@ -127,6 +127,13 @@ class Board:
     def __eq__(self, other):
         return self.board == other.board
 
+    def __repr__(self):
+        string=''
+        for i in self.board:
+            string += f'{str(i)}\n'
+        return string
+
+
 
     def __str__(self):
         prettyprint = ''
@@ -219,6 +226,7 @@ class Board:
 
         new_board = Board(board, board_size, line, col)
         print(f' inicial: {new_board}')
+        new_board
         return new_board
 
 
