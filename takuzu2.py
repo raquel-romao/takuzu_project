@@ -41,6 +41,8 @@ class TakuzuState:
 
     def actions(self):
 
+        actions =[]
+
         if self.board_size % 2 == 0:
             half = self.board_size //2
         else:
