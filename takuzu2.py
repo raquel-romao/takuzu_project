@@ -182,7 +182,7 @@ class TakuzuState:
 
 
     def actions(self):
-        print(self.last_action)
+        print(f' ultima ação: {self.last_action}')
         actions =[]
 
         if self.board_size % 2 == 0:
@@ -243,9 +243,11 @@ class TakuzuState:
                 actions = []
                 print('one position not possible')
                 return actions
+
         
-        print(actions)
         print(self.np_board)
+        print(f' ações possíveis {actions}')
+        
 
         return actions
 
