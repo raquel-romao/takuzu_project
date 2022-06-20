@@ -310,13 +310,13 @@ class Takuzu(Problem):
         return unique_rows and unique_cols
 
 
-    '''def half_half(self, state: TakuzuState):
+    def half_half(self, state: TakuzuState):
         half = state.board_size //2
     
         if state.board_size % 2 == 0:
             return np.all(state.board.rows == half) and np.all(state.board.cols == half)
         else:
-            return np.all(np.isin(state.board.rows, (half, half+1))) and np.all(np.isin(state.board.cols,(half, half+1)))'''
+            return np.all(np.isin(state.board.rows, [half, half +1])) and np.all(np.isin(state.board.cols, [half, half+1]))
 
 
     '''def adjacent(self, state: TakuzuState):
