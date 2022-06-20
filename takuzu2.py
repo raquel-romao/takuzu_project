@@ -182,7 +182,7 @@ class TakuzuState:
 
 
     def actions(self):
-        print(f' ultima ação: {self.last_action}')
+
         actions =[]
 
         if self.board_size % 2 == 0:
@@ -192,13 +192,13 @@ class TakuzuState:
         
         if self.last_action!=None:
             if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
-                print('last action quebrou uma regra')
+
                 return actions
 
 
         empty = self.empty_positions()
         for i in empty:
-            print(f'avaliar a posição: {i}')
+
             row_idx, col_idx = i
             position_actions = []
 
@@ -242,12 +242,8 @@ class TakuzuState:
 
             else:
                 actions = []
-                print('one position not possible')
                 return actions
 
-        
-        print(self.np_board)
-        print(f' ações possíveis {actions}')
         
 
         return actions
