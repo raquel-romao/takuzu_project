@@ -148,7 +148,8 @@ print(d)
 a = np.array([[1,2,1],[1,2,1], [1,2,1]])
 v = np.lib.stride_tricks.sliding_window_view(a[0], 3)
 print(v)
-print(a.transpose())
-print(any(np.all(a==a[0]) for a in v))
-print(np.any(a[0] > 1))
+b = a[0]
+print(b[0])
+#print(any(np.all(a==a[0]) for a in v))
+#print(np.any(a[0] > 1))
 
