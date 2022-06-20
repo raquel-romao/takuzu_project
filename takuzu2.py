@@ -343,6 +343,6 @@ if __name__ == "__main__":
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
     print(goal_node.state.board)
-    print(goal_node.state.board.string())
+    goal_node.state.board.string()
 
 
