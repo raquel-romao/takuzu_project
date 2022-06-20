@@ -52,7 +52,7 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action != None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0], self.last_action[1], self.last_action[2]) or not self.board.vertical(self.last_action[0], self.last_action[1], self.last_action[2]):
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half): #not self.board.horizontal(self.last_action[0], self.last_action[1], self.last_action[2]) or not self.board.vertical(self.last_action[0], self.last_action[1], self.last_action[2]):
                 return actions
 
         empty = self.empty_positions()
@@ -293,7 +293,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.dif_rows_cols(state) and self.adjacent(state) 
+        return 2 not in state.board.board and self.dif_rows_cols(state) and self.adjacent(state)
             
     
     def find_broken_rules(self, node: Node, board_np, i):
@@ -328,11 +328,12 @@ if __name__ == "__main__":
     
     board = Board.parse_instance_from_stdin()
 
-
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
+
     # Obter o nó solução usando a procura em profundidade:
     goal_node = depth_first_tree_search(problem)
+
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
     print(goal_node.state.board)
