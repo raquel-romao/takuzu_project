@@ -87,7 +87,7 @@ class Board:
         if (col not in (0, n-1)):
             check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
 
-        print(f'checkar a coluna da possível ação {check} para o valor {move}')
+        print(f'checkar a os adjacentes na linha {check} para o valor {move}')
 
         return all(t.count(move) != 2 for t in check)
 
@@ -103,7 +103,7 @@ class Board:
         if (row not in (0, n-1)):
             check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
 
-        print(f'checkar a coluna da possível ação {check} para o valor {move}')
+        print(f'checkar os adjacentes na coluna {check} para o valor {move}')
 
         return all(t.count(move) != 2 for t in check)
 
