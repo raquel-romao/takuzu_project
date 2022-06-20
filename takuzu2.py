@@ -341,6 +341,6 @@ if __name__ == "__main__":
     goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
-    #print(goal_node.state.board)
+    print(goal_node.state.board)
 
 
