@@ -225,7 +225,7 @@ class Board:
 
 
         new_board = Board(board, board_size, line, col)
-        print(f' inicial:\n {new_board}')
+        #print(f' inicial:\n {new_board}')
         new_board
         return new_board
 
@@ -341,6 +341,6 @@ if __name__ == "__main__":
     goal_node = depth_first_tree_search(problem)
     # Verificar se foi atingida a solução
     #print("Is goal?", problem.goal_test(goal_node.state))
-    print(goal_node.state.board)
+    #print(goal_node.state.board)
 
 
