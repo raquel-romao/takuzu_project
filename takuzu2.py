@@ -27,8 +27,8 @@ class TakuzuState:
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
-        self.rows = set(str(arr) for arr in board.board if 2 not in arr)
-        self.cols = set(str(arr) for arr in board.board.transpose() if 2 not in arr)
+        self.rows = set([str(arr) for arr in board.board if 2 not in arr])
+        self.cols = set([str(arr) for arr in board.board.transpose() if 2 not in arr])
 
 
     def __lt__(self, other):
@@ -51,8 +51,8 @@ class TakuzuState:
         else:
             half = self.board_size //2 + 1
         
-        if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0], self.last_action[1], self.last_action[2]) or not self.board.vertical(self.last_action[0], self.last_action[1], self.last_action[2]):
+        if self.last_action != None:
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half): #or not self.board.horizontal(self.last_action[0], self.last_action[1], self.last_action[2]) or not self.board.vertical(self.last_action[0], self.last_action[1], self.last_action[2]):
                 return actions
 
         empty = self.empty_positions()
@@ -149,7 +149,6 @@ class Board:
     def get_number(self, row: int, col: int):
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
-
 
 
     def horizontal(self, row: int, col: int, move: int):
