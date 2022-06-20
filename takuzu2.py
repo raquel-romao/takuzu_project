@@ -18,108 +18,7 @@ from search import (
 )
 
 
-class TakuzuState:
-    state_id = 0
 
-    def __init__(self, board, action):
-        self.board = board
-        self.board_size = board.board_size
-        self.id = TakuzuState.state_id
-        TakuzuState.state_id += 1
-        self.last_action = action
-        #self.rows = set(str(arr) for arr in board.board)
-        #self.cols = set(str(arr) for arr in board.board.transpose())
-
-
-    def __lt__(self, other):
-        return self.id < other.id
-
-
-    def __hash__(self): 
-        return hash(self.board)
-
-
-    def actions(self):
-
-        actions =[]
-
-        if self.board_size % 2 == 0:
-            half = self.board_size //2
-        else:
-            half = self.board_size //2 + 1
-        
-        if self.last_action!=None:
-            if self.check_col(half) or self.check_line(half):
-                return actions
-
-
-        empty = self.empty_positions()
-        for i in empty:
-            row_idx, col_idx = i
-            position_actions = []
-
-
-            if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
-                position_actions.append((row_idx, col_idx, 0))
-
-
-            if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
-                position_actions.append((row_idx, col_idx, 1))
-
-            '''
-            for a in position_actions:
-                test_row = self.board.board[a[0]].copy()
-                test_row[a[1]] = a[2] 
-                test_col = self.board.board.transpose()[:,a[1]].copy()
-                test_col[a[0]] = a[2]
-
-                if str(test_row) in self.rows or str(test_col) in self.cols:
-                    position_actions.remove(a)
-
-                if 2 not in test_row and str(test_row) not in self.rows:
-                    self.rows.add(str(test_row))
-                if 2 not in test_col and str(test_col) not in self.cols:
-                    self.cols.add(str(test_col))
-            '''
-
-            if len(position_actions)==2:
-                actions.append(position_actions[0])
-                actions.append(position_actions[1])
-
-            elif len(position_actions)==1:
-                a=position_actions[0]
-                self.board.set_number(a[0],a[1],a[2])
-
-
-                if len(actions) ==0 and 2 not in self.board.board:
-                    actions.append(a)
-                    self.board.rows[a[0],a[2]] -=1
-                    self.board.cols[a[1],a[2]] -=1
-
-            else:
-                actions = []
-                return actions
-
-
-        return actions
-
-    def check_line(self, half):
-        line = self.board.board[self.actions[0]]
-        v = np.lib.stride_tricks.sliding_window_view(line, 3)
-
-        return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
-
-    def check_col(self, half):
-        col = self.board.board[:,self.actions[1]]
-        v = np.lib.stride_tricks.sliding_window_view(col, 3)
-
-        return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)
-
-    def empty_positions(self):
-        result = np.where(self.board.board == 2)
-        empty = np.column_stack(result)
-        return empty
-    
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu.""" 
@@ -143,6 +42,8 @@ class Board:
                     prettyprint += f'{i[j]}\t'
         return prettyprint.rstrip('\n')
 
+    def get_board(self):
+        return self.board
 
     def set_number(self, row: int, col: int, value):
         self.board[row, col] = value
@@ -253,6 +154,110 @@ class Board:
 
         new_board = Board(board, board_size, line,col)
         return new_board
+
+
+class TakuzuState:
+    state_id = 0
+
+    def __init__(self, board: Board, action):
+        self.board = board
+        self.board_size = board.board_size
+        self.id = TakuzuState.state_id
+        TakuzuState.state_id += 1
+        self.last_action = action
+        #self.rows = set(str(arr) for arr in board.board)
+        #self.cols = set(str(arr) for arr in board.board.transpose())
+
+
+    def __lt__(self, other):
+        return self.id < other.id
+
+
+    def __hash__(self): 
+        return hash(self.board)
+
+
+    def actions(self):
+
+        actions =[]
+
+        if self.board_size % 2 == 0:
+            half = self.board_size //2
+        else:
+            half = self.board_size //2 + 1
+        
+        if self.last_action!=None:
+            if self.check_col(half) or self.check_line(half):
+                return actions
+
+
+        empty = self.empty_positions()
+        for i in empty:
+            row_idx, col_idx = i
+            position_actions = []
+
+
+            if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0):
+                position_actions.append((row_idx, col_idx, 0))
+
+
+            if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1):
+                position_actions.append((row_idx, col_idx, 1))
+
+            '''
+            for a in position_actions:
+                test_row = self.board.board[a[0]].copy()
+                test_row[a[1]] = a[2] 
+                test_col = self.board.board.transpose()[:,a[1]].copy()
+                test_col[a[0]] = a[2]
+
+                if str(test_row) in self.rows or str(test_col) in self.cols:
+                    position_actions.remove(a)
+
+                if 2 not in test_row and str(test_row) not in self.rows:
+                    self.rows.add(str(test_row))
+                if 2 not in test_col and str(test_col) not in self.cols:
+                    self.cols.add(str(test_col))
+            '''
+
+            if len(position_actions)==2:
+                actions.append(position_actions[0])
+                actions.append(position_actions[1])
+
+            elif len(position_actions)==1:
+                a=position_actions[0]
+                self.board.set_number(a[0],a[1],a[2])
+
+
+                if len(actions) ==0 and 2 not in self.board.board:
+                    actions.append(a)
+                    self.board.rows[a[0],a[2]] -=1
+                    self.board.cols[a[1],a[2]] -=1
+
+            else:
+                actions = []
+                return actions
+
+        return actions
+
+
+    def check_line(self, half):
+        line = self.board.board[self.actions[0]]
+        v = np.lib.stride_tricks.sliding_window_view(line, 3)
+
+        return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
+
+    def check_col(self, half):
+        col = self.board.board[:,self.actions[1]]
+        v = np.lib.stride_tricks.sliding_window_view(col, 3)
+
+        return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)
+
+    def empty_positions(self):
+        result = np.where(self.board.board == 2)
+        empty = np.column_stack(result)
+        return empty
+    
 
 
 class Takuzu(Problem):
