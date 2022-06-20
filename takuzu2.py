@@ -49,10 +49,11 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(*self.last_action) or not self.board.vertical(*self.last_action):
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0], self.last_action[1], self.last_action[2]) or not self.board.vertical(self.last_action[0], self.last_action[1], self.last_action[2]):
                 return actions
 
         empty = self.empty_positions()
+        
         for i in empty:
             row_idx, col_idx = i
             position_actions = []
@@ -87,10 +88,10 @@ class TakuzuState:
 
             elif len(position_actions)==1:
                 a=position_actions[0]
-                self.board.set_number(*a)
+                self.board.set_number(a[0],a[1],a[2])
 
 
-                if len(actions) ==0 and 2 not in self.board.board:
+                if len(actions)==0 and 2 not in self.board.board:
                     actions.append(a)
                     self.board.rows[a[0],a[2]] -=1
                     self.board.cols[a[1],a[2]] -=1
@@ -312,7 +313,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.dif_rows_cols(state) and self.adjacent(state) and self.half_half(state)
+        return 2 not in state.board.board and self.dif_rows_cols(state) and self.adjacent(state) 
             
     
     def find_broken_rules(self, node: Node, board_np, i):
