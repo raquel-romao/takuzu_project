@@ -49,7 +49,7 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half): #or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
                 return actions
 
         empty = self.empty_positions()
@@ -175,7 +175,7 @@ class Board:
             check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
 
 
-        return all([t.count(move) != 2 for t in check])
+        return all(t.count(move) != 2 for t in check)
 
 
     def vertical(self, row: int, col:int, move:int):
@@ -189,7 +189,7 @@ class Board:
         if (row not in (0, n-1)):
             check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
 
-        return all([t.count(move) != 2 for t in check])
+        return all(t.count(move) != 2 for t in check)
 
     '''def adjacent_horizontal_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
