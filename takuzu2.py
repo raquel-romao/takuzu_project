@@ -192,7 +192,7 @@ class TakuzuState:
         
         if self.last_action!=None:
             if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
-                print('oi')
+                print('last action quebrou uma regra')
                 return actions
 
 
@@ -234,13 +234,14 @@ class TakuzuState:
                 self.board.set_number(a[0],a[1],a[2])
 
 
-                if len(actions) ==0 and 2 not in self.board.board:
+                if len(actions)==0 and 2 not in self.board.board:
                     actions.append(a)
                     self.board.rows[a[0],a[2]] -=1
                     self.board.cols[a[1],a[2]] -=1
 
             else:
                 actions = []
+                print('one position not possible')
                 return actions
         
         print(actions)
