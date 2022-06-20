@@ -21,12 +21,12 @@ from search import (
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board):
+    def __init__(self, board, action):
         self.board = board
         self.board_size = board.board_size
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        self.open = False
+        self.last_action = action
         self.rows = set(str(arr) for arr in board.board)
         self.cols = set(str(arr) for arr in board.board.transpose())
 
@@ -40,15 +40,16 @@ class TakuzuState:
 
 
     def actions(self):
-        actions = []
-        empty = self.empty_positions()
-
 
         if self.board_size % 2 == 0:
             half = self.board_size //2
         else:
             half = self.board_size //2 + 1
 
+        if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half):
+            return actions
+
+        empty = self.empty_positions()
         for i in empty:
             row_idx, col_idx = i
             position_actions = []
@@ -266,7 +267,7 @@ class Takuzu(Problem):
         if hash_state in self.visited_states:
             return self.visited_states[hash_state]
 
-        new_state = TakuzuState(new_board)
+        new_state = TakuzuState(new_board, action)
         self.visited_states.update({hash_state: new_state})
         
         return new_state
@@ -283,15 +284,12 @@ class Takuzu(Problem):
 
 
     def half_half(self, state: TakuzuState):
-        board_size = state.board.board_size
-        half = board_size // 2
-        sum_col = np.sum(state.board.board, axis=0)
-        sum_lines = np.sum(state.board.board, axis=1)
+        half = state.board_size //2
     
-        if board_size % 2 == 0:
-            return np.all(sum_col == half) and np.all(sum_lines == half)
+        if state.board_size % 2 == 0:
+            return np.all(state.board.rows == half) and np.all(state.board.cols == half)
         else:
-            return np.all(np.isin(sum_col, (half, half+1))) and np.all(np.isin(sum_lines,(half, half+1)))
+            return np.all(np.isin(state.board.rows, (half, half+1))) and np.all(np.isin(state.board.cols,(half, half+1)))
 
 
     def adjacent(self, state: TakuzuState):

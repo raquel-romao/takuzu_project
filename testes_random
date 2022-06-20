@@ -145,10 +145,8 @@ print(np.count_nonzero(a==2))
 print(c)
 print(d)
 '''
-a = np.array([[1,2,1],[1,2,1], [1,2,1]])
-print(a.transpose())
-print(a)
-
+a = np.array([[1,1,1],[1,2,1], [1,2,1]])
+print(np.any(a[0]>1))
 
 
 
