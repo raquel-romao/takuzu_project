@@ -146,13 +146,11 @@ print(c)
 print(d)
 '''
 a = np.array([[1,2,1],[1,2,1], [1,2,1]])
-v = np.lib.stride_tricks.sliding_window_view(a[0], 3)
-print(v)
-b = a[0]
-print(b[0])
-#print(any(np.all(a==a[0]) for a in v))
-#print(np.any(a[0] > 1))
-print(False or False)
+b = set()
+#c =[1,0,1]
+#d=[1,0,1]
+#b.add(c)
+#b.add(d)
 
-print(True or False or True or True)
-print(True or False or False or False)
+#print([1,0,1] in b)
+#print(d in b)
