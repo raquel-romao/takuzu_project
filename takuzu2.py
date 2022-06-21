@@ -193,23 +193,30 @@ class Board:
         col = np.column_stack(((board==0).sum(axis=0), (board==1).sum(axis=0)))
 
 
-        new_board = Board(board, board_size, line,col)
+        new_board = Board(board, board_size, line, col)
         return new_board
 
 
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board: Board, action):
+    def __init__(self, board: Board, action, rows = set(), cols = set()):
         self.board = board
         self.board_size = board.board_size
         self.np_board = board.board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
-        self.rows = set(str(arr) for arr in board.board if 2 not in arr)
-        self.cols = set(str(arr) for arr in board.board.transpose() if 2 not in arr)
+        self.rows = rows
+        self.cols = cols
 
+
+    def completed_rows(self):
+        self.rows = set(str(arr) for arr in board.board if 2 not in arr)
+
+
+    def completed_cols(self):
+        self.cols = set(str(arr) for arr in board.board.transpose() if 2 not in arr)
 
 
     def __lt__(self, other):
@@ -341,6 +348,8 @@ class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
         self.initial = TakuzuState(board, None)
+        self.initial.completed_cols()
+        self.initial.completed_rows()
         self.visited_states = {}
 
 
@@ -364,20 +373,25 @@ class Takuzu(Problem):
         if hash_state in self.visited_states:
             return self.visited_states[hash_state]
 
-        new_state = TakuzuState(new_board, action)
+        new_setrow= state.rows.copy()
+        new_setcol= state.cols.copy()
+        new_state = TakuzuState(new_board, action, new_setrow, new_setcol)
         self.visited_states.update({hash_state: new_state})
         
         return new_state
 
 
-    def dif_rows_cols(self, state: TakuzuState):
+    '''def dif_rows_cols(self, state: TakuzuState):
         _, row_counts = np.unique(state.board.board, axis=0, return_counts=True)
         unique_rows = len(row_counts) == state.board.board_size
 
         _, col_counts = np.unique(state.board.board, axis=1, return_counts=True)
         unique_cols = len(col_counts) == state.board.board_size
 
-        return unique_rows and unique_cols
+        return unique_rows and unique_cols'''
+
+    def dif_rows_cols(self, state: TakuzuState):
+        return len(state.rows) == state.board_size and len(state.cols) == state.board_size
 
 
     def half_half(self, state: TakuzuState):
