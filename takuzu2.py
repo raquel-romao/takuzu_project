@@ -349,7 +349,7 @@ class TakuzuState:
                     self.rows.add(str(self.np_board[a[0]]))
                 if 2 not in self.np_board_t[a[1]]:
                     damn +=1
-                    self.cols.add(str(self.np_board[a[0]]))
+                    self.cols.add(str(self.np_board_t[a[1]]))
                 
                 if damn!=2:
                     return []
