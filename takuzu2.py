@@ -256,7 +256,7 @@ class TakuzuState:
 
 
         changed_number = True
-        
+
         while changed_number:
             changed_number=False
             empty = self.empty_positions()
@@ -266,7 +266,7 @@ class TakuzuState:
                 position_actions = []
 
                 test_row = self.np_board[i[0]].copy()
-                test_col = self.np_board.transpose()[i[1]].copy()
+                test_col = self.np_board_t[i[1]].copy()
 
                 test_row[i[1]] = 0
                 test_col[i[0]] = 0
@@ -274,24 +274,49 @@ class TakuzuState:
                 if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0) and str(test_row) not in self.rows and str(test_col) not in self.cols:
                     position_actions.append((row_idx, col_idx, 0))
 
+                test_row[i[1]] = 1
+                test_col[i[0]] = 1
+
                 if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1) and str(test_row) not in self.rows and str(test_col) not in self.cols:
                     position_actions.append((row_idx, col_idx, 1))
                     
 
-                
-                '''for a in position_actions:
-                    test_row = self.np_board[a[0]].copy()
-                    test_row[a[1]] = a[2] 
-                    test_col = self.np_board[:,a[1]].copy()
-                    test_col[a[0]] = a[2]
+                if len(position_actions)==2 and np.count_nonzero(test_row ==2)==1:
+                    p = np.argwhere(test_row==2)
+                    
+                    new_actions = []
+                    test_row[p[0,0]]= 1
+                    test_row[i[1]] = 0
+                    
+                    if str(test_row) not in self.rows :
+                        new_actions.append(position_actions[0])
+                    
+                    test_row[p[0,0]] = 0
+                    test_row[i[1]] = 1
+                    if str(test_row) not in self.rows:
+                        new_actions.append(position_actions[1])
 
-                    if str(test_row) in self.rows or str(test_col) in self.cols:
-                        position_actions.remove(a)
+                    position_actions = new_actions
 
-                    if 2 not in test_row and str(test_row) not in self.rows:
-                        self.rows.add(str(test_row))
-                    if 2 not in test_col and str(test_col) not in self.cols:
-                        self.cols.add(str(test_col))'''
+                if len(position_actions)==2 and np.count_nonzero(test_col ==2)==1:
+                    p = np.argwhere(test_col==2)
+                    
+                    new_actions = []
+                    test_col[p[0,0]]= 1
+                    test_col[i[0]] = 0
+                    
+                    if str(test_col) not in self.cols:
+                        new_actions.append(position_actions[0])
+                    
+                    test_col[p[0,0]] = 0
+                    test_col[i[0]] = 1
+                    if str(test_col) not in self.cols:
+                        new_actions.append(position_actions[1])
+
+                    position_actions = new_actions
+
+
+
                 
 
                 if len(position_actions)==2:
