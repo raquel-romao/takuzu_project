@@ -296,6 +296,7 @@ class TakuzuState:
                     if str(test_row) not in self.rows:
                         new_actions.append(position_actions[1])
 
+                    test_row[p[0,0]] = 2
                     position_actions = new_actions
 
                 if len(position_actions)==2 and np.count_nonzero(test_col ==2)==1:
@@ -313,6 +314,7 @@ class TakuzuState:
                     if str(test_col) not in self.cols:
                         new_actions.append(position_actions[1])
 
+                    test_col[p[0,0]] = 2
                     position_actions = new_actions
 
 
