@@ -344,12 +344,16 @@ class TakuzuState:
                 a=bora_bora[0]
                 self.board.set_number(a[0], a[1], a[2])
                 damn = 0
-                if 2 not in self.np_board[a[0]]:
+                row=str(self.np_board[a[0]])
+                col=str(self.np_board_t[a[1]])
+                if row not in self.rows:
                     damn +=1
-                    self.rows.add(str(self.np_board[a[0]]))
-                if 2 not in self.np_board_t[a[1]]:
+                    if 2 not in self.np_board[a[0]]:
+                        self.rows.add(row)
+                if col not in self.cols:
                     damn +=1
-                    self.cols.add(str(self.np_board_t[a[1]]))
+                    if 2 not in self.np_board_t[a[1]]:
+                        self.cols.add(col)
                 
                 if damn!=2:
                     return []
