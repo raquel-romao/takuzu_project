@@ -225,8 +225,8 @@ class TakuzuState:
             '''
 
             if len(position_actions)==2:
-                actions.add(0, position_actions[0])
-                actions.add(0, position_actions[1])
+                actions.add(position_actions[0])
+                actions.add(position_actions[1])
 
             elif len(position_actions)==1:
                 a=position_actions[0]
