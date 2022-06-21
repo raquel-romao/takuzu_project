@@ -304,19 +304,59 @@ class TakuzuState:
                 if 2 not in test_col:
                     self.cols.add(str(test_col))
 
-
                 if len(actions)==0 and 2 not in self.board.board:
                     actions.append(a)
                     self.board.rows[a[0],a[2]] -=1
                     self.board.cols[a[1],a[2]] -=1
+                    return actions
+
+                revised_actions = self.revise(actions, half)
+
+                if len(revised_actions)==0:
+                    return revised_actions
 
             else:
                 actions = []
                 return actions
 
-        
-
         return actions
+
+
+    def revise(self, actions: list, half):
+        revised_actions = []
+        for i in actions[::2]:
+            bora_bora = []
+            if self.board.rows[i[0], 0] < half and self.board.cols[i[1], 0] < half and self.board.horizontal(i[0], i[1], 0) and self.board.vertical(i[0], i[1], 0):
+                bora_bora.append((i[0], i[1], 0))
+
+            if self.board.rows[i[0], 1] < half and self.board.cols[i[1], 1] < half and self.board.horizontal(i[0], i[1], 1) and self.board.vertical(i[0], i[1], 1):
+                revised_actions.append((i[0], i[1], 1))
+
+            if len(bora_bora)==2:
+                revised_actions.append(bora_bora[0])
+                revised_actions.append(bora_bora[1])
+
+            elif len(bora_bora)==1:
+                a=bora_bora[0]
+                self.board.set_number(a[0], a[1], a[2])
+                damn = 0
+                if 2 not in self.np_board[a[0]]:
+                    damn +=1
+                    self.rows.add(str(self.np_board[a[0]]))
+                if 2 not in self.np_board_t[a[1]]:
+                    damn +=1
+                    self.cols.add(str(self.np_board[a[0]]))
+                
+                if damn!=2:
+                    return []
+            
+            else:
+                return []
+
+        if len(revised_actions)==0:
+            revised_actions.append(a)
+
+        return revised_actions
 
 
     '''def check_line(self, half):
