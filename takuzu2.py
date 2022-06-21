@@ -356,6 +356,10 @@ class TakuzuState:
 
                 if len(revised_actions)==0 and 2 not in self.np_board:
                     revised_actions.append(a)
+                    self.board.rows[a[0],a[2]] -=1
+                    self.board.cols[a[1],a[2]] -=1
+                    return revised_actions
+            
             else:
                 return []
 
