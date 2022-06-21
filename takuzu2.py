@@ -208,9 +208,8 @@ class TakuzuState:
         TakuzuState.state_id += 1
         self.last_action = action
         self.rows = set(str(arr) for arr in board.board if 2 not in arr)
-        print(self.rows)
         self.cols = set(str(arr) for arr in board.board.transpose() if 2 not in arr)
-        print(self.cols)
+
 
 
     def __lt__(self, other):
