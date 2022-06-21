@@ -254,11 +254,12 @@ class TakuzuState:
 
         if np.any(self.board.rows[a[0]] == half):
             for i in np.argwhere(self.board.board[a[0]]==2):
-                a.discard((a[0], i[0], a[2]))
+                actions.discard((a[0], i[0], a[2]))
                 actions = self.only_one((a[0], i[0], value),actions,half)
 
         if np.any(self.board.cols[a[1]] == half):
             for i in np.argwhere(self.board.board[:,a[1]]==2, axis=0):
+                actions.discard((i[0], a[1], a[2]))
                 actions = self.only_one((i[0], a[1], value),actions,half)
         
         return actions
