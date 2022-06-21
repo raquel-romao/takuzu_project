@@ -237,13 +237,13 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            b=True
-            if 2 in self.np_board[self.last_action[0]]:
-                b=False
-            if 2 in self.np_board_t[self.last_action[1]]:
-                b=False
+            b=0
+            if 2 in self.np_board[self.last_action[0]] and self.np_board[self.last_action[0]] not in self.rows:
+                b+=1
+            if 2 in self.np_board_t[self.last_action[1]] and self.np_board_t[self.last_action[1]] not in self.cols:
+                b+=1
 
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]) or b:
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]) or b!=2:
 
                 return actions
 
@@ -262,20 +262,10 @@ class TakuzuState:
 
             if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0) and str(test_row) not in self.rows and str(test_col) not in self.cols:
                 position_actions.append((row_idx, col_idx, 0))
-                if 2 not in test_row:
-                    self.rows.add(str(test_row))
-                if 2 not in test_col:
-                    self.cols.add(str(test_col))
-
-            test_row[i[1]] = 1
-            test_col[i[0]] = 1
 
             if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1) and str(test_row) not in self.rows and str(test_col) not in self.cols:
                 position_actions.append((row_idx, col_idx, 1))
-                if 2 not in test_row:
-                    self.rows.add(str(test_row))
-                if 2 not in test_col:
-                    self.cols.add(str(test_col))
+                
 
             
             '''for a in position_actions:
@@ -300,6 +290,12 @@ class TakuzuState:
             elif len(position_actions)==1:
                 a=position_actions[0]
                 self.board.set_number(a[0],a[1],a[2])
+                test_row[a[1]] = a[2]
+                test_col[a[0]] = a[2]
+                if 2 not in test_row:
+                    self.rows.add(str(test_row))
+                if 2 not in test_col:
+                    self.cols.add(str(test_col))
 
 
                 if len(actions)==0 and 2 not in self.board.board:
