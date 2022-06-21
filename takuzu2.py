@@ -255,78 +255,76 @@ class TakuzuState:
                 return actions
 
 
-        empty = self.empty_positions()
-        for i in empty:
+        changed_number = True
+        
+        while changed_number:
+            changed_number=False
+            empty = self.empty_positions()
+            for i in empty:
 
-            row_idx, col_idx = i
-            position_actions = []
+                row_idx, col_idx = i
+                position_actions = []
 
-            test_row = self.np_board[i[0]].copy()
-            test_col = self.np_board.transpose()[i[1]].copy()
+                test_row = self.np_board[i[0]].copy()
+                test_col = self.np_board.transpose()[i[1]].copy()
 
-            test_row[i[1]] = 0
-            test_col[i[0]] = 0
+                test_row[i[1]] = 0
+                test_col[i[0]] = 0
 
-            if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0) and str(test_row) not in self.rows and str(test_col) not in self.cols:
-                position_actions.append((row_idx, col_idx, 0))
+                if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0) and str(test_row) not in self.rows and str(test_col) not in self.cols:
+                    position_actions.append((row_idx, col_idx, 0))
 
-            if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1) and str(test_row) not in self.rows and str(test_col) not in self.cols:
-                position_actions.append((row_idx, col_idx, 1))
+                if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1) and str(test_row) not in self.rows and str(test_col) not in self.cols:
+                    position_actions.append((row_idx, col_idx, 1))
+                    
+
+                
+                '''for a in position_actions:
+                    test_row = self.np_board[a[0]].copy()
+                    test_row[a[1]] = a[2] 
+                    test_col = self.np_board[:,a[1]].copy()
+                    test_col[a[0]] = a[2]
+
+                    if str(test_row) in self.rows or str(test_col) in self.cols:
+                        position_actions.remove(a)
+
+                    if 2 not in test_row and str(test_row) not in self.rows:
+                        self.rows.add(str(test_row))
+                    if 2 not in test_col and str(test_col) not in self.cols:
+                        self.cols.add(str(test_col))'''
                 
 
-            
-            '''for a in position_actions:
-                test_row = self.np_board[a[0]].copy()
-                test_row[a[1]] = a[2] 
-                test_col = self.np_board[:,a[1]].copy()
-                test_col[a[0]] = a[2]
+                if len(position_actions)==2:
+                    actions.insert(0, position_actions[0])
+                    actions.insert(0, position_actions[1])
 
-                if str(test_row) in self.rows or str(test_col) in self.cols:
-                    position_actions.remove(a)
+                elif len(position_actions)==1:
+                    a=position_actions[0]
+                    self.board.set_number(a[0],a[1],a[2])
+                    changed_number = True
+                    test_row[a[1]] = a[2]
+                    test_col[a[0]] = a[2]
+                    if 2 not in test_row:
+                        self.rows.add(str(test_row))
+                    if 2 not in test_col:
+                        self.cols.add(str(test_col))
 
-                if 2 not in test_row and str(test_row) not in self.rows:
-                    self.rows.add(str(test_row))
-                if 2 not in test_col and str(test_col) not in self.cols:
-                    self.cols.add(str(test_col))'''
-            
 
-            if len(position_actions)==2:
-                actions.insert(0, position_actions[0])
-                actions.insert(0, position_actions[1])
+                    if len(actions)==0 and 2 not in self.board.board:
+                        actions.append(a)
+                        self.board.rows[a[0],a[2]] -=1
+                        self.board.cols[a[1],a[2]] -=1
 
-            elif len(position_actions)==1:
-                a=position_actions[0]
-                self.board.set_number(a[0],a[1],a[2])
-                test_row[a[1]] = a[2]
-                test_col[a[0]] = a[2]
-                if 2 not in test_row:
-                    self.rows.add(str(test_row))
-                if 2 not in test_col:
-                    self.cols.add(str(test_col))
-
-                if len(actions)==0 and 2 not in self.np_board:
-                    actions.append(a)
-                    self.board.rows[a[0],a[2]] -=1
-                    self.board.cols[a[1],a[2]] -=1
+                else:
+                    actions = []
                     return actions
 
-                if len(actions)!=0:
-                    revised_actions = self.revise(actions, half)
+            
 
-                    if len(revised_actions)==0:
-                        return revised_actions
-                
-                    else:
-                        actions = revised_actions
-
-            else:
-                actions = []
-                return actions
-
-        return actions
+            return actions
 
 
-    def revise(self, actions: list, half):
+    '''def revise(self, actions: list, half):
         revised_actions = []
         for i in actions[::2]:
             bora_bora = []
@@ -369,7 +367,7 @@ class TakuzuState:
 
         
 
-        return revised_actions
+        return revised_actions'''
 
 
     '''def check_line(self, half):
@@ -389,22 +387,6 @@ class TakuzuState:
         empty = np.column_stack(result)
         return empty
     
-    def Window_Sum(self, arr):
-
-        n = len(arr)
-    
-        window_sum = sum(arr[:3])
-        a=True
-        if window_sum not in [1,2]:
-            a=False
-        if a:
-            for i in range(n - 3):
-                window_sum = window_sum - arr[i] + arr[i + 3]
-                if window_sum not in [1,2]:
-                    a=False
-                    break
-    
-        return a
 
 
 class Takuzu(Problem):
