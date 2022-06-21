@@ -347,7 +347,7 @@ class TakuzuState:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        self.initial = TakuzuState(board, None)
+        self.initial = TakuzuState(board, None, None, None)
         self.initial.completed_cols()
         self.initial.completed_rows()
         self.visited_states = {}
@@ -381,17 +381,17 @@ class Takuzu(Problem):
         return new_state
 
 
-    '''def dif_rows_cols(self, state: TakuzuState):
+    def dif_rows_cols(self, state: TakuzuState):
         _, row_counts = np.unique(state.board.board, axis=0, return_counts=True)
         unique_rows = len(row_counts) == state.board.board_size
 
         _, col_counts = np.unique(state.board.board, axis=1, return_counts=True)
         unique_cols = len(col_counts) == state.board.board_size
 
-        return unique_rows and unique_cols'''
+        return unique_rows and unique_cols
 
-    def dif_rows_cols(self, state: TakuzuState):
-        return len(state.rows) == state.board_size and len(state.cols) == state.board_size
+    '''def dif_rows_cols(self, state: TakuzuState):
+        return len(state.rows) == state.board_size and len(state.cols) == state.board_size'''
 
 
     def half_half(self, state: TakuzuState):
