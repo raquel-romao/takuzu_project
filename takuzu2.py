@@ -232,7 +232,6 @@ class TakuzuState:
                 a=position_actions[0]
                 actions=self.only_one(a, actions, half)
 
-
                 if len(actions)==0 and 2 not in self.board.board:
                     actions.add(a)
                     self.board.rows[a[0],a[2]] -=1
@@ -261,20 +260,18 @@ def only_one(self, a, actions, half):
     if np.any(self.board.cols[a[1]] == half):
         for i in np.argwhere(self.board.board[:,a[1]]==2, axis=0):
             actions = self.only_one((i[0], a[1], value),actions,half)
-    #primeiro rows
-    #do lado
-    #menos1 = self.np_board.get_number(a[0], a[1]-1)
-    #mais1 = self.np_board.get_number(a[0], a[1]+1)
-    #menos2 = self.np_board.get_number(a[0], a[1]-2)
-    #mais2 = self.np_board.get_number(a[0], a[1]+2)
-    #if np.any([menos1, mais1]==2) and np.all(np.isin([menos1, mais1],[2, a[1]])):
-        #actions
-    #if np.all(np.isin([n[])
-
-
+    
     return actions
 
-
+#primeiro rows
+#do lado
+#menos1 = self.np_board.get_number(a[0], a[1]-1)
+#mais1 = self.np_board.get_number(a[0], a[1]+1)
+#menos2 = self.np_board.get_number(a[0], a[1]-2)
+#mais2 = self.np_board.get_number(a[0], a[1]+2)
+#if np.any([menos1, mais1]==2) and np.all(np.isin([menos1, mais1],[2, a[1]])):
+#actions
+#if np.all(np.isin([n[])
     '''def check_line(self, half):
         line = self.board.board[self.last_action[0]]
         v = np.lib.stride_tricks.sliding_window_view(line, 3)
