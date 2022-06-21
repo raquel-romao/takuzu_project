@@ -200,7 +200,7 @@ class Board:
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board: Board, action, rows = set(), cols = set()):
+    def __init__(self, board: Board, action, rows, cols):
         self.board = board
         self.board_size = board.board_size
         self.np_board = board.board
