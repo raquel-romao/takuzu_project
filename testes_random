@@ -147,12 +147,10 @@ print(d)
 '''
 a = np.array([[1,2,1],[1,2,1],[1,2,1]])
 
-b = set(str(i) for i in a if 2 not in i)
+b = [1,2,3,4,5,6,7,8,9,10]
 
-print(b)
-print(str(1) in b)
-
-
+for i in b[::2]:
+    print(i)
 #c =[1,0,1]
 #d=[1,0,1]
 #b.add(c)

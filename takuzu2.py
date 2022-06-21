@@ -310,10 +310,13 @@ class TakuzuState:
                     self.board.cols[a[1],a[2]] -=1
                     return actions
 
-                revised_actions = self.revise(actions, half)
+                if len(actions)!=0:
+                    revised_actions = self.revise(actions, half)
 
-                if len(revised_actions)==0:
-                    return revised_actions
+                    if len(revised_actions)==0:
+                        return revised_actions
+                
+                    actions = revised_actions
 
             else:
                 actions = []
