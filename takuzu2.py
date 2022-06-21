@@ -116,27 +116,30 @@ class Board:
 
     def horizontal(self, row: int, col: int, move: int):
         
+        n = self.board_size
         check = []
-        
-        check.append((self.get_number(row, col+1), self.get_number(row, col+2))) #guardar array de posições contíguas
-    
-        check.append((self.get_number(row, col-2), self.get_number(row, col-1)))
-    
-        check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
 
+        if (col not in (n-1, n-2)):
+            check.append((self.get_number(row, col+1), self.get_number(row, col+2))) #guardar array de posições contíguas
+        if (col not in (0, 1)):
+            check.append((self.get_number(row, col-2), self.get_number(row, col-1)))
+        if (col not in (0, n-1)):
+            check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
 
+  
         return all(t.count(move) != 2 for t in check)
 
 
     def vertical(self, row: int, col:int, move:int):
-
+        n = self.board_size
         check = []
 
-        check.append((self.get_number(row+1, col), self.get_number(row+2, col)))
-
-        check.append((self.get_number(row-1, col), self.get_number(row-2, col)))
-
-        check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
+        if (row not in (n-1, n-2)):
+            check.append((self.get_number(row+1, col), self.get_number(row+2, col)))
+        if (row not in (0, 1)):
+            check.append((self.get_number(row-1, col), self.get_number(row-2, col)))
+        if (row not in (0, n-1)):
+            check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
 
 
         return all(t.count(move) != 2 for t in check)
@@ -204,8 +207,10 @@ class TakuzuState:
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
         self.last_action = action
-        #self.rows = set(str(arr) for arr in board.board)
-        #self.cols = set(str(arr) for arr in board.board.transpose())
+        self.rows = set(str(arr) for arr in board.board if 2 not in arr)
+        print(self.rows)
+        self.cols = set(str(arr) for arr in board.board.transpose() if 2 not in arr)
+        print(self.cols)
 
 
     def __lt__(self, other):
@@ -214,7 +219,6 @@ class TakuzuState:
 
     def __hash__(self): 
         return hash(self.board)
-
 
     def actions(self):
 
@@ -286,7 +290,7 @@ class TakuzuState:
 
     '''def check_line(self, half):
         line = self.board.board[self.last_action[0]]
-        v = np.lib.stride_tricks.sliding_window_view(line, 3)
+        window = self.Window_Sum(line)
 
         return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
 
@@ -301,6 +305,22 @@ class TakuzuState:
         empty = np.column_stack(result)
         return empty
     
+    def Window_Sum(self, arr):
+
+        n = len(arr)
+    
+        window_sum = sum(arr[:3])
+        a=True
+        if window_sum not in [1,2]:
+            a=False
+        if a:
+            for i in range(n - 3):
+                window_sum = window_sum - arr[i] + arr[i + 3]
+                if window_sum not in [1,2]:
+                    a=False
+                    break
+    
+        return a
 
 
 class Takuzu(Problem):
