@@ -1,4 +1,55 @@
 
+'''def only_one(self, a, actions, half):
+    self.board.set_number(*a)
+    actions.discard(a)
+
+    if a[2]==0:
+        value = 1
+    else:
+        value = 0
+
+    if np.any(self.board.rows[a[0]] == half):
+        for i in np.argwhere(self.board.board[a[0]]==2):
+            actions.discard((a[0], i[0], a[2]))
+            actions = self.only_one((a[0], i[0], value),actions,half)
+
+    if np.any(self.board.cols[a[1]] == half):
+        for i in np.argwhere(self.board.board[:,a[1]]==2, axis=0):
+            actions.discard((i[0], a[1], a[2]))
+            actions = self.only_one((i[0], a[1], value),actions,half)
+    
+    return actions'''
+
+'''def check_line(self, half):
+    line = self.board.board[self.last_action[0]]
+    v = np.lib.stride_tricks.sliding_window_view(line, 3)
+
+    return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
+
+def check_col(self, half):
+    col = self.board.board[:,self.last_action[1]]
+    v = np.lib.stride_tricks.sliding_window_view(col, 3)
+
+    return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)'''
+
+
+'''def Window_Sum(self, arr):
+
+    n = len(arr)
+
+    window_sum = sum(arr[:3])
+    a=True
+    if window_sum not in [1,2]:
+        a=False
+    if a:
+        for i in range(n - 3):
+            window_sum = window_sum - arr[i] + arr[i + 3]
+            if window_sum not in [1,2]:
+                a=False
+                break
+    return a'''
+
+  
 # Grupo 30:
 # 92759 Laura Quintas
 # 92780 Raquel Romão
@@ -182,7 +233,7 @@ class TakuzuState:
 
     def actions(self):
 
-        actions = set()
+        actions =[]
 
         if self.board_size % 2 == 0:
             half = self.board_size //2
@@ -191,7 +242,8 @@ class TakuzuState:
         
         if self.last_action!=None:
             if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
-                return []
+
+                return actions
 
 
         empty = self.empty_positions()
@@ -225,44 +277,27 @@ class TakuzuState:
             '''
 
             if len(position_actions)==2:
-                actions.add(position_actions[0])
-                actions.add(position_actions[1])
+                actions.insert(0, position_actions[0])
+                actions.insert(0, position_actions[1])
 
             elif len(position_actions)==1:
                 a=position_actions[0]
-                actions=self.only_one(a, actions, half)
+                self.board.set_number(a[0],a[1],a[2])
+
 
                 if len(actions)==0 and 2 not in self.board.board:
-                    actions.add(a)
+                    actions.append(a)
                     self.board.rows[a[0],a[2]] -=1
                     self.board.cols[a[1],a[2]] -=1
 
             else:
-                return []
+                actions = []
+                return actions
 
-        return list(actions)
-
-
-    def only_one(self, a, actions, half):
-        self.board.set_number(*a)
-        actions.discard(a)
-
-        if a[2]==0:
-            value = 1
-        else:
-            value = 0
-
-        if np.any(self.board.rows[a[0]] == half):
-            for i in np.argwhere(self.board.board[a[0]]==2):
-                actions.discard((a[0], i[0], a[2]))
-                actions = self.only_one((a[0], i[0], value),actions,half)
-
-        if np.any(self.board.cols[a[1]] == half):
-            for i in np.argwhere(self.board.board[:,a[1]]==2, axis=0):
-                actions.discard((i[0], a[1], a[2]))
-                actions = self.only_one((i[0], a[1], value),actions,half)
         
+
         return actions
+
 
     '''def check_line(self, half):
         line = self.board.board[self.last_action[0]]
@@ -280,22 +315,6 @@ class TakuzuState:
         result = np.where(self.board.board == 2)
         empty = np.column_stack(result)
         return empty
-
-    '''def Window_Sum(self, arr):
-
-        n = len(arr)
-    
-        window_sum = sum(arr[:3])
-        a=True
-        if window_sum not in [1,2]:
-            a=False
-        if a:
-            for i in range(n - 3):
-                window_sum = window_sum - arr[i] + arr[i + 3]
-                if window_sum not in [1,2]:
-                    a=False
-                    break
-        return a'''
     
 
 
@@ -365,6 +384,7 @@ class Takuzu(Problem):
                 if window_sum not in [1,2]:
                     a=False
                     break
+    
         return a
 
     '''def adjacent(self, state: TakuzuState):
@@ -395,7 +415,7 @@ class Takuzu(Problem):
         return 2 not in state.board.board and self.dif_rows_cols(state) and self.half_half(state) and self.adjacent(state)
             
     
-    '''def find_broken_rules(self, node: Node, board_np, i):
+    def find_broken_rules(self, node: Node, board_np, i):
         board = node.state.board
         board_size = board.board_size
 
@@ -406,7 +426,7 @@ class Takuzu(Problem):
             if np.any(board_np[indices != i, :] == board_np[i, :]):
                 return board_size**3
 
-        return 0'''
+        return 0
 
 
     def h(self, node: Node):
