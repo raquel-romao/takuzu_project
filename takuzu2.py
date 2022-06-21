@@ -240,7 +240,7 @@ class TakuzuState:
             else:
                 return []
 
-        return actions
+        return list(actions)
 
 
     def only_one(self, a, actions, half):
