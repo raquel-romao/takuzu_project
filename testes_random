@@ -147,25 +147,12 @@ print(d)
 '''
 a = np.array([[1,2,1],[1,2,1],[1,2,1]])
 
+b = np.argwhere(a[0]==2)
+c= np.argwhere(a[:,0]==1)
 
-def Window_Sum(arr):
+print(b[0])
+print(c)
 
-    n = len(arr)
- 
-    window_sum = sum(arr[:3])
-    a=True
-    if window_sum not in [1,2]:
-        a=False
-    if a:
-        for i in range(n - 3):
-            window_sum = window_sum - arr[i] + arr[i + 3]
-            if window_sum not in [1,2]:
-                a=False
-                break
- 
-    return a
-
-print(all(Window_Sum(b) for b in a))
 
 #c =[1,0,1]
 #d=[1,0,1]
@@ -174,3 +161,9 @@ print(all(Window_Sum(b) for b in a))
 
 #print([1,0,1] in b)
 #print(d in b)
+
+'''a =set()
+a.add((2,1,0))
+a.add((1,2,0))
+a= list(sorted(a))
+print(a)'''
