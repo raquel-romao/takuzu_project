@@ -20,18 +20,6 @@
     
     return actions'''
 
-'''def check_line(self, half):
-    line = self.board.board[self.last_action[0]]
-    v = np.lib.stride_tricks.sliding_window_view(line, 3)
-
-    return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
-
-def check_col(self, half):
-    col = self.board.board[:,self.last_action[1]]
-    v = np.lib.stride_tricks.sliding_window_view(col, 3)
-
-    return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)'''
-
 
 '''def Window_Sum(self, arr):
 
@@ -128,34 +116,31 @@ class Board:
 
     def horizontal(self, row: int, col: int, move: int):
         
-        n = self.board_size
         check = []
+        
+        check.append((self.get_number(row, col+1), self.get_number(row, col+2))) #guardar array de posições contíguas
+    
+        check.append((self.get_number(row, col-2), self.get_number(row, col-1)))
+    
+        check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
 
-        if (col not in (n-1, n-2)):
-            check.append((self.get_number(row, col+1), self.get_number(row, col+2))) #guardar array de posições contíguas
-        if (col not in (0, 1)):
-            check.append((self.get_number(row, col-2), self.get_number(row, col-1)))
-        if (col not in (0, n-1)):
-            check.append((self.get_number(row, col-1), self.get_number(row, col+1)))
-
-  
 
         return all(t.count(move) != 2 for t in check)
 
 
     def vertical(self, row: int, col:int, move:int):
-        n = self.board_size
+
         check = []
 
-        if (row not in (n-1, n-2)):
-            check.append((self.get_number(row+1, col), self.get_number(row+2, col)))
-        if (row not in (0, 1)):
-            check.append((self.get_number(row-1, col), self.get_number(row-2, col)))
-        if (row not in (0, n-1)):
-            check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
+        check.append((self.get_number(row+1, col), self.get_number(row+2, col)))
+
+        check.append((self.get_number(row-1, col), self.get_number(row-2, col)))
+
+        check.append((self.get_number(row-1, col), self.get_number(row+1, col)))
 
 
         return all(t.count(move) != 2 for t in check)
+
 
     '''def adjacent_horizontal_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
