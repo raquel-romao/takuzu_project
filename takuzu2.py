@@ -202,6 +202,7 @@ class TakuzuState:
 
     def __init__(self, board: Board, action, rows, cols):
         self.board = board
+        self.np_board_t = board.board.transpose()
         self.board_size = board.board_size
         self.np_board = board.board
         self.id = TakuzuState.state_id
@@ -212,11 +213,11 @@ class TakuzuState:
 
 
     def completed_rows(self):
-        self.rows = set(str(arr) for arr in board.board if 2 not in arr)
+        self.rows = set(str(arr) for arr in self.np_board if 2 not in arr)
 
 
     def completed_cols(self):
-        self.cols = set(str(arr) for arr in board.board.transpose() if 2 not in arr)
+        self.cols = set(str(arr) for arr in self.np_board_t if 2 not in arr)
 
 
     def __lt__(self, other):
@@ -236,7 +237,13 @@ class TakuzuState:
             half = self.board_size //2 + 1
         
         if self.last_action!=None:
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]):
+            b=True
+            if 2 in self.np_board[self.last_action[0]]:
+                b=False
+            if 2 in self.np_board_t[self.last_action[1]]:
+                b=False
+
+            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]) or b:
 
                 return actions
 
