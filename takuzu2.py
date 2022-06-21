@@ -304,7 +304,7 @@ class TakuzuState:
                 if 2 not in test_col:
                     self.cols.add(str(test_col))
 
-                if len(actions)==0 and 2 not in self.board.board:
+                if len(actions)==0 and 2 not in self.np_board:
                     actions.append(a)
                     self.board.rows[a[0],a[2]] -=1
                     self.board.cols[a[1],a[2]] -=1
@@ -316,7 +316,8 @@ class TakuzuState:
                     if len(revised_actions)==0:
                         return revised_actions
                 
-                    actions = revised_actions
+                    else:
+                        actions = revised_actions
 
             else:
                 actions = []
@@ -333,7 +334,7 @@ class TakuzuState:
                 bora_bora.append((i[0], i[1], 0))
 
             if self.board.rows[i[0], 1] < half and self.board.cols[i[1], 1] < half and self.board.horizontal(i[0], i[1], 1) and self.board.vertical(i[0], i[1], 1):
-                revised_actions.append((i[0], i[1], 1))
+                bora_bora.append((i[0], i[1], 1))
 
             if len(bora_bora)==2:
                 revised_actions.append(bora_bora[0])
