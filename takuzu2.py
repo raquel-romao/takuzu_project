@@ -353,12 +353,13 @@ class TakuzuState:
                 
                 if damn!=2:
                     return []
-            
+
+                if len(revised_actions)==0 and 2 not in self.np_board:
+                    revised_actions.append(a)
             else:
                 return []
 
-        if len(revised_actions)==0:
-            revised_actions.append(a)
+        
 
         return revised_actions
 
