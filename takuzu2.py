@@ -317,7 +317,22 @@ class TakuzuState:
                     test_col[p[0,0]] = 2
                     position_actions = new_actions
 
+                #cenas xpto da adjacencia para linhas
+                
+                if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.rows[i[1]]==half-1):
 
+                    if self.rows[i[1,0]]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
+                        onde_dois = np.argwhere(a[0]==2)
+                        dois = np.count_nonzero(test_row ==2)
+                        if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and ( 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[1,0])):
+                            position_actions.remove((i[0],i[1],0))
+                        elif self.board_size > 4 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
+                            position_actions.remove((i[0],i[1],0))
+                        elif self.board_size > 5 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
+                            pass
+
+
+                #cenas xpto da adjacencia para colunas
 
                 
 
@@ -350,7 +365,22 @@ class TakuzuState:
 
             return actions
 
+    '''def Window_3(self, arr, size, possible):
 
+        n = len(arr)
+
+        window_sum = [arr[:size]]
+    
+        if window_sum not in [1,2]:
+            a=False
+        if a:
+            for i in range(n - size):
+                window_sum = window_sum - arr[i] + arr[i + 3]
+                if window_sum not in [1,2]:
+                    a=False
+                    break
+    
+        return a'''
     '''def revise(self, actions: list, half):
         revised_actions = []
         for i in actions[::2]:
@@ -397,17 +427,6 @@ class TakuzuState:
         return revised_actions'''
 
 
-    '''def check_line(self, half):
-        line = self.board.board[self.last_action[0]]
-        window = self.Window_Sum(line)
-
-        return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
-
-    def check_col(self, half):
-        col = self.board.board[:,self.last_action[1]]
-        v = np.lib.stride_tricks.sliding_window_view(col, 3)
-
-        return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)'''
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)

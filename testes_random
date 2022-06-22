@@ -145,9 +145,14 @@ print(np.count_nonzero(a==2))
 print(c)
 print(d)
 '''
-a = np.array([[1,2,1],[1,2,1],[1,2,1]])
+a = np.array([[1,2,2],[1,2,1],[1,2,1]])
+
 
 b = np.argwhere(a[0]==2)
+
+if (b[0,0]+1)==b[1,0]:
+    print('toma-te')
+
 print(b)
 #c =[1,0,1]
 #d=[1,0,1]
