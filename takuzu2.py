@@ -280,7 +280,7 @@ class TakuzuState:
                 if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1) and str(test_row) not in self.rows and str(test_col) not in self.cols:
                     position_actions.append((row_idx, col_idx, 1))
                     
-
+                #ver se podemos preencher logo a coluna ou linha
                 if len(position_actions)==2 and np.count_nonzero(test_row ==2)==1:
                     p = np.argwhere(test_row==2)
                     
@@ -299,7 +299,7 @@ class TakuzuState:
                     test_row[p[0,0]] = 2
                     position_actions = new_actions
 
-                if len(position_actions)==2 and np.count_nonzero(test_col ==2)==1:
+                if len(position_actions)==2 and np.count_nonzero(test_col==2)==1:
                     p = np.argwhere(test_col==2)
                     
                     new_actions = []
