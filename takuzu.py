@@ -298,18 +298,17 @@ class TakuzuState:
                         self.rows.add(str(test_row))
                     if 2 not in test_col:
                         self.cols.add(str(test_col))
+                    self.last_action=a
 
 
-                    if len(actions)==0 and 2 not in self.board.board:
-                        actions.append(a)
-                        self.board.rows[a[0],a[2]] -=1
-                        self.board.cols[a[1],a[2]] -=1
-
-                '''else:
+                else:
                     actions = []
-                    return actions'''
+                    return actions
 
-            
+        if len(actions)==0 and 2 not in self.board.board:
+            actions.append(self.last_action)
+            self.board.rows[self.last_action[0],self.last_action[2]] -=1
+            self.board.cols[self.last_action[1],self.last_action[2]] -=1
 
         return actions
 
