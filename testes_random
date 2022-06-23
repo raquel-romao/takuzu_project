@@ -148,12 +148,10 @@ print(d)
 a = np.array([[1,2,2],[1,2,1],[1,2,1]])
 
 
-b = np.argwhere(a[0]==2)
+b=a.transpose()
 
-if (b[0,0]+1)==b[1,0]:
-    print('toma-te')
-
-print(b)
+print(b[0])
+print(a[:,0])
 #c =[1,0,1]
 #d=[1,0,1]
 #b.add(c)
