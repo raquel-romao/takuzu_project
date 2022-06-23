@@ -69,7 +69,7 @@ class Board:
     """def count(self, t: tuple, i: int):
         return sum(x == i for x in t)"""
 
-    '''def adjacent_vertical_numbers(self, row: int, col: int):
+    def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
 
@@ -80,7 +80,7 @@ class Board:
             return (self.get_number(row - 1, col),)
 
         else:
-            return (self.get_number(row - 1, col), self.get_number(row + 1, col))'''
+            return (self.get_number(row - 1, col), self.get_number(row + 1, col))
 
 
 
@@ -115,7 +115,7 @@ class Board:
         return all(t.count(move) != 2 for t in check)
 
 
-    '''def adjacent_horizontal_numbers(self, row: int, col: int):
+    def adjacent_horizontal_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
       
@@ -126,7 +126,7 @@ class Board:
             return (self.get_number(row, col - 1),)
 
         else:
-            return (self.get_number(row, col - 1), self.get_number(row, col + 1))'''
+            return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
 
     def __hash__(self):
