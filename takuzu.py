@@ -218,11 +218,11 @@ class TakuzuState:
 
 
         changed_number = True
-        print(self.last_action)
+     
         while changed_number:
             changed_number=False
             empty = self.empty_positions()
-            print(self.np_board)
+         
             for i in empty:
 
                 row_idx, col_idx = i
@@ -305,6 +305,8 @@ class TakuzuState:
                     actions = []
                     return actions
 
+        print(self.board.board)
+        print(self.actions)
         if len(actions)==0 and 2 not in self.board.board:
             actions.append(self.last_action)
             self.board.rows[self.last_action[0],self.last_action[2]] -=1
@@ -334,6 +336,7 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         actions = state.actions()
+        print(actions)
         return actions
 
 
