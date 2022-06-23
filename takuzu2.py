@@ -363,14 +363,15 @@ class TakuzuState:
                             self.board.cols[a[1],a[2]] -=1
 
                     else:
-                        if self.board.get_number(*i)==2:
-                            actions = []
-                            return actions
-                        '''elif 2 not in self.board.board:
+                        
+                        actions = []
+                        return actions
+                        '''if 2 not in self.board.board:
                             if self.last_action!=None:
                                 actions.append(self.last_action)
                             else:
                                 actions.append(a)'''
+                                
                 print(changed_number)
             
             return actions
