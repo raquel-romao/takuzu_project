@@ -287,7 +287,7 @@ class TakuzuState:
                     
                     
                     #cenas xpto da adjacencia para linhas - posição isolada
-                    deu_naslinhas =False
+                    '''deu_naslinhas =False
                     if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
 
                         if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
@@ -344,7 +344,7 @@ class TakuzuState:
                             changed_number = self.para_colunas(i,0,test_col,changed_number)
 
                         elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
-                            changed_number=self.para_colunas(i,1,test_col, changed_number)
+                            changed_number=self.para_colunas(i,1,test_col, changed_number)'''
 
 
                     if len(position_actions)==2:
