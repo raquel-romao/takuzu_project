@@ -221,7 +221,7 @@ class TakuzuState:
 
         changed_number = True
         print(self.last_action)
-        while changed_number:
+        while changed_number==True:
             changed_number=False
             empty = self.empty_positions()
             print(self.np_board)
