@@ -236,7 +236,7 @@ class TakuzuState:
         else:
             half = self.board_size //2 + 1
         
-        if self.last_action!=None:
+        '''if self.last_action!=None:
             b=0
             row = str(self.np_board[self.last_action[0]]) 
             col = str(self.np_board_t[self.last_action[1]])
@@ -251,7 +251,7 @@ class TakuzuState:
 
 
             if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]) or b!=2:
-                return actions
+                return actions'''
 
 
         changed_number = True
@@ -408,66 +408,6 @@ class TakuzuState:
 
             return actions
 
-    '''def Window_3(self, arr, size, possible):
-
-        n = len(arr)
-
-        window_sum = [arr[:size]]
-    
-        if window_sum not in [1,2]:
-            a=False
-        if a:
-            for i in range(n - size):
-                window_sum = window_sum - arr[i] + arr[i + 3]
-                if window_sum not in [1,2]:
-                    a=False
-                    break
-    
-        return a'''
-    '''def revise(self, actions: list, half):
-        revised_actions = []
-        for i in actions[::2]:
-            bora_bora = []
-            if self.board.rows[i[0], 0] < half and self.board.cols[i[1], 0] < half and self.board.horizontal(i[0], i[1], 0) and self.board.vertical(i[0], i[1], 0):
-                bora_bora.append((i[0], i[1], 0))
-
-            if self.board.rows[i[0], 1] < half and self.board.cols[i[1], 1] < half and self.board.horizontal(i[0], i[1], 1) and self.board.vertical(i[0], i[1], 1):
-                bora_bora.append((i[0], i[1], 1))
-
-            if len(bora_bora)==2:
-                revised_actions.append(bora_bora[0])
-                revised_actions.append(bora_bora[1])
-
-            elif len(bora_bora)==1:
-                a=bora_bora[0]
-                self.board.set_number(a[0], a[1], a[2])
-                damn = 0
-                row=str(self.np_board[a[0]])
-                col=str(self.np_board_t[a[1]])
-                if row not in self.rows:
-                    damn +=1
-                    if 2 not in self.np_board[a[0]]:
-                        self.rows.add(row)
-                if col not in self.cols:
-                    damn +=1
-                    if 2 not in self.np_board_t[a[1]]:
-                        self.cols.add(col)
-                
-                if damn!=2:
-                    return []
-
-                if len(revised_actions)==0 and 2 not in self.np_board:
-                    revised_actions.append(a)
-                    self.board.rows[a[0],a[2]] -=1
-                    self.board.cols[a[1],a[2]] -=1
-                    return revised_actions
-            
-            else:
-                return []
-
-        
-
-        return revised_actions'''
 
 
 
