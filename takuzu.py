@@ -1,40 +1,3 @@
-'''def only_one(self, a, actions, half):
-    self.board.set_number(*a)
-    actions.discard(a)
-
-    if a[2]==0:
-        value = 1
-    else:
-        value = 0
-
-    if np.any(self.board.rows[a[0]] == half):
-        for i in np.argwhere(self.board.board[a[0]]==2):
-            actions.discard((a[0], i[0], a[2]))
-            actions = self.only_one((a[0], i[0], value),actions,half)
-
-    if np.any(self.board.cols[a[1]] == half):
-        for i in np.argwhere(self.board.board[:,a[1]]==2, axis=0):
-            actions.discard((i[0], a[1], a[2]))
-            actions = self.only_one((i[0], a[1], value),actions,half)
-    
-    return actions'''
-
-
-'''def Window_Sum(self, arr):
-
-    n = len(arr)
-
-    window_sum = sum(arr[:3])
-    a=True
-    if window_sum not in [1,2]:
-        a=False
-    if a:
-        for i in range(n - 3):
-            window_sum = window_sum - arr[i] + arr[i + 3]
-            if window_sum not in [1,2]:
-                a=False
-                break
-    return a'''
 
   
 # Grupo 30:
@@ -348,66 +311,9 @@ class TakuzuState:
 
             
 
-            return actions
+        return actions
 
-
-    '''def revise(self, actions: list, half):
-        revised_actions = []
-        for i in actions[::2]:
-            bora_bora = []
-            if self.board.rows[i[0], 0] < half and self.board.cols[i[1], 0] < half and self.board.horizontal(i[0], i[1], 0) and self.board.vertical(i[0], i[1], 0):
-                bora_bora.append((i[0], i[1], 0))
-
-            if self.board.rows[i[0], 1] < half and self.board.cols[i[1], 1] < half and self.board.horizontal(i[0], i[1], 1) and self.board.vertical(i[0], i[1], 1):
-                bora_bora.append((i[0], i[1], 1))
-
-            if len(bora_bora)==2:
-                revised_actions.append(bora_bora[0])
-                revised_actions.append(bora_bora[1])
-
-            elif len(bora_bora)==1:
-                a=bora_bora[0]
-                self.board.set_number(a[0], a[1], a[2])
-                damn = 0
-                row=str(self.np_board[a[0]])
-                col=str(self.np_board_t[a[1]])
-                if row not in self.rows:
-                    damn +=1
-                    if 2 not in self.np_board[a[0]]:
-                        self.rows.add(row)
-                if col not in self.cols:
-                    damn +=1
-                    if 2 not in self.np_board_t[a[1]]:
-                        self.cols.add(col)
-                
-                if damn!=2:
-                    return []
-
-                if len(revised_actions)==0 and 2 not in self.np_board:
-                    revised_actions.append(a)
-                    self.board.rows[a[0],a[2]] -=1
-                    self.board.cols[a[1],a[2]] -=1
-                    return revised_actions
-            
-            else:
-                return []
-
-        
-
-        return revised_actions'''
-
-
-    '''def check_line(self, half):
-        line = self.board.board[self.last_action[0]]
-        window = self.Window_Sum(line)
-
-        return np.any(self.board.rows[self.last_action[0]] > half) or any(np.all(a==a[0]) for a in v)
-
-    def check_col(self, half):
-        col = self.board.board[:,self.last_action[1]]
-        v = np.lib.stride_tricks.sliding_window_view(col, 3)
-
-        return np.any(self.board.cols[self.last_action[1]] > half) or any(np.all(a==a[0]) for a in v)'''
+           
 
     def empty_positions(self):
         result = np.where(self.board.board == 2)
