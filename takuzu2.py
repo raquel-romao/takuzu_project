@@ -306,7 +306,6 @@ class TakuzuState:
                     test_col[i[0]] = 0
 
                     if str(test_col) not in self.cols:
-                        c+=1
                         new_actions.append(position_actions[0])
                     
                     test_col[p[0,0]] = 0
