@@ -162,14 +162,14 @@ class Board:
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board: Board, action, rows, cols):
+    def __init__(self, board: Board, rows, cols):
         self.board = board
         self.np_board_t = board.board.transpose()
         self.board_size = board.board_size
         self.np_board = board.board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        self.last_action = action
+        self.last_action = None
         self.rows = rows
         self.cols = cols
 
@@ -197,24 +197,6 @@ class TakuzuState:
             half = self.board_size //2
         else:
             half = self.board_size //2 + 1
-        
-        if self.last_action!=None:
-            b=0
-            row = str(self.np_board[self.last_action[0]]) 
-            col = str(self.np_board_t[self.last_action[1]])
-            if row not in self.rows:
-                b+=1
-                if 2 not in self.np_board[self.last_action[0]]:
-                    self.rows.add(row)
-            if col not in self.cols:
-                b+=1
-                if 2 not in self.np_board_t[self.last_action[1]]:
-                    self.cols.add(col)
-
-
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]) or b!=2:
-
-                return actions
 
 
         changed_number = True
@@ -306,8 +288,7 @@ class TakuzuState:
                     actions = []
                     return actions
 
-        print(self.board.board)
-        print(self.actions)
+
         if len(actions)==0 and 2 not in self.board.board:
             actions.append(self.last_action)
             self.board.rows[self.last_action[0],self.last_action[2]] -=1
@@ -337,7 +318,6 @@ class Takuzu(Problem):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
         actions = state.actions()
-        print(actions)
         return actions
 
 
@@ -356,7 +336,7 @@ class Takuzu(Problem):
 
         new_setrow= state.rows.copy()
         new_setcol= state.cols.copy()
-        new_state = TakuzuState(new_board, action, new_setrow, new_setcol)
+        new_state = TakuzuState(new_board, new_setrow, new_setcol)
         self.visited_states.update({hash_state: new_state})
         
         return new_state
@@ -401,17 +381,7 @@ class Takuzu(Problem):
     
         return a
 
-    '''def adjacent(self, state: TakuzuState):
-        board = state.board.board
-        v = np.lib.stride_tricks.sliding_window_view(board, 3, axis=1)
-        v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
-        rows = np.all(np.isin(v, (1, 2)))
 
-        v = np.lib.stride_tricks.sliding_window_view(board, 3, axis=0)
-        v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
-        cols = np.all(np.isin(v, (1, 2)))
-
-        return rows and cols'''
 
     def adjacent(self, state:TakuzuState):
         board = state.board.board 
