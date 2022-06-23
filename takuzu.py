@@ -191,7 +191,7 @@ class TakuzuState:
 
     def actions(self):
 
-        actions =[]
+        
 
         if self.board_size % 2 == 0:
             half = self.board_size //2
@@ -222,6 +222,7 @@ class TakuzuState:
         while changed_number:
             changed_number=False
             empty = self.empty_positions()
+            actions =[]
          
             for i in empty:
 
