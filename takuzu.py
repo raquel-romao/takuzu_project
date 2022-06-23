@@ -305,9 +305,9 @@ class TakuzuState:
                         self.board.rows[a[0],a[2]] -=1
                         self.board.cols[a[1],a[2]] -=1
 
-                else:
+                '''else:
                     actions = []
-                    return actions
+                    return actions'''
 
             
 
