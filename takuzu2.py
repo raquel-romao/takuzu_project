@@ -227,7 +227,6 @@ class TakuzuState:
             print(self.np_board)
             for i in empty:
                 
-                
                 if self.board.get_number(*i)==2:
 
                     row_idx, col_idx = i
@@ -281,6 +280,7 @@ class TakuzuState:
                         test_col[i[0]] = 1
                         if str(test_col) not in self.cols:
                             new_actions.append(position_actions[1])
+
 
                         test_col[p[0,0]] = 2
                         position_actions = new_actions
@@ -341,7 +341,7 @@ class TakuzuState:
                     if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
 
                         if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            changed_number= self.para_colunas(i,0,test_col,changed_number)
+                            changed_number = self.para_colunas(i,0,test_col,changed_number)
 
                         elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
                             changed_number=self.para_colunas(i,1,test_col, changed_number)
@@ -371,7 +371,7 @@ class TakuzuState:
                                 actions.append(self.last_action)
                             else:
                                 actions.append(a)
-
+                print(changed_number)
             
             return actions
 
