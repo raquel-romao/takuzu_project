@@ -266,7 +266,7 @@ class TakuzuState:
             changed_number=False
             empty = self.empty_positions()
             for i in empty:
-                changed_this_round = False
+                
                 if self.board.get_number(*i)==2:
 
                     row_idx, col_idx = i
@@ -324,94 +324,43 @@ class TakuzuState:
                         test_col[p[0,0]] = 2
                         position_actions = new_actions
                     
-                    #i hate it here, este código não está nada friendly
+                    
                     #cenas xpto da adjacencia para linhas - posição isolada
                     deu_naslinhas =False
                     if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
 
                         if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            onde_dois = np.argwhere(test_row==2)
-                            dois = np.count_nonzero(test_row ==2)
-                            if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[1,0])):
-                                position_actions.remove((i[0],i[1],0))
+                            result = self.linhas_p_isolada(i,0,test_row,position_actions,deu_naslinhas)
+                            position_actions=result[0]
+                            deu_naslinhas=result[1]
+                            if deu_naslinhas:
                                 test_row[i[1]] = 1
-                                deu_naslinhas =True
-                            elif self.board_size > 4 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
-                                position_actions.remove((i[0],i[1],0))
-                                test_row[i[1]] = 1
-                                deu_naslinhas =True
-                            elif self.board_size > 5 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
-                                position_actions.remove((i[0],i[1],0))
-                                test_row[i[1]] = 1
-                                deu_naslinhas =True
-                            elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
-                                position_actions.remove((i[0],i[1],0))
-                                test_row[i[1]] = 1
-                                deu_naslinhas =True
+                            
 
                         elif self.board.rows[i[0],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
-                            onde_dois = np.argwhere(test_row==2)
-                            dois = np.count_nonzero(test_row ==2)
-                            if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[1,0])):
-                                position_actions.remove((i[0],i[1],1))
+                            result = self.linhas_p_isolada(i,1,test_row,position_actions,deu_naslinhas)
+                            position_actions=result[0]
+                            deu_naslinhas=result[1]
+                            if deu_naslinhas:
                                 test_row[i[1]] = 0
-                                deu_naslinhas =True
-                            elif self.board_size > 4 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
-                                position_actions.remove((i[0],i[1],1))
-                                test_row[i[1]] = 0
-                                deu_naslinhas =True
-                            elif self.board_size > 5 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
-                                position_actions.remove((i[0],i[1],1))
-                                test_row[i[1]] = 0
-                                deu_naslinhas =True
-                            elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
-                                position_actions.remove((i[0],i[1],1))
-                                test_row[i[1]] = 0
-                                deu_naslinhas =True
 
                     #cenas xpto da adjacencia para colunas - posição isolada
                     deu_nascolunas=False
                     if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
 
                         if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            onde_dois = np.argwhere(test_col==2)
-                            dois = np.count_nonzero(test_col ==2)
-                            if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (1 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or 1 in self.board.adjacent_vertical_numbers(onde_dois[1,0], i[1])):
-                                position_actions.remove((i[0],i[1],0))
+                            resultcol = self.linhas_p_isolada(i,0,test_row,position_actions,deu_naslinhas)
+                            position_actions=resultcol[0]
+                            deu_naslinhas=resultcol[1]
+                            if deu_nascolunas:
                                 test_col[i[0]] = 1
-                                deu_nascolunas=True
-                            elif self.board_size > 4 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
-                                position_actions.remove((i[0],i[1],0))
-                                test_col[i[0]] = 1
-                                deu_nascolunas=True
-                            elif self.board_size > 5 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
-                                position_actions.remove((i[0],i[1],0))
-                                test_col[i[0]] = 1
-                                deu_nascolunas=True
-                            elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
-                                position_actions.remove((i[0],i[1],0))
-                                test_col[i[0]] = 1
-                                deu_nascolunas=True
 
                         elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
-                            onde_dois = np.argwhere(test_col==2)
-                            dois = np.count_nonzero(test_col==2)
-                            if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (0 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or 0 in self.board.adjacent_vertical_numbers(onde_dois[1,0], i[1])):
-                                position_actions.remove((i[0],i[1],1))
+                            resultcol = self.linhas_p_isolada(i,1,test_row,position_actions,deu_naslinhas)
+                            position_actions=resultcol[0]
+                            deu_naslinhas=resultcol[1]
+                            if deu_nascolunas:
                                 test_col[i[0]] = 0
-                                deu_nascolunas=True
-                            elif self.board_size > 4 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
-                                position_actions.remove((i[0],i[1],1))
-                                test_col[i[0]] = 0
-                                deu_nascolunas=True
-                            elif self.board_size > 5 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
-                                position_actions.remove((i[0],i[1],1))
-                                test_col[i[0]] = 0
-                                deu_nascolunas=True
-                            elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
-                                position_actions.remove((i[0],i[1],1))
-                                test_col[i[0]] = 0
-                                deu_nascolunas=True
 
                     if not deu_naslinhas:
                         test_row[i[1]] = 2
@@ -422,200 +371,21 @@ class TakuzuState:
                     if (len(position_actions)==2 or deu_naslinhas) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
 
                         if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            onde_dois = np.argwhere(test_row==2)
-                            dois = np.count_nonzero(test_row==2)
-                            if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
-                                if 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[2,0]):
-                                    self.board.set_number(i[0],onde_dois[1,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[0,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[2,0],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
-                                    self.board.set_number(i[0],onde_dois[2,0],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-                                
-                                elif 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[2,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-                            
-                            elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
-                                if 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[1,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[2,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[3,0],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[1,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[2,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[3,0],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[3,0],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                            elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
-                                if  0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[4,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[1,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[2,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[3,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[4,0],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
+                            changed_number = self.para_linhas(i,0,test_row,changed_number)
 
 
                         elif self.board.rows[i[0],1]==half-1: #falta pôr um único 1
-                            onde_dois = np.argwhere(test_row==2)
-                            dois = np.count_nonzero(test_row==2)
-                            if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
-                                if 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[2,0]):
-                                    self.board.set_number(i[0],onde_dois[1,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[0,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[2,0],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
-                                    self.board.set_number(i[0],onde_dois[2,0],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-                                
-                                elif 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[2,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-                            
-                            elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
-                                if 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[1,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[2,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[3,0],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[1,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[2,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[3,0],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[3,0],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                            elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
-                                if  1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[4,0]):
-                                    self.board.set_number(i[0],onde_dois[0,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[1,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[2,0],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[3,0],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(i[0],onde_dois[4,0],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
+                            changed_number = self.para_linhas(i,1,test_row,changed_number)
 
                     #agora para as colunas *I'm done*
 
                     if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
 
                         if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            onde_dois = np.argwhere(test_col==2)
-                            dois = np.count_nonzero(test_col ==2)
-                            
-                            if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
-                                if 1 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and 1 in self.board.adjacent_vertical_numbers(onde_dois[2,0],i[1]):
-                                    self.board.set_number(onde_dois[1,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[0,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[2,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 1 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
-                                    self.board.set_number(onde_dois[2,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-                                
-                                elif 1 in self.board.adjacent_vertical_numbers(i[0],onde_dois[2,0]):
-                                    self.board.set_number(onde_dois[0,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-                            
-                            elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
-                                if 1 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
-                                    self.board.set_number(onde_dois[0,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[1,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[2,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[3,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 1 in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
-                                    self.board.set_number(onde_dois[0,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[1,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[2,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[3,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 0 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or 0 in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
-                                    self.board.set_number(onde_dois[0,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[3,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                            elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
-                                if  0 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and 0 in self.board.adjacent_vertical_numbers(onde_dois[4,0],i[1]):
-                                    self.board.set_number(onde_dois[0,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[1,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[2,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[3,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[4,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
+                            changed_number= self.para_colunas(i,0,test_col,changed_number)
 
                         elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
-                            onde_dois = np.argwhere(test_col==2)
-                            dois = np.count_nonzero(test_col==2)
-                            if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
-                                if 0 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and 0 in self.board.adjacent_vertical_numbers(onde_dois[2,0],i[1]):
-                                    self.board.set_number(onde_dois[1,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[0,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[2,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 0 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
-                                    self.board.set_number(onde_dois[2,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-                                
-                                elif 0 in self.board.adjacent_vertical_numbers(i[0],onde_dois[2,0]):
-                                    self.board.set_number(onde_dois[0,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-                            
-                            elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
-                                if 0 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
-                                    self.board.set_number(onde_dois[0,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[1,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[2,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[3,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 0 in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
-                                    self.board.set_number(onde_dois[0,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[1,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[2,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[3,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                                elif 1 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or 1 in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
-                                    self.board.set_number(onde_dois[0,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[3,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
-                            elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
-                                if  1 in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and 1 in self.board.adjacent_vertical_numbers(onde_dois[4,0],i[1]):
-                                    self.board.set_number(onde_dois[0,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[1,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[2,0],i[1],1,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[3,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    self.board.set_number(onde_dois[4,0],i[1],0,test_row,test_col, self.rows, self.cols)
-                                    changed_number = True
-
+                            changed_number=self.para_colunas(i,1,test_col, changed_number)
 
 
                     if len(position_actions)==2:
@@ -641,9 +411,173 @@ class TakuzuState:
                             return actions
 
             
-
             return actions
 
+    def linhas_p_isolada(self,i,qual,test_row,position_actions,deu_naslinhas):
+        onde_dois = np.argwhere(test_row==2)
+        dois = np.count_nonzero(test_row ==2)
+        if qual==0:
+            a=0
+            b=1
+        else:
+            a=1
+            b=0
+        
+        if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[1,0])):
+            position_actions.remove((i[0],i[1],a))
+            deu_naslinhas =True
+        elif self.board_size > 4 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
+            position_actions.remove((i[0],i[1],a))
+            deu_naslinhas =True
+        elif self.board_size > 5 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
+            position_actions.remove((i[0],i[1],a))
+            deu_naslinhas =True
+        elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
+            position_actions.remove((i[0],i[1],a))
+            deu_naslinhas =True
+        
+        return (position_actions, deu_naslinhas)
+
+
+    def colunas_p_isolada(self, i, qual, test_col, position_actions, deu_nascolunas):
+        onde_dois = np.argwhere(test_col==2)
+        dois = np.count_nonzero(test_col ==2)
+        if qual==0:
+            a=0
+            b=1
+        else:
+            a=1
+            b=0
+
+        if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or b in self.board.adjacent_vertical_numbers(onde_dois[1,0], i[1])):
+            position_actions.remove((i[0],i[1],a))
+            deu_nascolunas=True
+        elif self.board_size > 4 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
+            position_actions.remove((i[0],i[1],a))
+            deu_nascolunas=True
+        elif self.board_size > 5 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
+            position_actions.remove((i[0],i[1],a))
+            deu_nascolunas=True
+        elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
+            position_actions.remove((i[0],i[1],a))
+            deu_nascolunas=True
+        
+        return (position_actions,deu_nascolunas)
+        
+
+    def para_linhas(self,i,qual,test_row,changed_number):
+        onde_dois = np.argwhere(test_row==2)
+        dois = np.count_nonzero(test_row ==2)
+        if qual==0:
+            a=0
+            b=1
+        else:
+            a=1
+            b=0
+
+        if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
+            if b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[2,0]):
+                self.board.set_number(i[0],onde_dois[1,0],a,self.np_board[i[0]],self.np_board_t[onde_dois[1,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[0,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[0,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[2,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[2,0]], self.rows, self.cols)
+                changed_number = True
+
+            elif b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
+                self.board.set_number(i[0],onde_dois[2,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[2,0]], self.rows, self.cols)
+                changed_number = True
+            
+            elif b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[2,0]):
+                self.board.set_number(i[0],onde_dois[0,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[0,0]], self.rows, self.cols)
+                changed_number = True
+        
+        elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
+            if b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
+                self.board.set_number(i[0],onde_dois[0,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[0,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[1,0],a,self.np_board[i[0]],self.np_board_t[onde_dois[1,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[2,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[2,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[3,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[3,0]], self.rows, self.cols)
+                changed_number = True
+
+            elif b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
+                self.board.set_number(i[0],onde_dois[0,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[0,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[1,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[1,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[2,0],a,self.np_board[i[0]],self.np_board_t[onde_dois[2,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[3,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[3,0]], self.rows, self.cols)
+                changed_number = True
+
+            elif a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
+                self.board.set_number(i[0],onde_dois[0,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[0,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[3,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[3,0]], self.rows, self.cols)
+                changed_number = True
+
+        elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
+            if  a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[4,0]):
+                self.board.set_number(i[0],onde_dois[0,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[0,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[1,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[1,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[2,0],a,self.np_board[i[0]],self.np_board_t[onde_dois[2,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[3,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[3,0]], self.rows, self.cols)
+                self.board.set_number(i[0],onde_dois[4,0],b,self.np_board[i[0]],self.np_board_t[onde_dois[4,0]], self.rows, self.cols)
+                changed_number =True
+        
+        return changed_number
+
+        
+
+    def para_colunas(self,i,qual, test_col, changed_number):
+        onde_dois = np.argwhere(test_col==2)
+        dois = np.count_nonzero(test_col ==2)
+        if qual==0:
+            a=0
+            b=1
+        else:
+            a=1
+            b=0
+        
+        if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
+            if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and b in self.board.adjacent_vertical_numbers(onde_dois[2,0],i[1]):
+                self.board.set_number(onde_dois[1,0],i[1],a,self.np_board[onde_dois[1,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[0,0],i[1],b,self.np_board[onde_dois[0,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[2,0],i[1],b,self.np_board[onde_dois[2,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                changed_number = True
+
+            elif b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
+                self.board.set_number(onde_dois[2,0],i[1],b,self.np_board[onde_dois[2,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                changed_number = True
+            
+            elif b in self.board.adjacent_vertical_numbers(i[0],onde_dois[2,0]):
+                self.board.set_number(onde_dois[0,0],i[1],b,self.np_board[onde_dois[0,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                changed_number = True
+        
+        elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
+            if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
+                self.board.set_number(onde_dois[0,0],i[1],b,self.np_board[onde_dois[0,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[1,0],i[1],a,self.np_board[onde_dois[1,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[2,0],i[1],b,self.np_board[onde_dois[2,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[3,0],i[1],b,self.np_board[onde_dois[3,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                changed_number = True
+
+            elif b in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
+                self.board.set_number(onde_dois[0,0],i[1],b,self.np_board[onde_dois[0,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[1,0],i[1],b,self.np_board[onde_dois[1,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[2,0],i[1],a,self.np_board[onde_dois[2,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[3,0],i[1],b,self.np_board[onde_dois[3,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                changed_number = True
+
+            elif a in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or a in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
+                self.board.set_number(onde_dois[0,0],i[1],b,self.np_board[onde_dois[0,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[3,0],i[1],b,self.np_board[onde_dois[3,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                changed_number = True
+
+        elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
+            if  a in self.board.adjacent_horizontal_numbers(onde_dois[0,0],i[1]) and a in self.board.adjacent_horizontal_numbers(onde_dois[4,0],i[1]):
+                self.board.set_number(onde_dois[0,0],i[1],b,self.np_board[onde_dois[0,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[1,0],i[1],b,self.np_board[onde_dois[1,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[2,0],i[1],a,self.np_board[onde_dois[2,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[3,0],i[1],b,self.np_board[onde_dois[3,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                self.board.set_number(onde_dois[4,0],i[1],b,self.np_board[onde_dois[4,0]],self.np_board_t[i[1]], self.rows, self.cols)
+                changed_number =True
+        
+        return changed_number
 
 
 
