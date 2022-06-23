@@ -273,9 +273,68 @@ class TakuzuState:
                     test_col[p[0,0]] = 2
                     position_actions = new_actions
 
+                if self.board_size%2==0:
+                    #cenas xpto da adjacencia para linhas - posição isolada
+                    deu_naslinhas =False
+                    if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
 
+                        if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
+                            result = self.linhas_p_isolada(i,0,test_row,position_actions,deu_naslinhas)
+                            position_actions=result[0]
+                            deu_naslinhas=result[1]
+                            if deu_naslinhas:
+                                test_row[i[1]] = 1
+                            
 
-                
+                        elif self.board.rows[i[0],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
+                            result = self.linhas_p_isolada(i,1,test_row,position_actions,deu_naslinhas)
+                            position_actions=result[0]
+                            deu_naslinhas=result[1]
+                            if deu_naslinhas:
+                                test_row[i[1]] = 0
+
+                    #cenas xpto da adjacencia para colunas - posição isolada
+                    deu_nascolunas=False
+                    if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
+
+                        if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
+                            resultcol = self.colunas_p_isolada(i,0,test_col,position_actions,deu_naslinhas)
+                            position_actions=resultcol[0]
+                            deu_naslinhas=resultcol[1]
+                            if deu_nascolunas:
+                                test_col[i[0]] = 1
+
+                        elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
+                            resultcol = self.colunas_p_isolada(i,1,test_col,position_actions,deu_naslinhas)
+                            position_actions=resultcol[0]
+                            deu_naslinhas=resultcol[1]
+                            if deu_nascolunas:
+                                test_col[i[0]] = 0
+
+                    if not deu_naslinhas:
+                        test_row[i[1]] = 2
+                    if not deu_nascolunas:
+                        test_col[i[0]] = 2
+
+                    #primeiro para as linhas
+                    if (len(position_actions)==2 or deu_naslinhas) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
+
+                        if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
+                            self.para_linhas(i,0,test_row)
+                        
+                        elif self.board.rows[i[0],1]==half-1: #falta pôr um único 1
+                            self.para_linhas(i,1,test_row)
+
+                    #agora para as colunas *I'm done*
+                    if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
+
+                        if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
+                            self.para_colunas(i,0,test_col)
+
+                        elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
+                            self.para_colunas(i,1,test_col)
+                            
+                    
 
                 if len(position_actions)==2:
                     actions.insert(0, position_actions[0])
@@ -402,10 +461,6 @@ class TakuzuState:
                 self.board.set_number(i[0],onde_dois[2,0],a,self)
                 self.board.set_number(i[0],onde_dois[3,0],b,self)
                 self.board.set_number(i[0],onde_dois[4,0],b,self)
-
-      
-
-        
 
     def para_colunas(self,i,qual, test_col):
         onde_dois = np.argwhere(test_col==2)
