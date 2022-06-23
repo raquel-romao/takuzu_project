@@ -224,8 +224,9 @@ class TakuzuState:
         while changed_number:
             changed_number=False
             empty = self.empty_positions()
+            print(self.np_board)
             for i in empty:
-                print(self.np_board)
+                
                 
                 if self.board.get_number(*i)==2:
 
