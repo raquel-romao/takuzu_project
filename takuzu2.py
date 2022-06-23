@@ -211,7 +211,7 @@ class TakuzuState:
                     self.rows.add(row)
             if col not in self.cols:
                 b+=1
-                if 2 not in self.np_board_t[self.last_action[1]]:
+                if 2 not in self.np_board[:,self.last_action[1]]:
                     self.cols.add(col)
 
 
