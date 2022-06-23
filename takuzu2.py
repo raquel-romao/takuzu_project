@@ -318,9 +318,9 @@ class TakuzuState:
 
                 #cenas xpto da adjacencia para linhas posição isolada
                 
-                if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[1]]==half-1):
+                if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1):
 
-                    if self.board.rows[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
+                    if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                         onde_dois = np.argwhere(test_row==2)
                         dois = np.count_nonzero(test_row ==2)
                         if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or 1 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[1,0])):
@@ -332,7 +332,7 @@ class TakuzuState:
                         elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
                             position_actions.remove((i[0],i[1],0))
 
-                    elif self.board.rows[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
+                    elif self.board.rows[i[0],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
                         onde_dois = np.argwhere(test_row==2)
                         dois = np.count_nonzero(test_row ==2)
                         if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or 0 in self.board.adjacent_horizontal_numbers(i[0],onde_dois[1,0])):
@@ -346,9 +346,9 @@ class TakuzuState:
 
                 #cenas xpto da adjacencia para colunas posição isolada
 
-                if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[0]]==half-1):
+                if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1):
 
-                    if self.board.cols[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
+                    if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                         onde_dois = np.argwhere(test_col==2)
                         dois = np.count_nonzero(test_col ==2)
                         if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (1 in self.board.adjacent_vertical_numbers(i[0],onde_dois[0,0]) or 1 in self.board.adjacent_vertical_numbers(i[0],onde_dois[1,0])):
@@ -360,7 +360,7 @@ class TakuzuState:
                         elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
                             position_actions.remove((i[0],i[1],0))
 
-                    elif self.board.cols[i[0],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
+                    elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
                         onde_dois = np.argwhere(test_col==2)
                         dois = np.count_nonzero(test_col==2)
                         if self.board_size > 3 and dois==2 and (onde_dois[0,0]+1)==onde_dois[1,0] and (0 in self.board.adjacent_vertical_numbers(i[0],onde_dois[0,0]) or 0 in self.board.adjacent_vertical_numbers(i[0],onde_dois[1,0])):
