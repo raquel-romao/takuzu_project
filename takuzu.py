@@ -493,7 +493,7 @@ class Takuzu(Problem):
         self.actions(state)."""
         
         new_board = state.board.copy()
-        new_board.set_number(action[0], action[1], action[2])
+        new_board.set_number(action[0], action[1], action[2],state)
         hash_state = hash(new_board)
 
         if hash_state in self.visited_states:
