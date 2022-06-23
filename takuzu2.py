@@ -204,7 +204,7 @@ class TakuzuState:
         if self.last_action!=None:
             b=0
             row = str(self.np_board[self.last_action[0]]) 
-            col = str(self.np_board_t[self.last_action[1]])
+            col = str(self.np_board[:,self.last_action[1]])
             if row not in self.rows:
                 b+=1
                 if 2 not in self.np_board[self.last_action[0]]:
