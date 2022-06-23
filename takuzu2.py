@@ -220,7 +220,7 @@ class TakuzuState:
 
 
         changed_number = True
-
+        print(self.last_action)
         while changed_number:
             changed_number=False
             empty = self.empty_positions()
