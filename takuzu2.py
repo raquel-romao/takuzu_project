@@ -677,8 +677,8 @@ class Takuzu(Problem):
         self.actions(state)."""
         
         new_board = state.board.copy()
-        test_row = new_board[action[0]]
-        test_col = new_board.transpose()[action[1]]
+        test_row = new_board.board[action[0]]
+        test_col = new_board.board.transpose()[action[1]]
         new_board.set_number(action[0], action[1], action[2], test_row, test_col, state.rows, state.cols)
         hash_state = hash(new_board)
 
