@@ -317,7 +317,7 @@ class TakuzuState:
                     test_col[p[0,0]] = 2
                     position_actions = new_actions
 
-                #cenas xpto da adjacencia para linhas
+                #cenas xpto da adjacencia para linhas posição isolada
                 
                 if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.rows[i[1]]==half-1):
 
@@ -345,7 +345,7 @@ class TakuzuState:
                         elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
                             position_actions.remove((i[0],i[1],1))
 
-                #cenas xpto da adjacencia para colunas
+                #cenas xpto da adjacencia para colunas posição isolada
 
                 if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.cols[i[0]]==half-1):
 
@@ -373,7 +373,10 @@ class TakuzuState:
                         elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
                             position_actions.remove((i[0],i[1],1))
 
-                
+                #if len(position_actions)==2 and np.count_nonzero(test_col ==2):
+                    #pass
+
+
 
                 if len(position_actions)==2:
                     actions.insert(0, position_actions[0])
