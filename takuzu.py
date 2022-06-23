@@ -308,7 +308,7 @@ class TakuzuState:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        self.initial = TakuzuState(board, None, None, None)
+        self.initial = TakuzuState(board, None, None)
         self.initial.completed_cols()
         self.initial.completed_rows()
         self.visited_states = {}
