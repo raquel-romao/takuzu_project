@@ -221,7 +221,7 @@ class TakuzuState:
 
         changed_number = True
         print(self.last_action)
-        while changed_number==True:
+        while changed_number:
             changed_number=False
             empty = self.empty_positions()
             print(self.np_board)
@@ -366,11 +366,11 @@ class TakuzuState:
                         if self.board.get_number(*i)==2:
                             actions = []
                             return actions
-                        elif 2 not in self.board.board:
+                        '''elif 2 not in self.board.board:
                             if self.last_action!=None:
                                 actions.append(self.last_action)
                             else:
-                                actions.append(a)
+                                actions.append(a)'''
                 print(changed_number)
             
             return actions
