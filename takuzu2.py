@@ -316,9 +316,9 @@ class TakuzuState:
                     test_col[p[0,0]] = 2
                     position_actions = new_actions
 
-                #cenas xpto da adjacencia para linhas posição isolada
+                #cenas xpto da adjacencia para linhas - posição isolada
                 
-                if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1):
+                if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
 
                     if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                         onde_dois = np.argwhere(test_row==2)
@@ -344,9 +344,9 @@ class TakuzuState:
                         elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
                             position_actions.remove((i[0],i[1],1))
 
-                #cenas xpto da adjacencia para colunas posição isolada
+                #cenas xpto da adjacencia para colunas - posição isolada
 
-                if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1):
+                if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
 
                     if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                         onde_dois = np.argwhere(test_col==2)
@@ -372,6 +372,8 @@ class TakuzuState:
                         elif self.board_size > 6 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
                             position_actions.remove((i[0],i[1],1))
 
+                test_row[i[1]] = 2
+                test_col[i[0]] = 2
                 #if len(position_actions)==2 and np.count_nonzero(test_col ==2):
                     #pass
 
