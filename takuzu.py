@@ -172,7 +172,6 @@ class TakuzuState:
 
     def __init__(self, board: Board, rows, cols):
         self.board = board
-        self.np_board_t = board.board.transpose()
         self.board_size = board.board_size
         self.np_board = board.board
         self.id = TakuzuState.state_id
@@ -188,7 +187,7 @@ class TakuzuState:
 
 
     def completed_cols(self):
-        self.cols = set(str(arr) for arr in self.np_board_t if 2 not in arr)
+        self.cols = set(str(arr) for arr in self.board.board.transpose() if 2 not in arr)
 
 
     def __lt__(self, other):
@@ -276,7 +275,7 @@ class TakuzuState:
                 if self.board_size%2==0:
                     #cenas xpto da adjacencia para linhas - posição isolada
                     deu_naslinhas =False
-                    if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
+                    if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1):
 
                         if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                             result = self.linhas_p_isolada(i,0,test_row,position_actions,deu_naslinhas)
@@ -295,7 +294,7 @@ class TakuzuState:
 
                     #cenas xpto da adjacencia para colunas - posição isolada
                     deu_nascolunas=False
-                    if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
+                    if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1):
 
                         if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                             resultcol = self.colunas_p_isolada(i,0,test_col,position_actions,deu_naslinhas)
@@ -317,7 +316,7 @@ class TakuzuState:
                         test_col[i[0]] = 2
 
                     #primeiro para as linhas
-                    if (len(position_actions)==2 or deu_naslinhas) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
+                    if (len(position_actions)==2 or deu_naslinhas) and np.any(self.board.rows[i[0]]==half-1):
 
                         if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                             self.para_linhas(i,0,test_row)
@@ -326,7 +325,7 @@ class TakuzuState:
                             self.para_linhas(i,1,test_row)
 
                     #agora para as colunas *I'm done*
-                    if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
+                    if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1):
 
                         if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                             self.para_colunas(i,0,test_col)
