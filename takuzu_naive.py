@@ -451,6 +451,23 @@ class Takuzu(Problem):
     
         return a
 
+    def Window_linecol(self, arr):
+
+        n = len(arr)
+    
+        window = arr[:3]
+        a=True
+        if all(window)==window[0]:
+            a=False
+        if a:
+            for i in range(n - 3):
+                window = window.pop(0) + arr[i + 3]
+                if all(window==window[0]):
+                    a=False
+                    break
+    
+        return a
+
 
 
     def adjacent(self, state:TakuzuState):
@@ -494,6 +511,8 @@ class Takuzu(Problem):
             row = np.count_nonzero(node.state.board.board[row_idx] == 2)
             col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
             return twos + 2*row + 2*col 
+
+        
         return twos
 
     def h2(self, node: Node):
