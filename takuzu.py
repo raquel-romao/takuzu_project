@@ -211,9 +211,9 @@ class TakuzuState:
             self.changed_number=False
             empty = self.empty_positions()
             actions =[]
-            print(self.np_board)
+          
             for i in empty:
-                print(self.np_board)
+               
                 if self.board.get_number(*i)==2:
                     row_idx, col_idx = i
                     position_actions = []
@@ -275,7 +275,7 @@ class TakuzuState:
                         #cenas xpto da adjacencia para linhas - posição isolada
                         deu_naslinhas =False
                         if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1):
-                            print('1')
+                       
 
                             if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                                 result = self.linhas_p_isolada(i,0,test_row,position_actions,deu_naslinhas)
@@ -295,7 +295,7 @@ class TakuzuState:
                         #cenas xpto da adjacencia para colunas - posição isolada
                         deu_nascolunas=False
                         if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1):
-                            print('2')
+                          
 
                             if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                                 resultcol = self.colunas_p_isolada(i,0,test_col,position_actions,deu_naslinhas)
@@ -318,7 +318,7 @@ class TakuzuState:
 
                         #primeiro para as linhas
                         if (len(position_actions)==2 or deu_naslinhas) and np.any(self.board.rows[i[0]]==half-1):
-                            print('3')
+                         
 
                             if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                                 self.para_linhas(i,0,test_row)
@@ -328,7 +328,7 @@ class TakuzuState:
 
                         #agora para as colunas *I'm done*
                         if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1):
-                            print('4')
+                        
 
                             if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                                 print('problema com 0')
@@ -351,7 +351,7 @@ class TakuzuState:
 
 
                     else:
-                        print('oi')
+                     
                         actions = []
                         return actions
 
@@ -481,25 +481,25 @@ class TakuzuState:
         
         if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
             if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and b in self.board.adjacent_vertical_numbers(onde_dois[2,0],i[1]):
-                print('1')
+            
                 self.board.set_number(onde_dois[1,0],i[1],a,self)
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
 
 
             elif b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
-                print('2')
+             
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
 
             
             elif b in self.board.adjacent_vertical_numbers(onde_dois[2,0], i[1]):
-                print('3')
+             
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
 
         
         elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
             if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
-                print('4')
+       
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],a,self)
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
@@ -507,7 +507,7 @@ class TakuzuState:
 
 
             elif b in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
-                print('5')
+        
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],a,self)
@@ -515,14 +515,14 @@ class TakuzuState:
 
 
             elif a in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or a in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
-                print('6')
+           
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[3,0],i[1],b,self)
 
 
         elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
             if  a in self.board.adjacent_horizontal_numbers(onde_dois[0,0],i[1]) and a in self.board.adjacent_horizontal_numbers(onde_dois[4,0],i[1]):
-                print('7')
+         
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],a,self)
