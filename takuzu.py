@@ -206,7 +206,7 @@ class TakuzuState:
             self.changed_number=False
             empty = self.empty_positions()
             actions =[]
-          
+            
             for i in empty:
                
                 if self.board.get_number(*i)==2:
@@ -297,7 +297,7 @@ class TakuzuState:
                                 position_actions=resultcol[0]
                                 deu_naslinhas=resultcol[1]
                                 if deu_nascolunas:
-                                    test_col[i[0]] = 1
+                                    test_col[i[0]] = 1 
 
                             elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
                                 resultcol = self.colunas_p_isolada(i,1,test_col,position_actions,deu_naslinhas)
@@ -350,10 +350,10 @@ class TakuzuState:
                         return actions
 
 
-        if len(actions)==0 and 2 not in self.board.board:
+        '''if len(actions)==0 and 2 not in self.board.board:
             actions.append(self.last_action)
             self.board.rows[self.last_action[0],self.last_action[2]] -=1
-            self.board.cols[self.last_action[1],self.last_action[2]] -=1
+            self.board.cols[self.last_action[1],self.last_action[2]] -=1'''
 
         return actions
 
@@ -410,7 +410,7 @@ class TakuzuState:
         
 
     def para_linhas(self,i,qual,test_row):
-        onde_dois = np.argwhere(test_row==2)
+        onde_dois = np.argwhere(test_row==2) 
         dois = np.count_nonzero(test_row ==2)
         if qual==0:
             a=0
@@ -619,7 +619,7 @@ class Takuzu(Problem):
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
 
-        return 2 not in state.board.board and self.dif_rows_cols(state) and self.half_half(state) and self.adjacent(state)
+        return 2 not in state.board.board and self.dif_rows_cols(state) and self.adjacent(state) #and self.half_half(state) 
             
     
     def find_broken_rules(self, node: Node, board_np, i):
