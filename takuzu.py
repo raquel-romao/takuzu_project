@@ -350,10 +350,10 @@ class TakuzuState:
                         return actions
 
 
-        '''if len(actions)==0 and 2 not in self.board.board:
+        if len(actions)==0 and 2 not in self.board.board:
             actions.append(self.last_action)
             self.board.rows[self.last_action[0],self.last_action[2]] -=1
-            self.board.cols[self.last_action[1],self.last_action[2]] -=1'''
+            self.board.cols[self.last_action[1],self.last_action[2]] -=1
 
         return actions
 
