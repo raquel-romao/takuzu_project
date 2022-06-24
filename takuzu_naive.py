@@ -504,7 +504,7 @@ class Takuzu(Problem):
         if np.any(board.rows[where[0]]>half) or np.any(board.cols[where[1]]>half):
             return board_size**3
 
-        if not self.Window_linecol(row) or not self.Window_linecol(col):
+        if not board.vertical(*node.action) or not board.horizontal(*node.action):
             return board_size**3
         
         if (2 not in row and [np_board[i]==row for i in range(board_size) if i!=where[0]]) or (2 not in col and [i==col for i in np_board_t if i!=where[1]]):
