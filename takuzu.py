@@ -1,5 +1,3 @@
-
-  
 # Grupo 30:
 # 92759 Laura Quintas
 # 92780 Raquel Romão
