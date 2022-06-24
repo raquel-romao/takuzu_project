@@ -276,6 +276,7 @@ class TakuzuState:
                         #cenas xpto da adjacencia para linhas - posição isolada
                         deu_naslinhas =False
                         if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1):
+                            print('1')
 
                             if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                                 result = self.linhas_p_isolada(i,0,test_row,position_actions,deu_naslinhas)
@@ -295,6 +296,7 @@ class TakuzuState:
                         #cenas xpto da adjacencia para colunas - posição isolada
                         deu_nascolunas=False
                         if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1):
+                            print('2')
 
                             if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                                 resultcol = self.colunas_p_isolada(i,0,test_col,position_actions,deu_naslinhas)
@@ -317,6 +319,7 @@ class TakuzuState:
 
                         #primeiro para as linhas
                         if (len(position_actions)==2 or deu_naslinhas) and np.any(self.board.rows[i[0]]==half-1):
+                            print('3')
 
                             if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                                 self.para_linhas(i,0,test_row)
@@ -326,6 +329,7 @@ class TakuzuState:
 
                         #agora para as colunas *I'm done*
                         if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1):
+                            print('4')
 
                             if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
                                 self.para_colunas(i,0,test_col)
