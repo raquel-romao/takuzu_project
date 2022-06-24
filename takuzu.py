@@ -331,12 +331,11 @@ class TakuzuState:
                         
 
                             if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                                print('problema com 0')
-                                print(position_actions)
+                                
                                 self.para_colunas(i,0,test_col)
 
                             elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
-                                print('problema com 1')
+                                
                                 self.para_colunas(i,1,test_col)
                                 
                         
