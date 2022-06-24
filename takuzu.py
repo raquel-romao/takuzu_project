@@ -351,10 +351,10 @@ class TakuzuState:
                         self.board.set_number(a[0],a[1],a[2], self)
 
 
-                    else:
+                    '''else:
                         print('oi')
                         actions = []
-                        return actions
+                        return actions'''
 
 
         if len(actions)==0 and 2 not in self.board.board:
