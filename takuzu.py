@@ -468,6 +468,7 @@ class TakuzuState:
                 self.board.set_number(i[0],onde_dois[3,0],b,self)
                 self.board.set_number(i[0],onde_dois[4,0],b,self)
 
+
     def para_colunas(self,i,qual, test_col):
         onde_dois = np.argwhere(test_col==2)
         dois = np.count_nonzero(test_col ==2)
@@ -480,21 +481,25 @@ class TakuzuState:
         
         if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
             if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and b in self.board.adjacent_vertical_numbers(onde_dois[2,0],i[1]):
+                print('1')
                 self.board.set_number(onde_dois[1,0],i[1],a,self)
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
 
 
             elif b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
+                print('2')
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
 
             
             elif b in self.board.adjacent_vertical_numbers(i[0],onde_dois[2,0]):
+                print('3')
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
 
         
         elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
             if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
+                print('4')
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],a,self)
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
@@ -502,6 +507,7 @@ class TakuzuState:
 
 
             elif b in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
+                print('5')
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],a,self)
@@ -509,12 +515,14 @@ class TakuzuState:
 
 
             elif a in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or a in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
+                print('6')
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[3,0],i[1],b,self)
 
 
         elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
             if  a in self.board.adjacent_horizontal_numbers(onde_dois[0,0],i[1]) and a in self.board.adjacent_horizontal_numbers(onde_dois[4,0],i[1]):
+                print('7')
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],a,self)
