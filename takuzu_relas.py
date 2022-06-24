@@ -5,6 +5,7 @@
 from hashlib import new
 from sys import stdin
 import numpy as np
+from utils import (print_table, name)
 from search import (
     Problem,
     Node,
@@ -13,7 +14,7 @@ from search import (
     depth_first_tree_search,
     greedy_search,
     recursive_best_first_search,
-    InstrumentedProblem
+    InstrumentedProblem, compare_searchers
 )
 
 
@@ -636,7 +637,7 @@ class Takuzu(Problem):
         return 0
 
 
-    def h1(self, node: Node):
+    def h(self, node: Node): #tem que ter nome h!! senão n funciona
         """Função heuristica 1 utilizada para a procura A*. Além do numéro de casas vazias, é dada prioridade 
         a ações em linhas/colunas com poucos 2, para ser dado mais peso a serem completadas linhas/colunas."""
         
@@ -660,6 +661,16 @@ class Takuzu(Problem):
         return twos + dif
 
 
+def compare_searchers(problem, header, searchers):
+    def do(searcher, problem):
+        p = InstrumentedProblem(problem)
+        searcher(p)
+        return p
+
+    table = [[name(s)] + [do(s, problem)] for s in searchers]
+    print_table(table, header)
+
+
 if __name__ == "__main__":
     
     board = Board.parse_instance_from_stdin()
@@ -672,4 +683,14 @@ if __name__ == "__main__":
     goal_node = depth_first_tree_search(problem)
     
     print(goal_node.state.board)
+
+    compare_searchers(problem, header=['Searcher', 'selfsuccs', 'Goal tests', 'States'],
+                      searchers=[astar_search,
+                    breadth_first_tree_search,
+                    depth_first_tree_search,
+                    greedy_search,
+                    recursive_best_first_search])
+
+
+
 
