@@ -492,7 +492,7 @@ class TakuzuState:
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
 
             
-            elif b in self.board.adjacent_vertical_numbers(i[0],onde_dois[2,0]):
+            elif b in self.board.adjacent_vertical_numbers(onde_dois[2,0], i[1]):
                 print('3')
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
 
