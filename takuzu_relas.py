@@ -680,15 +680,16 @@ if __name__ == "__main__":
     problem = Takuzu(board)
 
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = depth_first_tree_search(problem)
+    #goal_node = depth_first_tree_search(problem)
     
-    print(goal_node.state.board)
+    #print(goal_node.state.board)
 
     compare_searchers(problem, header=['Searcher', 'selfsuccs/Goal tests/States'],
                       searchers=[astar_search, breadth_first_tree_search, depth_first_tree_search, greedy_search, recursive_best_first_search])
 
 #quanto se vai à função action self.succs +=1, succs=succesors?
-#última coluna da tabela fica estranha -> é suposto ser str(self.found)[:4] , sendo self.found o state do resultado final
+#última coluna da tabela fica estranha  (<__m)-> é suposto ser str(self.found)[:4] , sendo self.found o state do resultado final
+#<__main__.TakuzuState object at 0x7f3983f2e7d0> -> faz sentido
 
 
 
