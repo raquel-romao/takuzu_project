@@ -352,6 +352,7 @@ class TakuzuState:
 
 
                     else:
+                        print('oi')
                         actions = []
                         return actions
 
