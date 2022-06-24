@@ -486,34 +486,49 @@ class Takuzu(Problem):
         return 2 not in state.board.board and self.dif_rows_cols(state) and self.half_half(state) and self.adjacent(state)
             
     
-    def find_broken_rules(self, node: Node, board_np, i):
+    def find_broken_rules(self, node: Node):
         board = node.state.board
+        np_board = board.board
+        np_board_t = np_board.transpose()
         board_size = board.board_size
+        where = (node.action[0], node.action[1])
+        row = np_board[where[0]]
+        col = np_board[:,where[1]]
 
-        indices = np.arange(board_size)
+        if board_size%2==0:
+            half = board_size//2
+        else:
+            half = board_size//2 +1
+
         
-        if 2 not in board_np[i, :]: 
-                
-            if np.any(board_np[indices != i, :] == board_np[i, :]):
-                return board_size**3
+        if np.any(board.rows[where[0]]>half) or np.any(board.cols[where[1]]>half):
+            return board_size**3
 
+        if not self.Window_linecol(row) or not self.Window_linecol(col):
+            return board_size**3
+        
+        if (2 not in row and [np_board[i]==row for i in range(board_size) if i!=where[0]]) or (2 not in col and [i==col for i in np_board_t if i!=where[1]]):
+            return board_size**3
+
+        
         return 0
 
 
     def h(self, node: Node): #tem que ter nome h!! senão n funciona
         """Função heuristica 1 utilizada para a procura A*. Além do numéro de casas vazias, é dada prioridade 
         a ações em linhas/colunas com poucos 2, para ser dado mais peso a serem completadas linhas/colunas."""
-        
+        f = 0
         twos = np.count_nonzero(node.state.board.board == 2)
 
         if node.parent:
             row_idx, col_idx,_ = node.action
+            broken_rules = self.find_broken_rules(node)
             row = np.count_nonzero(node.state.board.board[row_idx] == 2)
             col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
-            return twos + 2*row + 2*col 
+            f= twos + broken_rules + 2*row + 2*col 
 
-        
-        return twos
+
+        return f
 
     def h2(self, node: Node):
         """Função heuristica 2 utilizada para a procura A*. Além do numéro de casas vazias, tem-se em conta a

@@ -146,9 +146,12 @@ print(c)
 print(d)
 '''
 a = np.array([[1,2,2],[1,2,1],[1,2,1]])
+print(a[:,])
 
-print(abs((a==0).sum() - (a==1).sum()))
-b=a.transpose()
+#print(abs((a==0).sum() - (a==1).sum()))
+#b=a.transpose()
+
+
 
 #print(b[0])
 #print(a[:,0])
