@@ -213,7 +213,7 @@ class TakuzuState:
             self.changed_number=False
             empty = self.empty_positions()
             actions =[]
-         
+            print(self.np_board)
             for i in empty:
                 if self.board.get_number(*i)==2:
                     row_idx, col_idx = i
