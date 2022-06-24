@@ -270,7 +270,7 @@ class TakuzuState:
                         position_actions = new_actions
 
                     if self.board_size%2==0:
-                        #cenas xpto da adjacencia para linhas - posição isolada
+                        #adjacencia para linhas - posição isolada
                         deu_naslinhas =False
                         if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1):
                        
@@ -290,7 +290,7 @@ class TakuzuState:
                                 if deu_naslinhas:
                                     test_row[i[1]] = 0
 
-                        #cenas xpto da adjacencia para colunas - posição isolada
+                        #adjacencia para colunas - posição isolada
                         deu_nascolunas=False
                         if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1):
                           
@@ -314,7 +314,7 @@ class TakuzuState:
                         if not deu_nascolunas:
                             test_col[i[0]] = 2
 
-                        #primeiro para as linhas
+                        #linhas
                         if (len(position_actions)==2 or deu_naslinhas) and np.any(self.board.rows[i[0]]==half-1):
                          
 
@@ -324,7 +324,7 @@ class TakuzuState:
                             elif self.board.rows[i[0],1]==half-1: #falta pôr um único 1
                                 self.para_linhas(i,1,test_row)
 
-                        #agora para as colunas *I'm done*
+                        #colunas
                         if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1):
                         
 
@@ -533,8 +533,6 @@ class TakuzuState:
         empty = np.column_stack(result)
         return empty
 
-    
-
 
 class Takuzu(Problem):
     def __init__(self, board: Board):
@@ -581,9 +579,6 @@ class Takuzu(Problem):
         unique_cols = len(col_counts) == state.board.board_size
 
         return unique_rows and unique_cols
-
-    '''def dif_rows_cols(self, state: TakuzuState):
-        return len(state.rows) == state.board_size and len(state.cols) == state.board_size'''
 
 
     def half_half(self, state: TakuzuState):
@@ -653,10 +648,8 @@ class Takuzu(Problem):
             row_idx, col_idx,_ = node.action
             row = np.count_nonzero(node.state.board.board[row_idx] == 2)
             col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
-            return twos + 2*row + 2*col #para prioritizar ações em linhas com poucos 2, para dar mais peso a completar a linha
+            return twos + 2*row + 2*col #para prioritizar ações em linhas com poucos 2, para dar mais peso a completar linhas/colunas
         return twos
-
-        #return np.count_nonzero(node.state.board.board == 2) #f #como estava antes mas decidi meter o número de casas vazias como h p experimentar, quero fechar a árvore o mais rápido possível e tentar primeiro os estados com menos casas
 
 if __name__ == "__main__":
     
@@ -665,8 +658,8 @@ if __name__ == "__main__":
 
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
+
     # Obter o nó solução usando a procura em profundidade:
     goal_node = depth_first_tree_search(problem)
-    # Verificar se foi atingida a solução
-    #print("Is goal?", problem.goal_test(goal_node.state))
+    
     print(goal_node.state.board)
