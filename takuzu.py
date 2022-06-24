@@ -64,9 +64,6 @@ class Board:
         return self.board[row, col] 
 
 
-    """def count(self, t: tuple, i: int):
-        return sum(x == i for x in t)"""
-
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
@@ -639,8 +636,9 @@ class Takuzu(Problem):
         return 0
 
 
-    def h(self, node: Node):
-        """Função heuristica utilizada para a procura A*."""
+    def h1(self, node: Node):
+        """Função heuristica 1 utilizada para a procura A*. Além do numéro de casas vazias, é dada prioridade 
+        a ações em linhas/colunas com poucos 2, para ser dado mais peso a serem completadas linhas/colunas."""
         
         twos = np.count_nonzero(node.state.board.board == 2)
 
@@ -648,8 +646,19 @@ class Takuzu(Problem):
             row_idx, col_idx,_ = node.action
             row = np.count_nonzero(node.state.board.board[row_idx] == 2)
             col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
-            return twos + 2*row + 2*col #para prioritizar ações em linhas com poucos 2, para dar mais peso a completar linhas/colunas
+            return twos + 2*row + 2*col 
         return twos
+
+    def h2(self, node: Node):
+        """Função heuristica 2 utilizada para a procura A*. Além do numéro de casas vazias, tem-se em conta a
+        diferença entre o número de 0's e 1's no tabuleiro."""
+        
+        twos = np.count_nonzero(node.state.board.board == 2)
+
+        dif = abs((node.state.board.board==0).sum() - (node.state.board.board==1).sum())
+
+        return twos + dif
+        
 
 if __name__ == "__main__":
     

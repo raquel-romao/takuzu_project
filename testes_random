@@ -147,11 +147,11 @@ print(d)
 '''
 a = np.array([[1,2,2],[1,2,1],[1,2,1]])
 
-
+print(abs((a==0).sum() - (a==1).sum()))
 b=a.transpose()
 
-print(b[0])
-print(a[:,0])
+#print(b[0])
+#print(a[:,0])
 #c =[1,0,1]
 #d=[1,0,1]
 #b.add(c)
