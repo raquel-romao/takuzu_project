@@ -220,7 +220,7 @@ class TakuzuState:
                     position_actions = []
 
                     test_row = self.np_board[i[0]].copy()
-                    test_col = self.np_board_t[i[1]].copy()
+                    test_col = self.np_board[:,i[1]].copy()
 
                     test_row[i[1]] = 0
                     test_col[i[0]] = 0
