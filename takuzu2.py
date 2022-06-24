@@ -2,9 +2,11 @@
 # 92759 Laura Quintas
 # 92780 Raquel Romão
 
+import time
 from hashlib import new
 from sys import stdin
 import numpy as np
+from utils import (print_table, name)
 from search import (
     Problem,
     Node,
@@ -13,7 +15,7 @@ from search import (
     depth_first_tree_search,
     greedy_search,
     recursive_best_first_search,
-    InstrumentedProblem,
+    InstrumentedProblem, compare_searchers
 )
 
 
@@ -46,6 +48,8 @@ class Board:
 
     def set_number(self, row: int, col: int, value, state):
         self.board[row, col] = value
+        state.last_action = (row,col,value)
+        state.changed_number = True
         self.rows[row, value] += 1
         self.cols[col,value] += 1
         test_row=self.board[row]
@@ -61,9 +65,6 @@ class Board:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col] 
 
-
-    """def count(self, t: tuple, i: int):
-        return sum(x == i for x in t)"""
 
     def adjacent_vertical_numbers(self, row: int, col: int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -166,13 +167,14 @@ class Board:
 class TakuzuState:
     state_id = 0
 
-    def __init__(self, board: Board, action, rows, cols):
+    def __init__(self, board: Board, rows, cols):
         self.board = board
         self.board_size = board.board_size
         self.np_board = board.board
         self.id = TakuzuState.state_id
         TakuzuState.state_id += 1
-        self.last_action = action
+        self.last_action = None
+        self.changed_number=True
         self.rows = rows
         self.cols = cols
 
@@ -182,7 +184,7 @@ class TakuzuState:
 
 
     def completed_cols(self):
-        self.cols = set(str(arr) for arr in self.np_board.transpose() if 2 not in arr)
+        self.cols = set(str(arr) for arr in self.board.board.transpose() if 2 not in arr)
 
 
     def __lt__(self, other):
@@ -193,189 +195,14 @@ class TakuzuState:
         return hash(self.board)
 
     def actions(self):
-
-        actions =[]
-
-        if self.board_size % 2 == 0:
-            half = self.board_size //2
-        else:
-            half = self.board_size //2 + 1
-        
-        if self.last_action!=None:
-            b=0
-            row = str(self.np_board[self.last_action[0]]) 
-            col = str(self.np_board[:,self.last_action[1]])
-            if row not in self.rows:
-                b+=1
-                if 2 not in self.np_board[self.last_action[0]]:
-                    self.rows.add(row)
-            if col not in self.cols:
-                b+=1
-                if 2 not in self.np_board[:,self.last_action[1]]:
-                    self.cols.add(col)
-
-
-            if np.any(self.board.rows[self.last_action[0]] > half) or np.any(self.board.cols[self.last_action[1]] > half) or not self.board.horizontal(self.last_action[0],self.last_action[1],self.last_action[2]) or not self.board.vertical(self.last_action[0],self.last_action[1],self.last_action[2]) or b!=2:
-                return actions
-
-
-        changed_number = True
-
-        while changed_number:
-            changed_number=False
-            empty = self.empty_positions()
-            print(self.np_board)
-            for i in empty:
-                
-                if self.board.get_number(*i)==2:
-
-                    row_idx, col_idx = i
-                    position_actions = []
-
-                    test_row = self.np_board[i[0]].copy()
-                    test_col = self.np_board[:,i[1]].copy()
-
-                    test_row[i[1]] = 0
-                    test_col[i[0]] = 0
-
-                    if self.board.rows[row_idx, 0] < half and self.board.cols[col_idx, 0] < half and self.board.horizontal(row_idx, col_idx, 0) and self.board.vertical(row_idx, col_idx, 0) and str(test_row) not in self.rows and str(test_col) not in self.cols:
-                        position_actions.append((row_idx, col_idx, 0))
-
-                    test_row[i[1]] = 1
-                    test_col[i[0]] = 1
-
-                    if self.board.rows[row_idx, 1] < half and self.board.cols[col_idx, 1] < half and self.board.horizontal(row_idx, col_idx, 1) and self.board.vertical(row_idx, col_idx, 1) and str(test_row) not in self.rows and str(test_col) not in self.cols:
-                        position_actions.append((row_idx, col_idx, 1))
-                        
-                    #ver se podemos preencher logo a coluna ou linha
-                    if len(position_actions)==2 and np.count_nonzero(test_row ==2)==1:
-                        p = np.argwhere(test_row==2)
-                        
-                        new_actions = []
-                        test_row[p[0,0]]= 1
-                        test_row[i[1]] = 0
-                        
-                        if str(test_row) not in self.rows :
-                            new_actions.append(position_actions[0])
-                        
-                        test_row[p[0,0]] = 0
-                        test_row[i[1]] = 1
-                        if str(test_row) not in self.rows:
-                            new_actions.append(position_actions[1])
-
-                        test_row[p[0,0]] = 2
-                        position_actions = new_actions
-
-                    if len(position_actions)==2 and np.count_nonzero(test_col==2)==1:
-                        p = np.argwhere(test_col==2)
-                        
-                        new_actions = []
-                        test_col[p[0,0]]= 1
-                        test_col[i[0]] = 0
-
-                        if str(test_col) not in self.cols:
-                            new_actions.append(position_actions[0])
-                        
-                        test_col[p[0,0]] = 0
-                        test_col[i[0]] = 1
-                        if str(test_col) not in self.cols:
-                            new_actions.append(position_actions[1])
-
-
-                        test_col[p[0,0]] = 2
-                        position_actions = new_actions
-                    
-                    
-                    #cenas xpto da adjacencia para linhas - posição isolada
-                    '''deu_naslinhas =False
-                    if len(position_actions)==2 and 2 not in self.board.adjacent_horizontal_numbers(*i) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
-
-                        if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            result = self.linhas_p_isolada(i,0,test_row,position_actions,deu_naslinhas)
-                            position_actions=result[0]
-                            deu_naslinhas=result[1]
-                            if deu_naslinhas:
-                                test_row[i[1]] = 1
-                            
-
-                        elif self.board.rows[i[0],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
-                            result = self.linhas_p_isolada(i,1,test_row,position_actions,deu_naslinhas)
-                            position_actions=result[0]
-                            deu_naslinhas=result[1]
-                            if deu_naslinhas:
-                                test_row[i[1]] = 0
-
-                    #cenas xpto da adjacencia para colunas - posição isolada
-                    deu_nascolunas=False
-                    if len(position_actions)==2 and 2 not in self.board.adjacent_vertical_numbers(*i) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
-
-                        if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            resultcol = self.colunas_p_isolada(i,0,test_col,position_actions,deu_naslinhas)
-                            position_actions=resultcol[0]
-                            deu_naslinhas=resultcol[1]
-                            if deu_nascolunas:
-                                test_col[i[0]] = 1
-
-                        elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
-                            resultcol = self.colunas_p_isolada(i,1,test_col,position_actions,deu_naslinhas)
-                            position_actions=resultcol[0]
-                            deu_naslinhas=resultcol[1]
-                            if deu_nascolunas:
-                                test_col[i[0]] = 0
-
-                    if not deu_naslinhas:
-                        test_row[i[1]] = 2
-                    if not deu_nascolunas:
-                        test_col[i[0]] = 2
-
-                    #primeiro para as linhas
-                    if (len(position_actions)==2 or deu_naslinhas) and np.any(self.board.rows[i[0]]==half-1) and not np.all(self.board.rows[i[0]]==half-1):
-
-                        if self.board.rows[i[0],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            changed_number = self.para_linhas(i,0,test_row,changed_number)
-                        
-                        elif self.board.rows[i[0],1]==half-1: #falta pôr um único 1
-                            changed_number = self.para_linhas(i,1,test_row,changed_number)
-
-                    #agora para as colunas *I'm done*
-                    if (len(position_actions)==2 or deu_nascolunas) and np.any(self.board.cols[i[1]]==half-1) and not np.all(self.board.cols[i[1]]==half-1):
-
-                        if self.board.cols[i[1],0]==half-1: #quer dizer que é o 0 que apenas falta acrescentar 1
-                            changed_number = self.para_colunas(i,0,test_col,changed_number)
-
-                        elif self.board.cols[i[1],1]==half-1: #quer dizer que é o 1 que apenas falta acrescentar 1
-                            changed_number=self.para_colunas(i,1,test_col, changed_number)
-                            if 2 not in self.board.board:
-                                if self.last_action!=None:
-                                    actions.append(self.last_action)
-                                else:
-                                    actions.append(a)'''
-
-
-                    if len(position_actions)==2:
-                        actions.insert(0, position_actions[0])
-                        actions.insert(0, position_actions[1])
-
-                    elif len(position_actions)==1:
-                        changed_number = True
-                        a=position_actions[0]
-                        self.board.set_number(a[0],a[1],a[2], self)
-                        
-
-                        
-                        if len(actions)==0 and 2 not in self.board.board:
-                            actions.append(a)
-                            self.board.rows[a[0],a[2]] -=1
-                            self.board.cols[a[1],a[2]] -=1
-
-                    else:
-                        actions = []
-                        return actions
-                       
-
-                print(changed_number)
+        actions = []
+        empty = self.empty_positions()
+        for i in empty:
+            actions.insert(0, (i[0],i[1],0))
+            actions.insert(0, (i[0],i[1],1))
             
-            return actions
+        return actions
+
 
     def linhas_p_isolada(self,i,qual,test_row,position_actions,deu_naslinhas):
         onde_dois = np.argwhere(test_row==2)
@@ -429,7 +256,7 @@ class TakuzuState:
         return (position_actions,deu_nascolunas)
         
 
-    def para_linhas(self,i,qual,test_row,changed_number):
+    def para_linhas(self,i,qual,test_row):
         onde_dois = np.argwhere(test_row==2)
         dois = np.count_nonzero(test_row ==2)
         if qual==0:
@@ -444,7 +271,7 @@ class TakuzuState:
                 self.board.set_number(i[0],onde_dois[1,0],a, self)
                 self.board.set_number(i[0],onde_dois[0,0],b, self)
                 self.board.set_number(i[0],onde_dois[2,0],b, self)
- 
+
 
             elif b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
                 self.board.set_number(i[0],onde_dois[2,0],b, self)
@@ -460,19 +287,19 @@ class TakuzuState:
                 self.board.set_number(i[0],onde_dois[1,0],a,self)
                 self.board.set_number(i[0],onde_dois[2,0],b,self)
                 self.board.set_number(i[0],onde_dois[3,0],b,self)
-     
+
 
             elif b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
                 self.board.set_number(i[0],onde_dois[0,0],b,self)
                 self.board.set_number(i[0],onde_dois[1,0],b,self)
                 self.board.set_number(i[0],onde_dois[2,0],a,self)
                 self.board.set_number(i[0],onde_dois[3,0],b,self)
-                
+
 
             elif a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
                 self.board.set_number(i[0],onde_dois[0,0],b,self)
                 self.board.set_number(i[0],onde_dois[3,0],b,self)
-        
+
 
         elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
             if  a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[4,0]):
@@ -481,12 +308,9 @@ class TakuzuState:
                 self.board.set_number(i[0],onde_dois[2,0],a,self)
                 self.board.set_number(i[0],onde_dois[3,0],b,self)
                 self.board.set_number(i[0],onde_dois[4,0],b,self)
-     
 
 
-        
-
-    def para_colunas(self,i,qual, test_col, changed_number):
+    def para_colunas(self,i,qual, test_col):
         onde_dois = np.argwhere(test_col==2)
         dois = np.count_nonzero(test_col ==2)
         if qual==0:
@@ -498,49 +322,53 @@ class TakuzuState:
         
         if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
             if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and b in self.board.adjacent_vertical_numbers(onde_dois[2,0],i[1]):
+            
                 self.board.set_number(onde_dois[1,0],i[1],a,self)
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
-              
+
 
             elif b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
+             
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
-           
+
             
-            elif b in self.board.adjacent_vertical_numbers(i[0],onde_dois[2,0]):
+            elif b in self.board.adjacent_vertical_numbers(onde_dois[2,0], i[1]):
+             
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
-            
+
         
         elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
             if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
+       
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],a,self)
                 self.board.set_number(onde_dois[2,0],i[1],b,self)
                 self.board.set_number(onde_dois[3,0],i[1],b,self)
-        
+
 
             elif b in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
+        
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],a,self)
                 self.board.set_number(onde_dois[3,0],i[1],b,self)
-        
+
 
             elif a in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or a in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
+           
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[3,0],i[1],b,self)
-    
+
 
         elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
             if  a in self.board.adjacent_horizontal_numbers(onde_dois[0,0],i[1]) and a in self.board.adjacent_horizontal_numbers(onde_dois[4,0],i[1]):
+         
                 self.board.set_number(onde_dois[0,0],i[1],b,self)
                 self.board.set_number(onde_dois[1,0],i[1],b,self)
                 self.board.set_number(onde_dois[2,0],i[1],a,self)
                 self.board.set_number(onde_dois[3,0],i[1],b,self)
                 self.board.set_number(onde_dois[4,0],i[1],b,self)
-    
-        
-        return changed_number
 
 
 
@@ -548,13 +376,12 @@ class TakuzuState:
         result = np.where(self.board.board == 2)
         empty = np.column_stack(result)
         return empty
-    
 
 
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        self.initial = TakuzuState(board, None, None, None)
+        self.initial = TakuzuState(board, None, None)
         self.initial.completed_cols()
         self.initial.completed_rows()
         self.visited_states = {}
@@ -574,7 +401,7 @@ class Takuzu(Problem):
         self.actions(state)."""
         
         new_board = state.board.copy()
-        new_board.set_number(action[0], action[1], action[2], state)
+        new_board.set_number(action[0], action[1], action[2],state)
         hash_state = hash(new_board)
 
         if hash_state in self.visited_states:
@@ -582,7 +409,7 @@ class Takuzu(Problem):
 
         new_setrow= state.rows.copy()
         new_setcol= state.cols.copy()
-        new_state = TakuzuState(new_board, action, new_setrow, new_setcol)
+        new_state = TakuzuState(new_board, new_setrow, new_setcol)
         self.visited_states.update({hash_state: new_state})
         
         return new_state
@@ -596,9 +423,6 @@ class Takuzu(Problem):
         unique_cols = len(col_counts) == state.board.board_size
 
         return unique_rows and unique_cols
-
-    '''def dif_rows_cols(self, state: TakuzuState):
-        return len(state.rows) == state.board_size and len(state.cols) == state.board_size'''
 
 
     def half_half(self, state: TakuzuState):
@@ -627,17 +451,7 @@ class Takuzu(Problem):
     
         return a
 
-    '''def adjacent(self, state: TakuzuState):
-        board = state.board.board
-        v = np.lib.stride_tricks.sliding_window_view(board, 3, axis=1)
-        v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
-        rows = np.all(np.isin(v, (1, 2)))
 
-        v = np.lib.stride_tricks.sliding_window_view(board, 3, axis=0)
-        v = v.reshape((v.shape[0]*v.shape[1],3)).sum(axis=1)
-        cols = np.all(np.isin(v, (1, 2)))
-
-        return rows and cols'''
 
     def adjacent(self, state:TakuzuState):
         board = state.board.board 
@@ -669,8 +483,9 @@ class Takuzu(Problem):
         return 0
 
 
-    def h(self, node: Node):
-        """Função heuristica utilizada para a procura A*."""
+    def h(self, node: Node): #tem que ter nome h!! senão n funciona
+        """Função heuristica 1 utilizada para a procura A*. Além do numéro de casas vazias, é dada prioridade 
+        a ações em linhas/colunas com poucos 2, para ser dado mais peso a serem completadas linhas/colunas."""
         
         twos = np.count_nonzero(node.state.board.board == 2)
 
@@ -678,10 +493,32 @@ class Takuzu(Problem):
             row_idx, col_idx,_ = node.action
             row = np.count_nonzero(node.state.board.board[row_idx] == 2)
             col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
-            return twos + 2*row + 2*col #para prioritizar ações em linhas com poucos 2, para dar mais peso a completar a linha
+            return twos + 2*row + 2*col 
         return twos
 
-        #return np.count_nonzero(node.state.board.board == 2) #f #como estava antes mas decidi meter o número de casas vazias como h p experimentar, quero fechar a árvore o mais rápido possível e tentar primeiro os estados com menos casas
+    def h2(self, node: Node):
+        """Função heuristica 2 utilizada para a procura A*. Além do numéro de casas vazias, tem-se em conta a
+        diferença entre o número de 0's e 1's no tabuleiro."""
+        
+        twos = np.count_nonzero(node.state.board.board == 2)
+
+        dif = abs((node.state.board.board==0).sum() - (node.state.board.board==1).sum())
+
+        return twos + dif
+
+
+def compare_searchers(problem, header, searchers):
+    
+    def do(searcher, problem):
+        p = InstrumentedProblem(problem)
+        start_time = time.time()
+        searcher(p)
+        return p , "%s seconds" % (time.time() - start_time), "%s ms" % (time.time()*10**3 - start_time*10**3)
+
+
+    table = [[name(s)] + [do(s, problem)] for s in searchers]
+    print_table(table, header)
+
 
 if __name__ == "__main__":
     
@@ -690,8 +527,15 @@ if __name__ == "__main__":
 
     # Criar uma instância de Takuzu:
     problem = Takuzu(board)
+
     # Obter o nó solução usando a procura em profundidade:
-    goal_node = astar_search(problem)
-    # Verificar se foi atingida a solução
-    #print("Is goal?", problem.goal_test(goal_node.state))
-    print(goal_node.state.board)
+    #goal_node = depth_first_tree_search(problem)
+    
+    #print(goal_node.state.board)
+
+    compare_searchers(problem, header=['Searcher', 'selfsuccs/Goal tests/States/Time(s)/Time(ms)'],
+                      searchers=[astar_search, breadth_first_tree_search, depth_first_tree_search, greedy_search, recursive_best_first_search])
+
+#quanto se vai à função action self.succs +=1, succs=succesors?
+#última coluna da tabela fica estranha  (<__m)-> é suposto ser str(self.found)[:4] , sendo self.found o state do resultado final
+#<__main__.TakuzuState object at 0x7f3983f2e7d0> -> faz sentido
