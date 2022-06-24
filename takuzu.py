@@ -199,15 +199,13 @@ class TakuzuState:
 
     def actions(self):
 
-        
 
         if self.board_size % 2 == 0:
             half = self.board_size //2
         else:
             half = self.board_size //2 + 1
 
-
-
+        actions=[]
      
         while self.changed_number:
             self.changed_number=False
