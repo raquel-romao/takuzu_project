@@ -2,6 +2,7 @@
 # 92759 Laura Quintas
 # 92780 Raquel Romão
 
+import time
 from hashlib import new
 from sys import stdin
 import numpy as np
@@ -662,10 +663,13 @@ class Takuzu(Problem):
 
 
 def compare_searchers(problem, header, searchers):
+    
     def do(searcher, problem):
         p = InstrumentedProblem(problem)
+        start_time = time.time()
         searcher(p)
-        return p
+        return p , "%s seconds" % (time.time() - start_time), "%s ms" % (time.time()*10**3 - start_time*10**3)
+
 
     table = [[name(s)] + [do(s, problem)] for s in searchers]
     print_table(table, header)
