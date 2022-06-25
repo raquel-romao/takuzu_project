@@ -503,7 +503,7 @@ class Takuzu(Problem):
         if board_size%2==0:
             half = board_size//2
         else:
-            half = board_size//2 +1
+            half = board_size//2 + 1
 
         
         if np.any(board.rows[where[0]]>half) or np.any(board.cols[where[1]]>half):
@@ -512,10 +512,12 @@ class Takuzu(Problem):
         if not board.vertical(*node.action) or not board.horizontal(*node.action):
             return board_size**3
         
-        if (2 not in row and [np_board[i]==row for i in range(board_size) if i!=where[0]]) or (2 not in col and [i==col for i in np_board_t if i!=where[1]]):
+        if 2 not in row and np.any([np_board[i]==row for i in range(board_size) if i!=where[0]]): 
             return board_size**3
 
-        
+        if 2 not in col and np.any([np_board_t[i]==col for i in range(board_size) if i!=where[1]]):
+            return board_size**3
+
         return 0
 
 
@@ -530,8 +532,8 @@ class Takuzu(Problem):
             broken_rules = self.find_broken_rules(node)
             row = np.count_nonzero(node.state.board.board[row_idx] == 2)
             col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
-            f= twos + broken_rules + 2*row + 2*col 
-
+            f = twos + broken_rules + row + col 
+            #cheguei à conclusão que ter no row e col *2 ou outro era igual
 
         return f
 
@@ -539,11 +541,34 @@ class Takuzu(Problem):
         """Função heuristica 2 utilizada para a procura A*. Além do numéro de casas vazias, tem-se em conta a
         diferença entre o número de 0's e 1's no tabuleiro."""
         
+        f = 0
         twos = np.count_nonzero(node.state.board.board == 2)
 
-        dif = abs((node.state.board.board==0).sum() - (node.state.board.board==1).sum())
+        if node.parent:
+            broken_rules = self.find_broken_rules(node)
+            dif = abs((node.state.board.board==0).sum() - (node.state.board.board==1).sum())
+            f = twos + dif + broken_rules
+        
+        return  f
 
-        return twos + dif
+    def h3(self, node: Node): #melhor combinação até agora
+        """Função heuristica 2 utilizada para a procura A*. Combinação das duas heurísticas acima."""
+        
+        f = 0
+        twos = np.count_nonzero(node.state.board.board == 2)
+
+        if node.parent:
+            row_idx, col_idx,_ = node.action
+            broken_rules = self.find_broken_rules(node)
+            row = np.count_nonzero(node.state.board.board[row_idx] == 2)
+            col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
+            dif = abs((node.state.board.board==0).sum() - (node.state.board.board==1).sum())
+            f = twos + dif + broken_rules + row + col
+
+            if np.count_nonzero(node.state.board.board == 2) < node.state.board.board_size:
+              f = f - node.state.board.board_size
+        
+        return  f
 
 
 def compare_searchers(problem, header, searchers):
@@ -572,8 +597,8 @@ if __name__ == "__main__":
     
     #print(goal_node.state.board)
 
-    compare_searchers(problem, header=['Searcher', 'selfsuccs/Goal tests/States/Time(s)/Time(ms)'],
-                      searchers=[ breadth_first_tree_search, depth_first_tree_search])
+    compare_searchers(problem, header=['Searcher', 'selfsuccs/Goal tests/States/Time(s)/Time(ms)'], 
+    searchers=[astar_search, breadth_first_tree_search, depth_first_tree_search, greedy_search])
 
 #quanto se vai à função action self.succs +=1, succs=succesors?
 #última coluna da tabela fica estranha  (<__m)-> é suposto ser str(self.found)[:4] , sendo self.found o state do resultado final
