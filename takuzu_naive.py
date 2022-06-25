@@ -521,7 +521,7 @@ class Takuzu(Problem):
         return 0
 
 
-    def h(self, node: Node): #tem que ter nome h!! senão n funciona
+    def h1(self, node: Node): #tem que ter nome h!! senão n funciona
         """Função heuristica 1 utilizada para a procura A*. Além do numéro de casas vazias, é dada prioridade 
         a ações em linhas/colunas com poucos 2, para ser dado mais peso a serem completadas linhas/colunas."""
         f = 0
@@ -551,7 +551,7 @@ class Takuzu(Problem):
         
         return  f
 
-    def h3(self, node: Node): #melhor combinação até agora
+    def h(self, node: Node): #melhor combinação até agora
         """Função heuristica 2 utilizada para a procura A*. Combinação das duas heurísticas acima."""
         
         f = 0
