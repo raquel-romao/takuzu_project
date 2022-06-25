@@ -5,6 +5,7 @@
 import time
 from hashlib import new
 from sys import stdin
+from turtle import position
 import numpy as np
 from utils import (print_table, name)
 from search import (
@@ -197,7 +198,11 @@ class TakuzuState:
     def actions(self):
         actions = []
         empty = self.empty_positions()
-        for i in empty:
+        
+        #for i in empty:
+        #para uma posição de cada vez:
+        if len(empty) != 0:
+            i = empty[0]
             actions.insert(0, (i[0],i[1],0))
             actions.insert(0, (i[0],i[1],1))
             
