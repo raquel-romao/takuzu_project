@@ -404,13 +404,13 @@ class Takuzu(Problem):
         new_board.set_number(action[0], action[1], action[2])
         hash_state = new_board.hash()
 
-        #if hash_state in self.visited_states:
-            #return self.visited_states[hash_state]
+        if hash_state in self.visited_states:
+            return self.visited_states[hash_state]
 
         new_setrow= state.rows.copy()
         new_setcol= state.cols.copy()
         new_state = TakuzuState(new_board, new_setrow, new_setcol)
-        
+
         test_row=new_board.board[action[0]]
         test_col= new_board.board[:,action[1]]
         if 2 not in test_row:
