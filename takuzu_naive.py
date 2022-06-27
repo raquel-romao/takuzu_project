@@ -591,7 +591,7 @@ if __name__ == "__main__":
     #print(goal_node.state.board)
 
     compare_searchers(problem, header=['Searcher', 'selfsuccs/Goal tests/States/Time(s)/Time(ms)'], 
-    searchers=[astar_search, greedy_search])
+    searchers=[astar_search,breadth_first_tree_search,depth_first_tree_search, greedy_search])
 
 #quanto se vai à função action self.succs +=1, succs=succesors?
 #última coluna da tabela fica estranha  (<__m)-> é suposto ser str(self.found)[:4] , sendo self.found o state do resultado final
