@@ -197,7 +197,7 @@ class TakuzuState:
             half = self.board_size //2 + 1
 
 
-     
+        self.changed_number=True
         while self.changed_number:
             self.changed_number=False
             empty = self.empty_positions()
