@@ -641,15 +641,15 @@ class Takuzu(Problem):
     def h(self, node: Node):
         """Função heuristica 1 utilizada para a procura A*. Além do numéro de casas vazias, é dada prioridade 
         a ações em linhas/colunas com poucos 2, para ser dado mais peso a serem completadas linhas/colunas."""
-        
+        '''
         twos = np.count_nonzero(node.state.board.board == 2)
 
         if node.parent:
             row_idx, col_idx,_ = node.action
             row = np.count_nonzero(node.state.board.board[row_idx] == 2)
             col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
-            return twos + 2*row + 2*col 
-        return twos
+            return twos + 2*row + 2*col '''
+        return 0
 
     def h2(self, node: Node):
         """Função heuristica 2 utilizada para a procura A*. Além do numéro de casas vazias, tem-se em conta a
