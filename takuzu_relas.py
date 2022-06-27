@@ -697,9 +697,6 @@ class Takuzu(Problem):
             col = np.count_nonzero(node.state.board.board[:,col_idx] == 2)
             dif = abs((node.state.board.board==0).sum() - (node.state.board.board==1).sum())
             f = twos + dif + broken_rules + row + col
-
-            if np.count_nonzero(node.state.board.board == 2) < node.state.board.board_size:
-              f = f - node.state.board.board_size
         
         return  f
 
