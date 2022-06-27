@@ -27,7 +27,7 @@ class Board:
     def __init__(self, board, board_size, rows, cols): 
         self.board = board
         self.board_size = board_size
-        self.string = str(self.board)
+       
 
         self.rows = rows
         self.cols = cols
@@ -46,19 +46,20 @@ class Board:
     def get_board(self):
         return self.board
 
-    def set_number(self, row: int, col: int, value, state):
+    def set_number(self, row: int, col: int, value, state, result):
         self.board[row, col] = value
         state.last_action = (row,col,value)
         state.changed_number = True
         self.rows[row, value] += 1
         self.cols[col,value] += 1
-        test_row=self.board[row]
-        test_col= self.board[:,col]
-        if 2 not in test_row:
-            state.rows.add(str(test_row))
-        if 2 not in test_col:
-            state.cols.add(str(test_col))
-        self.string = str(self.board.ravel()) # atualiza o hash value.
+        if not result:
+            test_row=self.board[row]
+            test_col= self.board[:,col]
+            if 2 not in test_row:
+                state.rows.add(str(test_row))
+            if 2 not in test_col:
+                state.cols.add(str(test_col))
+        
         
 
     def get_number(self, row: int, col: int):
@@ -269,7 +270,7 @@ class TakuzuState:
 
                     elif len(position_actions)==1:
                         a=position_actions[0]
-                        self.board.set_number(a[0],a[1],a[2], self)
+                        self.board.set_number(a[0],a[1],a[2], self,,False)
 
 
                     else:
@@ -349,46 +350,46 @@ class TakuzuState:
 
         if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
             if b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[2,0]):
-                self.board.set_number(i[0],onde_dois[1,0],a, self)
-                self.board.set_number(i[0],onde_dois[0,0],b, self)
-                self.board.set_number(i[0],onde_dois[2,0],b, self)
+                self.board.set_number(i[0],onde_dois[1,0],a, self,False)
+                self.board.set_number(i[0],onde_dois[0,0],b, self,False)
+                self.board.set_number(i[0],onde_dois[2,0],b, self,False)
 
 
             elif b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
-                self.board.set_number(i[0],onde_dois[2,0],b, self)
+                self.board.set_number(i[0],onde_dois[2,0],b, self,False)
 
             
             elif b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[2,0]):
-                self.board.set_number(i[0],onde_dois[0,0],b,self)
+                self.board.set_number(i[0],onde_dois[0,0],b,self,False)
 
         
         elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
             if b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]):
-                self.board.set_number(i[0],onde_dois[0,0],b,self)
-                self.board.set_number(i[0],onde_dois[1,0],a,self)
-                self.board.set_number(i[0],onde_dois[2,0],b,self)
-                self.board.set_number(i[0],onde_dois[3,0],b,self)
+                self.board.set_number(i[0],onde_dois[0,0],b,self,False)
+                self.board.set_number(i[0],onde_dois[1,0],a,self,False)
+                self.board.set_number(i[0],onde_dois[2,0],b,self,False)
+                self.board.set_number(i[0],onde_dois[3,0],b,self,False)
 
 
             elif b in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
-                self.board.set_number(i[0],onde_dois[0,0],b,self)
-                self.board.set_number(i[0],onde_dois[1,0],b,self)
-                self.board.set_number(i[0],onde_dois[2,0],a,self)
-                self.board.set_number(i[0],onde_dois[3,0],b,self)
+                self.board.set_number(i[0],onde_dois[0,0],b,self,False)
+                self.board.set_number(i[0],onde_dois[1,0],b,self,False)
+                self.board.set_number(i[0],onde_dois[2,0],a,self,False)
+                self.board.set_number(i[0],onde_dois[3,0],b,self,False)
 
 
             elif a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) or a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[3,0]):
-                self.board.set_number(i[0],onde_dois[0,0],b,self)
-                self.board.set_number(i[0],onde_dois[3,0],b,self)
+                self.board.set_number(i[0],onde_dois[0,0],b,self,False)
+                self.board.set_number(i[0],onde_dois[3,0],b,self,False)
 
 
         elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
             if  a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[0,0]) and a in self.board.adjacent_horizontal_numbers(i[0],onde_dois[4,0]):
-                self.board.set_number(i[0],onde_dois[0,0],b,self)
-                self.board.set_number(i[0],onde_dois[1,0],b,self)
-                self.board.set_number(i[0],onde_dois[2,0],a,self)
-                self.board.set_number(i[0],onde_dois[3,0],b,self)
-                self.board.set_number(i[0],onde_dois[4,0],b,self)
+                self.board.set_number(i[0],onde_dois[0,0],b,self,False)
+                self.board.set_number(i[0],onde_dois[1,0],b,self,False)
+                self.board.set_number(i[0],onde_dois[2,0],a,self,False)
+                self.board.set_number(i[0],onde_dois[3,0],b,self,False)
+                self.board.set_number(i[0],onde_dois[4,0],b,self,False)
 
 
     def para_colunas(self,i,qual, test_col):
@@ -404,52 +405,52 @@ class TakuzuState:
         if self.board_size > 3 and dois==3 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0]:
             if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) and b in self.board.adjacent_vertical_numbers(onde_dois[2,0],i[1]):
             
-                self.board.set_number(onde_dois[1,0],i[1],a,self)
-                self.board.set_number(onde_dois[0,0],i[1],b,self)
-                self.board.set_number(onde_dois[2,0],i[1],b,self)
+                self.board.set_number(onde_dois[1,0],i[1],a,self, False)
+                self.board.set_number(onde_dois[0,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[2,0],i[1],b,self,False)
 
 
             elif b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
              
-                self.board.set_number(onde_dois[2,0],i[1],b,self)
+                self.board.set_number(onde_dois[2,0],i[1],b,self,False)
 
             
             elif b in self.board.adjacent_vertical_numbers(onde_dois[2,0], i[1]):
              
-                self.board.set_number(onde_dois[0,0],i[1],b,self)
+                self.board.set_number(onde_dois[0,0],i[1],b,self,False)
 
         
         elif self.board_size > 4 and dois==4 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0]:
             if b in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]):
        
-                self.board.set_number(onde_dois[0,0],i[1],b,self)
-                self.board.set_number(onde_dois[1,0],i[1],a,self)
-                self.board.set_number(onde_dois[2,0],i[1],b,self)
-                self.board.set_number(onde_dois[3,0],i[1],b,self)
+                self.board.set_number(onde_dois[0,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[1,0],i[1],a,self,False)
+                self.board.set_number(onde_dois[2,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[3,0],i[1],b,self,False)
 
 
             elif b in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
         
-                self.board.set_number(onde_dois[0,0],i[1],b,self)
-                self.board.set_number(onde_dois[1,0],i[1],b,self)
-                self.board.set_number(onde_dois[2,0],i[1],a,self)
-                self.board.set_number(onde_dois[3,0],i[1],b,self)
+                self.board.set_number(onde_dois[0,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[1,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[2,0],i[1],a,self,False)
+                self.board.set_number(onde_dois[3,0],i[1],b,self,False)
 
 
             elif a in self.board.adjacent_vertical_numbers(onde_dois[0,0],i[1]) or a in self.board.adjacent_vertical_numbers(onde_dois[3,0],i[1]):
            
-                self.board.set_number(onde_dois[0,0],i[1],b,self)
-                self.board.set_number(onde_dois[3,0],i[1],b,self)
+                self.board.set_number(onde_dois[0,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[3,0],i[1],b,self,False)
 
 
         elif self.board_size > 5 and dois==5 and (onde_dois[0,0]+1)==onde_dois[1,0] and (onde_dois[0,0]+2)==onde_dois[2,0] and (onde_dois[0,0]+3)==onde_dois[3,0] and (onde_dois[0,0]+4)==onde_dois[4,0]:
             if  a in self.board.adjacent_horizontal_numbers(onde_dois[0,0],i[1]) and a in self.board.adjacent_horizontal_numbers(onde_dois[4,0],i[1]):
          
-                self.board.set_number(onde_dois[0,0],i[1],b,self)
-                self.board.set_number(onde_dois[1,0],i[1],b,self)
-                self.board.set_number(onde_dois[2,0],i[1],a,self)
-                self.board.set_number(onde_dois[3,0],i[1],b,self)
-                self.board.set_number(onde_dois[4,0],i[1],b,self)
+                self.board.set_number(onde_dois[0,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[1,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[2,0],i[1],a,self,False)
+                self.board.set_number(onde_dois[3,0],i[1],b,self,False)
+                self.board.set_number(onde_dois[4,0],i[1],b,self,False)
 
 
 
@@ -463,8 +464,8 @@ class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
         self.initial = TakuzuState(board, None, None)
-        #self.initial.completed_cols()
-        #self.initial.completed_rows()
+        self.initial.completed_cols()
+        self.initial.completed_rows()
         self.visited_states = {}
 
 
@@ -484,13 +485,24 @@ class Takuzu(Problem):
         self.actions(state)."""
         
         new_board = state.board.copy()
-        new_board.set_number(action[0], action[1], action[2],state)
+        new_board.set_number(action[0], action[1], action[2],state, True)
         hash_state = self.hash(new_board.board)
 
         if hash_state in self.visited_states:
             return self.visited_states[hash_state]
 
-        new_state = TakuzuState(new_board, None, None)
+        new_setrow= state.rows.copy()
+        new_setcol= state.cols.copy()
+
+        test_row=new_board.board[action[0]]
+        test_col= new_board.board[:,action[1]]
+        if 2 not in test_row:
+            new_setrow.add(str(test_row))
+        if 2 not in test_col:
+            new_setcol.add(str(test_col))
+
+        new_state = TakuzuState(new_board, new_setrow, new_setcol)
+        
 
         self.visited_states[hash_state] = new_state
         
