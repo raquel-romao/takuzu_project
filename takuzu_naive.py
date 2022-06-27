@@ -410,8 +410,8 @@ class Takuzu(Problem):
         new_setrow= state.rows.copy()
         new_setcol= state.cols.copy()
         new_state = TakuzuState(new_board, new_setrow, new_setcol)
-        test_row=new_board[action[0]]
-        test_col= new_board[:,action[1]]
+        test_row=new_board.board[action[0]]
+        test_col= new_board.board[:,action[1]]
         if 2 not in test_row:
             new_state.rows.add(str(test_row))
         if 2 not in test_col:
