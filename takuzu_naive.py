@@ -122,8 +122,6 @@ class Board:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
 
-    def hash(self):
-        return str(self.board.ravel())
 
 
     def copy(self):
@@ -187,8 +185,6 @@ class TakuzuState:
         return self.id < other.id
 
 
-    def __hash__(self): 
-        return hash(self.board)
 
     def actions(self):
         actions = []
@@ -382,8 +378,8 @@ class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
         self.initial = TakuzuState(board, None, None)
-        self.initial.completed_cols()
-        self.initial.completed_rows()
+        #self.initial.completed_cols()
+        #self.initial.completed_rows()
         self.visited_states = {}
 
 
@@ -393,6 +389,8 @@ class Takuzu(Problem):
         actions = state.actions()
         return actions
 
+    def hash(self, board):
+        return str(board.flatten())
 
     def result(self, state: TakuzuState, action):
         """Retorna o estado resultante de executar a 'action' sobre
@@ -402,23 +400,17 @@ class Takuzu(Problem):
         
         new_board = state.board.copy()
         new_board.set_number(action[0], action[1], action[2])
-        hash_state = new_board.hash()
+        hash_state = self.hash(new_board.board)
 
         if hash_state in self.visited_states:
             return self.visited_states[hash_state]
 
-        new_setrow= state.rows.copy()
-        new_setcol= state.cols.copy()
-        new_state = TakuzuState(new_board, new_setrow, new_setcol)
-
-        test_row=new_board.board[action[0]]
-        test_col= new_board.board[:,action[1]]
-        if 2 not in test_row:
-            new_state.rows.add(str(test_row))
-        if 2 not in test_col:
-            new_state.cols.add(str(test_col))
         
-        self.visited_states.update({hash_state: new_state})
+        new_state = TakuzuState(new_board, None, None)
+
+        
+        
+        self.visited_states[hash_state]= new_state
         
         return new_state
 
