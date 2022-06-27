@@ -28,7 +28,7 @@ class Board:
     def __init__(self, board, board_size, rows, cols): 
         self.board = board
         self.board_size = board_size
-        self.string = str(self.board)
+        #self.string = str(self.board)
 
         self.rows = rows
         self.cols = cols
@@ -47,19 +47,14 @@ class Board:
     def get_board(self):
         return self.board
 
-    def set_number(self, row: int, col: int, value, state):
+    def set_number(self, row: int, col: int, value):
         self.board[row, col] = value
-        state.last_action = (row,col,value)
-        state.changed_number = True
+        #state.last_action = (row,col,value)
+        #state.changed_number = True
         self.rows[row, value] += 1
         self.cols[col,value] += 1
-        test_row=self.board[row]
-        test_col= self.board[:,col]
-        if 2 not in test_row:
-            state.rows.add(str(test_row))
-        if 2 not in test_col:
-            state.cols.add(str(test_col))
-        self.string = str(self.board.ravel()) # atualiza o hash value.
+        
+        #self.string = str(self.board.ravel()) # atualiza o hash value.
         
 
     def get_number(self, row: int, col: int):
@@ -127,8 +122,8 @@ class Board:
             return (self.get_number(row, col - 1), self.get_number(row, col + 1))
 
 
-    def __hash__(self):
-        return hash(self.string)
+    def hash(self):
+        return str(self.board.ravel())
 
 
     def copy(self):
@@ -406,8 +401,8 @@ class Takuzu(Problem):
         self.actions(state)."""
         
         new_board = state.board.copy()
-        new_board.set_number(action[0], action[1], action[2],state)
-        hash_state = hash(new_board)
+        new_board.set_number(action[0], action[1], action[2])
+        hash_state = new_board.hash()
 
         if hash_state in self.visited_states:
             return self.visited_states[hash_state]
@@ -415,6 +410,13 @@ class Takuzu(Problem):
         new_setrow= state.rows.copy()
         new_setcol= state.cols.copy()
         new_state = TakuzuState(new_board, new_setrow, new_setcol)
+        test_row=new_board[action[0]]
+        test_col= new_board[:,action[1]]
+        if 2 not in test_row:
+            new_state.rows.add(str(test_row))
+        if 2 not in test_col:
+            new_state.cols.add(str(test_col))
+        
         self.visited_states.update({hash_state: new_state})
         
         return new_state
