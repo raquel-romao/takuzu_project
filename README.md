@@ -66,9 +66,12 @@ Example of output:
 To execute the program, use the command:
 
 _bash_
-
 python3 takuzu.py <instance_file>
 
+**Requirements**
+
+_bash_
+pip install numpy
 
 **Report**
 
