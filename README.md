@@ -65,4 +65,12 @@ Example of output:
 To execute the program, use the command:
 
 _bash_
+
 python3 takuzu.py <instance_file>
+
+
+**Report**
+
+An additional report is available in the "Final Report" folder. This report compares different types of search algorithms to determine the most effective method implemented in the main file, takuzu.py. Additional files were created to support this comparison and can be found in the "additional takuzu modes test" folder.
+
+_Final grade: 19/20_
