@@ -1,4 +1,5 @@
-**TAKUZU SOLVER - Artificial Intelligence Project 2021/22 (P4)**
+# TAKUZU SOLVER 
+## Artificial Intelligence Project 2021/22 (P4)
 
 **Introduction**
 
